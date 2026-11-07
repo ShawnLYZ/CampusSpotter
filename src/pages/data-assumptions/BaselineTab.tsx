@@ -5,7 +5,7 @@ import { Toast } from '../../components/Toast.tsx';
 import type { BaselineTable, CsvReport } from '../../providers/types.ts';
 import { cellText, displayColumns, reportLines } from './csvReport.ts';
 
-const btn = 'rounded-md border border-border bg-panel-2 px-3 py-1.5 text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified';
+const btn = 'btn';
 
 function Section({ table }: { table: BaselineTable }) {
   const provider = useProvider();
@@ -47,9 +47,9 @@ function Section({ table }: { table: BaselineTable }) {
 
   const inputId = `upload-${table.name}`;
   return (
-    <section aria-labelledby={`h-${table.name}`} className="rounded-lg border border-border bg-panel p-4">
+    <section aria-labelledby={`h-${table.name}`} className="card p-4">
       <h2 id={`h-${table.name}`} className="mb-3 text-lg font-semibold text-text">{table.title}</h2>
-      <div className="max-h-72 overflow-auto rounded-md border border-border [color-scheme:dark]">
+      <div className="max-h-72 overflow-auto rounded-md border border-border">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-panel-2">
             <tr className="text-left text-text-2">{cols.map((c) => <th key={c.header} scope="col" className="px-3 py-1.5 font-medium">{c.header}</th>)}</tr>
@@ -68,7 +68,7 @@ function Section({ table }: { table: BaselineTable }) {
         <label htmlFor={inputId} className="text-sm text-text">Upload CSV</label>
         <input id={inputId} ref={fileRef} type="file" accept=".csv,text/csv" disabled={busy}
           onChange={(e) => void upload(e.target.files?.[0])}
-          className="text-sm text-text-2 file:mr-3 file:rounded-md file:border file:border-border file:bg-panel-2 file:px-3 file:py-1.5 file:text-text focus-visible:outline-2 focus-visible:outline-verified" />
+          className="text-sm text-text-2 file:mr-3 file:rounded-lg file:border file:border-border-strong file:bg-panel-2 file:text-text file:px-3 file:py-1.5 file:text-text" />
         <label className="flex items-center gap-2 text-sm text-text">
           <input type="checkbox" checked={verified} onChange={(e) => setVerified(e.target.checked)} className="h-4 w-4 accent-verified" />
           Mark as Verified APU data

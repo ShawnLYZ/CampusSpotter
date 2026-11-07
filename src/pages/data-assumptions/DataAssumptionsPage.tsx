@@ -7,6 +7,8 @@ import { EstimatesTab } from './EstimatesTab.tsx';
 import { RulesTab } from './RulesTab.tsx';
 import { PrivacyTab } from './PrivacyTab.tsx';
 import { AboutTab } from './AboutTab.tsx';
+import { Database } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
 
 const TABS = [
   { id: 'sources', title: 'Sources', Panel: SourcesTab },
@@ -38,20 +40,21 @@ export default function DataAssumptionsPage() {
   const { Panel } = TABS[active];
   return (
     <div className="flex h-full min-h-0 flex-col gap-4">
-      <h1 className="text-xl font-semibold text-text">Data &amp; Assumptions</h1>
+      <PageIntro id="data" Icon={Database} title="Data & Assumptions"
+        summary="Every input behind the forecasts: where it comes from, how fresh it is, and which figures are assumptions you can replace." />
       <div role="tablist" aria-label="Data and assumptions" onKeyDown={onKey} className="flex gap-1 border-b border-border">
         {TABS.map((t, i) => (
           <button key={t.id} ref={(el) => { refs.current[i] = el; }} type="button" role="tab" id={`tab-${t.id}`}
             aria-selected={i === active} aria-controls={`panel-${t.id}`} tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)}
-            className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-verified ${
-              i === active ? 'border-verified text-text' : 'border-transparent text-text-2 hover:text-text'}`}>
+            className={`-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-offset-[-2px] ${
+              i === active ? 'border-accent text-text' : 'border-transparent text-text-2 hover:border-border-strong hover:text-text'}`}>
             {t.title}
           </button>
         ))}
       </div>
       <div role="tabpanel" id={`panel-${TABS[active].id}`} aria-labelledby={`tab-${TABS[active].id}`} tabIndex={0}
-        className="min-h-0 flex-1 overflow-y-auto pr-1 [color-scheme:dark] focus-visible:outline-2 focus-visible:outline-verified">
+        className="min-h-0 flex-1 overflow-y-auto pr-1">
         <Panel />
       </div>
     </div>

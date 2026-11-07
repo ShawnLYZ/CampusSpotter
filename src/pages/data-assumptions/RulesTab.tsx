@@ -38,7 +38,7 @@ export function RulesTab() {
     <div className="flex flex-col gap-6">
       <section aria-labelledby="h-thr">
         <h2 id="h-thr" className="mb-2 text-lg font-semibold text-text">Pressure thresholds</h2>
-        <div className="overflow-x-auto rounded-lg border border-border bg-panel">
+        <div className="overflow-x-auto card">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-left text-text-2">
@@ -67,7 +67,7 @@ export function RulesTab() {
       <section aria-labelledby="h-risk">
         <h2 id="h-risk" className="mb-2 text-lg font-semibold text-text">Risk rules</h2>
         <p className="mb-2 text-sm text-text-2">The risk level comes from the no-action forecast for the day.</p>
-        <dl className="space-y-2 rounded-lg border border-border bg-panel p-4 text-sm">
+        <dl className="space-y-2 card p-4 text-sm">
           {riskRuleLines(settings.risk).map((r) => (
             <div key={r.level} className="flex gap-3">
               <dt className="w-20 shrink-0 font-semibold text-text">{r.level}</dt>
@@ -78,7 +78,7 @@ export function RulesTab() {
       </section>
       <section aria-labelledby="h-cost">
         <h2 id="h-cost" className="mb-2 text-lg font-semibold text-text">Cost rates</h2>
-        <ul className="divide-y divide-border rounded-lg border border-border bg-panel text-sm">
+        <ul className="divide-y divide-border card text-sm">
           {costs.map((c) => (
             <li key={c.name} className="flex items-center justify-between px-4 py-2">
               <span className="text-text">{c.name}</span>

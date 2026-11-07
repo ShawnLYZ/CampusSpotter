@@ -47,10 +47,12 @@ interface Props {
 export function SmallMultiples({ noAction, withPlan, thresholds, step, metrics = METRIC_IDS, chartHeight = 150, bundle }: Props) {
   return (
     <section aria-label="Metric forecasts, no action against with plan">
-      <div className="mb-2 flex items-center gap-4 text-xs text-text-2">
+      <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-text-2">
+        <h2 className="section-title mr-auto">Each measure through the day</h2>
         <span className="flex items-center gap-1.5 whitespace-nowrap"><span aria-hidden="true" className="inline-block h-0.5 w-5" style={{ background: NO_ACTION_COLOUR }} />No action</span>
         <span className="flex items-center gap-1.5 whitespace-nowrap"><span aria-hidden="true" className="inline-block h-1 w-5" style={{ background: WITH_PLAN_COLOUR }} />With plan</span>
-        <span className="whitespace-nowrap">Dashed lines: busy (amber) and overloaded (red) thresholds</span>
+        <span className="flex items-center gap-1.5 whitespace-nowrap"><span aria-hidden="true" className="inline-block w-5 border-t-2 border-dashed border-amber" />Busy from</span>
+        <span className="flex items-center gap-1.5 whitespace-nowrap"><span aria-hidden="true" className="inline-block w-5 border-t-2 border-dashed border-red" />Overloaded above</span>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {metrics.map((m) => {
@@ -59,18 +61,18 @@ export function SmallMultiples({ noAction, withPlan, thresholds, step, metrics =
           const dataMax = Math.max(0, ...data.flatMap((p) => [p.a ?? 0, p.b ?? 0]));
           const yMax = Math.ceil(Math.max(th.redAbove * 1.15, dataMax * 1.05));
           return (
-            <figure key={m} className="min-w-0 rounded-lg border border-border bg-panel p-2">
-              <figcaption className="mb-1 flex items-center justify-between gap-2 text-xs font-medium text-text">
-                <span className="truncate" title={METRIC_TITLES[m]}>{METRIC_TITLES[m]}</span>
+            <figure key={m} className="card min-w-0 p-3">
+              <figcaption className="mb-2 flex min-h-[2.5rem] items-start justify-between gap-2 text-sm font-medium leading-tight text-text">
+                <span>{METRIC_TITLES[m]}</span>
                 <span className="shrink-0 text-xs"><FigureBadge forecasts={[noAction, withPlan]} bundle={bundle} metrics={[m]} /></span>
               </figcaption>
               <div style={{ height: chartHeight }} className="min-w-0">
                 <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 260, height: chartHeight }}>
                   <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
-                    <CartesianGrid stroke="#263241" strokeDasharray="2 4" vertical={false} />
+                    <CartesianGrid stroke="#263445" strokeDasharray="2 4" vertical={false} />
                     <XAxis dataKey="t" type="number" domain={[0, 75]} ticks={TICKS} tickFormatter={shortClock}
-                      tick={{ fill: '#a7b4c2', fontSize: 10 }} stroke="#263241" />
-                    <YAxis domain={[0, yMax]} width={36} tick={{ fill: '#a7b4c2', fontSize: 10 }} stroke="#263241" allowDecimals={false} />
+                      tick={{ fill: '#8a99ab', fontSize: 10 }} stroke="#263445" />
+                    <YAxis domain={[0, yMax]} width={36} tick={{ fill: '#8a99ab', fontSize: 10 }} stroke="#263445" allowDecimals={false} />
                     <ReferenceLine y={th.amberFrom} stroke="#f59e0b" strokeDasharray="4 3" />
                     <ReferenceLine y={th.redAbove} stroke="#ef4444" strokeDasharray="4 3" />
                     <ReferenceLine x={step} stroke="#e6edf3" strokeOpacity={0.7} />

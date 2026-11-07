@@ -59,7 +59,7 @@ export function SceneSlot({ mode, forecasts, step, captions, cameraPreset, onZon
     <div data-scene="" className="h-full">
       {webgl ? (
         <SceneErrorBoundary fallback={fallback}>
-          <Suspense fallback={<div role="status" aria-label="Loading 3D view" className="h-full min-h-32 rounded-lg border border-border bg-panel" />}>
+          <Suspense fallback={<div role="status" aria-label="Loading 3D view" className="h-full min-h-32 card" />}>
             <CampusCanvas views={views} step={step} cameraPreset={cameraPreset} weatherMm={weather}
               selectedZone={selected} onZoneClick={zoneClick} onEmptyClick={clear} />
           </Suspense>
@@ -79,7 +79,7 @@ function PlaceholderPanels({ mode, forecasts, step, captions, onZoneClick }: Pic
           <div key={i} role="button" tabIndex={0} aria-label="Open campus details"
             onClick={() => onZoneClick?.('campus')}
             onKeyDown={(e) => { if (e.key === 'Enter') onZoneClick?.('campus'); }}
-            className="flex h-full min-h-32 cursor-pointer flex-col items-center justify-center rounded-lg border border-border bg-panel p-4 text-center">
+            className="flex h-full min-h-32 cursor-pointer flex-col items-center justify-center card p-4 text-center">
             {captions?.[i] && <p className="mb-2 text-lg font-semibold text-text">{captions[i]}</p>}
             <p className="tabular text-text">
               APU stop wait at {clock12(7 * 60 + step * 15)}: {sv ? formatMetric('apuStopQueue', sv) : 'Not enough data'}

@@ -8,5 +8,5 @@ export function scanText(run: ScanRun): string {
 }
 
 export function ScanStatus({ run }: { run: ScanRun | null }) {
-  return <p className="text-sm text-text-2">{run ? scanText(run) : 'No scan has run yet'}</p>;
+  return <p className="text-xs text-text-3">{run ? scanText(run) : 'No scan has run yet'}</p>;
 }

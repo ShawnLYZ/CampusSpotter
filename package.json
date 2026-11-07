@@ -20,6 +20,7 @@
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
     "@vis.gl/react-google-maps": "^1.10.2",
+    "lucide-react": "^0.468.0",
     "react": "19.3",
     "react-dom": "19.3",
     "react-router": "^7.18.5",

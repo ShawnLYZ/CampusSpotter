@@ -18,6 +18,10 @@ import { AlertBanner } from './AlertBanner.tsx';
 import { MetricGrid } from './MetricGrid.tsx';
 import { ZonePopover } from './ZonePopover.tsx';
 import { pickAlert } from './alert.ts';
+import { LayoutDashboard } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
+import { Legend } from '../../components/Legend.tsx';
+import { worstPressureByStep } from '../../lib/worstPressure.ts';
 
 const clampStep = (n: number) => Math.min(75, Math.max(0, n));
 const NO_LEVERS: LeverSet = [];
@@ -69,30 +73,43 @@ export default function CommandCenterPage() {
   const alertFc = useForecast(alertCtx, NO_LEVERS);
   const closeZone = useCallback(() => setZone(null), []);
   const dayType = fc.bundle?.context.dayType;
+  const strip = useMemo(() => (fc.noAction ? worstPressureByStep(fc.noAction) : undefined), [fc.noAction]);
 
   return (
-    <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-3">
+    <div className="grid h-full min-h-0 grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-4">
+      <PageIntro id="command-center" Icon={LayoutDashboard} compact title="Command Center"
+        summary="How the chosen day unfolds on campus and along the shuttle route, if nothing is changed."
+        steps={['Press Play or drag the time slider', 'Watch places turn amber (busy) or red (overloaded)', 'Click a building or a label for details']} />
       <div><StaleBanner sources={sources} /></div>
-      <div className="grid min-h-0 grid-cols-[minmax(0,1fr)_440px] gap-4">
-        <div className="relative min-h-0">
-          {fc.status === 'ready' && fc.noAction ? (
-            <SceneSlot mode="single" forecasts={[fc.noAction]} step={step} onZoneClick={setZone}
-              weatherMm={fc.bundle?.weather?.precipitationMm.map((p) => p?.value ?? null)} />
-          ) : (
-            <p role="status" className="p-6 text-text-2">{fc.status === 'error' ? `Forecast unavailable: ${fc.error}` : 'Loading forecast…'}</p>
-          )}
-          {zone && fc.noAction && fc.bundle && (
-            <ZonePopover zoneId={zone} forecast={fc.noAction} step={step} bundle={fc.bundle} sources={sources} onClose={closeZone} />
-          )}
+      <div className="grid min-h-0 grid-cols-[minmax(0,1fr)_460px] gap-4">
+        <div className="card relative flex min-h-0 flex-col overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-2.5">
+            <h2 className="section-title">3D campus and shuttle route</h2>
+            <Legend />
+          </div>
+          <div className="relative min-h-0 flex-1">
+            {fc.status === 'ready' && fc.noAction ? (
+              <SceneSlot mode="single" forecasts={[fc.noAction]} step={step} onZoneClick={setZone}
+                weatherMm={fc.bundle?.weather?.precipitationMm.map((p) => p?.value ?? null)} />
+            ) : (
+              <p role="status" className="p-6 text-text-2">{fc.status === 'error' ? `Forecast unavailable: ${fc.error}` : 'Loading forecast…'}</p>
+            )}
+            {zone && fc.noAction && fc.bundle && (
+              <ZonePopover zoneId={zone} forecast={fc.noAction} step={step} bundle={fc.bundle} sources={sources} onClose={closeZone} />
+            )}
+          </div>
         </div>
         <div className="flex min-h-0 flex-col gap-3 overflow-y-auto pr-1">
           <AlertBanner item={alert} onOpen={openAlert} forecast={alertFc.noAction} bundle={alertFc.bundle} sources={sources} />
           {(dayType === 'weekend' || dayType === 'no_class') && <NoClassesState dayType={dayType} />}
           {fc.status === 'ready' && fc.noAction && fc.bundle && <MetricGrid forecast={fc.noAction} step={step} bundle={fc.bundle} sources={sources} />}
-          <MapPanel height={220} />
+          <section aria-label="Live traffic map" className="card overflow-hidden">
+            <h2 className="section-title px-4 py-2.5">Live traffic: APU to LRT Bukit Jalil</h2>
+            <MapPanel height={220} />
+          </section>
         </div>
       </div>
-      <Timeline nowStep={nowStep} />
+      <Timeline nowStep={nowStep} pressures={strip} />
     </div>
   );
 }

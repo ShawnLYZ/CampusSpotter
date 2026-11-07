@@ -19,7 +19,7 @@ export function MetricTile({ metric, series, step, bundle, sources }: {
   const peakText = peakIdx < 0 ? 'No peak (no data)'
     : `Peak ${formatMetric(metric, series.steps[peakIdx])} at ${clock12(DAY_START_MIN + peakIdx * STEP_MIN)}`;
   return (
-    <section aria-label={METRIC_TITLES[metric]} className="rounded-lg border border-border bg-panel p-4">
+    <section aria-label={METRIC_TITLES[metric]} className="card p-4">
       <h3 className="text-sm font-medium text-text-2">{METRIC_TITLES[metric]}</h3>
       <p className="tabular mt-1 text-3xl font-semibold text-text">{sv ? formatMetric(metric, sv) : 'Not enough data'}</p>
       <p className="tabular mt-1 text-sm text-text-2">{peakText}</p>

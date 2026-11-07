@@ -1,25 +1,123 @@
 @import "tailwindcss";
 
+/*
+ * CampusSpotter — dark control room (PRD §3.14: dark theme only).
+ * Colour roles are fixed by the spec:
+ *   pressure  green / amber / red (always with an icon and a word)
+ *   provenance  Verified blue / Baseline slate / AI-estimated violet
+ *   risk  Low / Medium / High / Critical (darker red)
+ * The one brand accent is "signal" cyan: primary actions, the current page, focus and the time slider. Nothing else.
+ */
 @theme {
-  --color-bg: #0b0f14;
-  --color-panel: #121821;
-  --color-panel-2: #18202b;
-  --color-border: #263241;
-  --color-text: #e6edf3;
-  --color-text-2: #a7b4c2;
-  --color-text-3: #738396;
+  --color-bg: #0a0f16;
+  --color-panel: #111924;
+  --color-panel-2: #18222f;
+  --color-panel-3: #212d3d;
+  --color-border: #263445;
+  --color-border-strong: #364759;
+  --color-text: #e8eef5;
+  --color-text-2: #b3bfcd;
+  --color-text-3: #8a99ab;
+
   --color-green: #22c55e;
+  --color-green-ink: #86efac;
   --color-amber: #f59e0b;
+  --color-amber-ink: #fcd34d;
   --color-red: #ef4444;
+  --color-red-ink: #fca5a5;
   --color-critical: #991b1b;
-  --color-accent: #2563eb;
+
+  --color-accent: #22d3ee;
+  --color-accent-hover: #67e8f9;
+  --color-accent-ink: #04161b;
+  --color-accent-soft: #0e3a45;
+
   --color-verified: #3b82f6;
+  --color-verified-ink: #93c5fd;
   --color-baseline: #64748b;
+  --color-baseline-ink: #cbd5e1;
   --color-ai: #8b5cf6;
+  --color-ai-ink: #c4b5fd;
+
   --font-sans: "Inter Variable", system-ui, sans-serif;
+  --shadow-pop: 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.35);
 }
 
 html, body, #root { height: 100%; }
-body { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
+html { color-scheme: dark; }
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
 .tabular { font-variant-numeric: tabular-nums; }
-:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+
+/* Browser surfaces carry the palette too. */
+::selection { background: color-mix(in oklab, var(--color-accent) 35%, transparent); color: var(--color-text); }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+input, textarea { caret-color: var(--color-accent); }
+a { text-underline-offset: 3px; }
+* { scrollbar-width: thin; scrollbar-color: var(--color-border-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 999px; border: 3px solid var(--color-bg); }
+::-webkit-scrollbar-track { background: transparent; }
+
+button:not(:disabled), [role="tab"], summary, label:has(input[type="checkbox"]) { cursor: pointer; }
+
+/* Checkboxes and the time slider use the accent. */
+input[type="checkbox"] { accent-color: var(--color-accent); }
+input[type="range"] { accent-color: var(--color-accent); }
+
+@layer components {
+  /* Buttons: one shape everywhere. primary = the page's main action; default = secondary; quiet = low-emphasis. */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    min-height: 2.25rem; padding: 0.375rem 0.875rem; border-radius: 0.5rem;
+    border: 1px solid var(--color-border-strong); background: var(--color-panel-2);
+    color: var(--color-text); font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; white-space: nowrap;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
+  }
+  .btn:hover:not(:disabled) { background: var(--color-panel-3); border-color: var(--color-text-3); }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+  .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-ink); font-weight: 600; }
+  .btn-primary:hover:not(:disabled) { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+
+  .btn-quiet { background: transparent; border-color: transparent; color: var(--color-text-2); }
+  .btn-quiet:hover:not(:disabled) { background: var(--color-panel-2); border-color: transparent; color: var(--color-text); }
+
+  .btn-danger { color: var(--color-red-ink); }
+  .btn-danger:hover:not(:disabled) { border-color: var(--color-red); background: color-mix(in oklab, var(--color-red) 14%, var(--color-panel-2)); }
+
+  .btn-sm { min-height: 1.875rem; padding: 0.25rem 0.625rem; font-size: 0.8125rem; border-radius: 0.4375rem; }
+
+  /* Form fields */
+  .field {
+    border-radius: 0.5rem; border: 1px solid var(--color-border-strong); background: var(--color-bg);
+    padding: 0.4375rem 0.75rem; font-size: 0.875rem; color: var(--color-text);
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .field:hover { border-color: var(--color-text-3); }
+  .field:focus-visible { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 25%, transparent); }
+  .field::placeholder { color: var(--color-text-3); }
+  .field[aria-invalid="true"] { border-color: var(--color-red); }
+  .field-label { font-size: 0.8125rem; font-weight: 500; color: var(--color-text-2); }
+
+  /* Toggle chips (filters, block pickers) */
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 999px;
+    border: 1px solid var(--color-border-strong); background: transparent;
+    padding: 0.25rem 0.75rem; font-size: 0.8125rem; color: var(--color-text-2);
+    transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+  }
+  .chip:hover { color: var(--color-text); border-color: var(--color-text-3); }
+  .chip[aria-pressed="true"] { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-text); }
+
+  /* Surfaces */
+  .card { border-radius: 0.875rem; border: 1px solid var(--color-border); background: var(--color-panel); }
+  .section-title { font-size: 0.9375rem; font-weight: 600; color: var(--color-text); }
+}

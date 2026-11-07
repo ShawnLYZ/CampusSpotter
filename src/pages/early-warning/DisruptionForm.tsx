@@ -55,49 +55,49 @@ export function DisruptionForm({ item, defaultDate, onSubmit, onCancel }: {
 
   return (
     <form onSubmit={(ev) => void submit(ev)} noValidate onKeyDown={(ev) => { if (ev.key === 'Escape') onCancel(); }}
-      className="space-y-3 rounded-lg border border-verified/60 bg-panel-2 p-4" aria-label={item ? `Edit ${item.title}` : 'Add disruption'}>
-      <h3 className="font-semibold">{item ? 'Edit disruption' : 'Add disruption'}</h3>
+      className="card space-y-4 border-accent/50 p-5 shadow-[var(--shadow-pop)]" aria-label={item ? `Edit ${item.title}` : 'Add disruption'}>
+      <h3 className="text-base font-semibold">{item ? 'Edit disruption' : 'Add disruption'}</h3>
       <div className="grid grid-cols-4 gap-3">
-        <label className="col-span-2 text-sm">Title
+        <label className="field-label col-span-2">Title
           <input ref={first} className={FIELD} value={title} onChange={(x) => setTitle(x.target.value)} required aria-invalid={submitted && !!titleErr}
             aria-describedby={submitted && titleErr ? titleId : undefined} />
-          {submitted && titleErr && <span id={titleId} className="mt-1 block text-red">{titleErr}</span>}
+          {submitted && titleErr && <span id={titleId} className="mt-1 block text-red-ink">{titleErr}</span>}
         </label>
-        <label className="text-sm">Type
+        <label className="field-label">Type
           <select className={FIELD} value={type} onChange={(x) => setType(x.target.value as DisruptionType)}>
             {TYPE_CHIPS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
           </select>
         </label>
-        <label className="text-sm">Kind
+        <label className="field-label">Kind
           <select className={FIELD} value={kind} onChange={(x) => setKind(x.target.value as DisruptionKind)}>
             {KINDS.map((k) => <option key={k} value={k}>{kindLabel(k)}</option>)}
           </select>
         </label>
-        <label className="text-sm">Venue
+        <label className="field-label">Venue
           <input className={FIELD} value={venue} onChange={(x) => setVenue(x.target.value)} />
         </label>
-        <label className="text-sm">Start (Malaysia time)
+        <label className="field-label">Start (Malaysia time)
           <input type="datetime-local" className={FIELD} value={start} onChange={(x) => setStart(x.target.value)} aria-invalid={submitted && !!timeErr}
             aria-describedby={submitted && timeErr ? timeId : undefined} />
         </label>
-        <label className="text-sm">End (Malaysia time)
+        <label className="field-label">End (Malaysia time)
           <input type="datetime-local" className={FIELD} value={end} onChange={(x) => setEnd(x.target.value)} aria-invalid={submitted && !!timeErr}
             aria-describedby={submitted && timeErr ? timeId : undefined} />
-          {submitted && timeErr && <span id={timeId} className="mt-1 block text-red">{timeErr}</span>}
+          {submitted && timeErr && <span id={timeId} className="mt-1 block text-red-ink">{timeErr}</span>}
         </label>
-        <label className="text-sm">Expected attendance
+        <label className="field-label">Expected attendance
           <input type="number" min={0} step={1} className={FIELD} value={att} onChange={(x) => setAtt(x.target.value)} aria-invalid={submitted && !!attErr}
             aria-describedby={submitted && attErr ? attId : undefined} />
-          {submitted && attErr && <span id={attId} className="mt-1 block text-red">{attErr}</span>}
+          {submitted && attErr && <span id={attId} className="mt-1 block text-red-ink">{attErr}</span>}
         </label>
-        <label className="col-span-4 text-sm">Notes
+        <label className="field-label col-span-4">Notes
           <textarea className={FIELD} rows={2} value={notes} onChange={(x) => setNotes(x.target.value)} />
         </label>
       </div>
-      {error && <p id={errId} role="alert" className="text-sm text-red">{error}</p>}
+      {error && <p id={errId} role="alert" className="text-sm text-red-ink">{error}</p>}
       <div className="flex gap-2">
-        <button type="submit" disabled={busy} className="rounded-md bg-accent px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50">{item ? 'Save changes' : 'Add disruption'}</button>
-        <button type="button" onClick={onCancel} className="rounded-md border border-border px-4 py-1.5 text-sm">Cancel</button>
+        <button type="submit" disabled={busy} className="btn btn-primary">{item ? 'Save changes' : 'Add disruption'}</button>
+        <button type="button" onClick={onCancel} className="btn btn-quiet">Cancel</button>
       </div>
     </form>
   );

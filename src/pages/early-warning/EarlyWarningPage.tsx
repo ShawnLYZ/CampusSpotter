@@ -12,6 +12,8 @@ import { FilterBar } from './FilterBar.tsx';
 import { OverrideForm } from './OverrideForm.tsx';
 import { ScanStatus } from './ScanStatus.tsx';
 import { WarningCard } from './WarningCard.tsx';
+import { CalendarClock, Plus, RefreshCw, Siren } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
 import type { CardActions } from './WarningCard.tsx';
 
 type FormState = { kind: 'add' } | { kind: 'edit'; item: EarlyWarningItem } | null;
@@ -110,22 +112,22 @@ export default function EarlyWarningPage() {
   };
 
   return (
-    <div className="h-full min-h-0 space-y-3 overflow-y-auto pr-2">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-xl font-semibold">Early Warning</h1>
-        <div className="flex items-center gap-4">
+    <div className="h-full min-h-0 space-y-5 overflow-y-auto pr-2">
+      <PageIntro id="early-warning" Icon={Siren} title="Early Warning"
+        summary="Days in the next six months that could overload the shuttle or campus, most urgent first."
+        steps={['Find a day with a high or critical risk', 'Read why, and what peaks if nothing is done', 'Open it in Scenario Lab, or generate plans']}
+        actions={<>
           <ScanStatus run={scan} />
-          <button type="button" onClick={() => void runScan()} disabled={scanning} aria-busy={scanning}
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-panel-2 px-4 py-1.5 text-sm font-medium disabled:opacity-60">
-            {scanning && <span aria-hidden="true" className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-3 border-t-transparent" />}
-            {scanning ? 'Scanning…' : 'Scan now'}
+          <button type="button" onClick={() => void runScan()} disabled={scanning} aria-busy={scanning} className="btn">
+            <RefreshCw aria-hidden="true" className={scanning ? 'animate-spin' : ''} />
+            {scanning ? 'Scanning…' : 'Scan for events'}
           </button>
-          <button type="button" onClick={() => setForm({ kind: 'add' })} disabled={!today}
-            className="rounded-md bg-accent px-4 py-1.5 text-sm font-medium text-white disabled:opacity-60">Add disruption</button>
-        </div>
-      </div>
+          <button type="button" onClick={() => setForm({ kind: 'add' })} disabled={!today} className="btn btn-primary">
+            <Plus aria-hidden="true" /> Add disruption
+          </button>
+        </>} />
       <FilterBar types={types} risks={risks} onTypes={setTypes} onRisks={setRisks} />
-      {error && <p role="alert" className="rounded-md border border-red/60 px-3 py-2 text-sm text-red">Something went wrong: {error}</p>}
+      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Something went wrong: {error}. Try again, or reload the page.</p>}
       {form?.kind === 'add' && <DisruptionForm defaultDate={defaultDate} onSubmit={submitForm} onCancel={() => setForm(null)} />}
       {form?.kind === 'edit' && form.item.origin === 'manual' && (
         <DisruptionForm key={form.item.id} item={form.item} defaultDate={defaultDate} onSubmit={submitForm} onCancel={() => setForm(null)} />
@@ -136,15 +138,19 @@ export default function EarlyWarningPage() {
       {!loaded && !error ? (
         <p role="status" className="text-text-2">Loading disruptions…</p>
       ) : visible.length === 0 ? (
-        <p className="text-text-2">{items.length === 0 ? 'No upcoming disruptions in the next 180 days.' : 'No disruptions match these filters.'}</p>
+        <div className="card flex flex-col items-center gap-2 px-6 py-10 text-center">
+          <CalendarClock aria-hidden="true" className="h-8 w-8 text-text-3" />
+          <p className="font-medium">{items.length === 0 ? 'No upcoming disruptions in the next 180 days' : 'No disruptions match these filters'}</p>
+          <p className="text-sm text-text-2">{items.length === 0 ? 'Run a scan, or add one you know about, such as road works or an open day.' : 'Turn off a filter above to see more.'}</p>
+        </div>
       ) : (
-        <ul className="grid grid-cols-2 gap-3">
+        <ul className="grid grid-cols-2 gap-4">
           {visible.map((i) => <WarningCard key={i.id} item={i} actions={actions} />)}
         </ul>
       )}
-      <details className="rounded-lg border border-border bg-panel p-3">
-        <summary className="cursor-pointer text-sm font-medium">Past disruptions ({past.length})</summary>
-        <ul className="mt-3 grid grid-cols-2 gap-3">
+      <details className="card p-4">
+        <summary className="text-sm font-medium text-text-2 hover:text-text">Past disruptions ({past.length})</summary>
+        <ul className="mt-4 grid grid-cols-2 gap-4">
           {past.map((i) => <WarningCard key={i.id} item={i} actions={actions} past />)}
         </ul>
         {past.length === 0 && <p className="mt-2 text-sm text-text-2">No past disruptions.</p>}

@@ -8,6 +8,7 @@ import { TypedText } from '../../components/TypedText.tsx';
 import { SCRIPTED_ASKS } from '../../providers/demo/scripted/ask.ts';
 import { usePresenterAction, usePresenterCancel } from '../../presenter/usePresenterAction.ts';
 import { explainGate, type ForecastStatus } from './explainGate.ts';
+import { CornerDownLeft, Sparkles } from 'lucide-react';
 
 interface Props { status: ForecastStatus; noAction?: Forecast; withPlan?: Forecast }
 
@@ -86,35 +87,37 @@ export function AskBox({ status, noAction, withPlan }: Props) {
   const onSubmit = (e: FormEvent) => { e.preventDefault(); void submit(question); };
 
   return (
-    <section aria-labelledby="ask-gemini" className="rounded-lg border border-border bg-panel p-3">
-      <h2 id="ask-gemini" className="mb-2 text-sm font-semibold text-text">Ask Gemini</h2>
+    <section aria-labelledby="ask-gemini" className="card border-ai/40 p-4">
+      <h2 id="ask-gemini" className="flex items-center gap-2 section-title"><Sparkles aria-hidden="true" className="h-4 w-4 text-ai-ink" />Ask Gemini</h2>
+      <p className="mb-3 mt-1 text-xs text-text-2">Describe an action in plain English. Gemini ticks the matching actions for you; the numbers come from the forecast engine.</p>
       <form onSubmit={onSubmit} className="flex flex-col gap-2">
         <label htmlFor="ask-input" className="sr-only">Ask a what-if question</label>
         <textarea id="ask-input" rows={3} value={question} onChange={(e) => setQuestion(e.target.value)}
           placeholder="What if we move afternoon classes online?"
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void submit(question); } }}
-          className="w-full resize-none rounded-md border border-border bg-bg p-2 text-sm text-text placeholder:text-text-3 focus-visible:outline-2 focus-visible:outline-verified" />
+          className="field w-full resize-none" />
         <button type="submit" disabled={busy || question.trim() === ''}
-          className="rounded-md border border-verified bg-verified/20 px-3 py-1.5 text-sm font-medium text-text disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified">
-          {busy ? 'Asking…' : 'Ask'}
+          className="btn btn-primary">
+          {busy ? 'Asking…' : <>Ask <CornerDownLeft aria-hidden="true" /></>}
         </button>
       </form>
-      <div className="mt-3 flex flex-col gap-1.5" role="group" aria-label="Suggested questions">
+      <p className="mt-4 text-xs font-medium text-text-3">Or try one of these</p>
+      <div className="mt-1.5 flex flex-col gap-1.5" role="group" aria-label="Suggested questions">
         {SUGGESTED_QUESTIONS.map((q) => (
           <button key={q} type="button" disabled={busy} onClick={() => { setQuestion(q); void submit(q); }}
-            className="rounded-md border border-border bg-panel-2 px-3 py-1.5 text-left text-xs text-text-2 hover:text-text disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-verified">
+            className="rounded-lg border border-border bg-panel-2 px-3 py-2 text-left text-xs leading-relaxed text-text-2 transition-colors hover:border-ai/60 hover:text-text disabled:opacity-50">
             {q}
           </button>
         ))}
       </div>
       <div aria-live="polite" className="mt-3 flex flex-col gap-3">
-        {error && <p role="alert" className="text-sm text-red">{error}</p>}
+        {error && <p role="alert" className="text-sm text-red-ink">{error}</p>}
         {restatement && (
           <p className="text-sm text-text"><TypedText key={restatement + token.current} text={restatement} onDone={() => setRestDone(true)} /></p>
         )}
         {restDone && (pending || explanation) && (
           <div>
-            <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-text-2">Why the results changed</h3>
+            <h3 className="mb-1 text-sm font-semibold text-ai-ink">Why the results changed</h3>
             {explanation
               ? <p className="text-sm text-text"><TypedText key={explanation} text={explanation} /></p>
               : <p className="text-sm text-text-2">Working out why…</p>}

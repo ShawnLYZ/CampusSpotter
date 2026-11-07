@@ -13,8 +13,10 @@ import { PlanCard } from './PlanCard.tsx';
 import { ComparisonTable } from './ComparisonTable.tsx';
 import { DecisionView } from './DecisionView.tsx';
 import type { PresenterAction } from '../../presenter/bus.ts';
+import { BookOpen, ClipboardCheck, Sparkles } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
 
-const field = 'rounded-md border border-border bg-bg px-2 py-1.5 text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-verified';
+const field = 'field';
 
 const NO_LEVERS: LeverSet = [];
 const ctxKey = (c: ContextRequest) => `${c.date}|${c.disruptionId ?? ''}|${c.reconstructed ? 1 : 0}`;
@@ -115,29 +117,35 @@ export default function ActionPlansPage() {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto [color-scheme:dark] pr-1">
-      <div className="flex items-center justify-between">
-        <h1 className="sr-only">Action Plans</h1>
-        <span />
-        <Link to="/action-plans/log" className="text-sm text-text underline underline-offset-2 hover:text-text-2">Decision Log</Link>
-      </div>
-      <div className="flex flex-wrap items-end gap-4">
+    <div className="flex h-full min-h-0 flex-col gap-5 overflow-y-auto pr-1">
+      <PageIntro id="action-plans" Icon={ClipboardCheck} title="Action Plans"
+        summary="Gemini suggests three plans within your budget; the forecast engine works out what each one achieves."
+        steps={['Pick the day and your budget', 'Generate and compare three plans', 'Choose one to get team checklists and a student message']}
+        actions={<Link to="/action-plans/log" className="btn"><BookOpen aria-hidden="true" /> Decision Log</Link>} />
+      <div className="card flex flex-wrap items-end gap-4 p-4">
         <ContextPicker today={today} />
         <div className="flex flex-col gap-1">
-          <label htmlFor="budget" className="text-xs text-text-2">Budget (RM)</label>
-          <input id="budget" type="number" min={0} step={100} className={`${field} w-32`} value={budget ?? ''}
+          <label htmlFor="budget" className="field-label">Budget per day (RM)</label>
+          <input id="budget" type="number" min={0} step={100} className={`${field} w-36`} value={budget ?? ''}
             onChange={(e) => setBudget(e.target.value === '' ? null : Number(e.target.value))} />
         </div>
-        <button type="button" onClick={generate} disabled={busy || budget === null || !ctx.date}
-          className="rounded-md border border-accent bg-accent px-3 py-1.5 text-sm font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified disabled:opacity-50">
-          {busy ? 'Generating…' : 'Generate plans'}
+        <button type="button" onClick={generate} disabled={busy || budget === null || !ctx.date} className="btn btn-primary">
+          <Sparkles aria-hidden="true" className={busy ? 'animate-pulse' : ''} />
+          {busy ? 'Generating…' : plans && current ? 'Generate again' : 'Generate plans'}
         </button>
       </div>
-      {error && <p role="alert" className="text-sm text-red">Could not generate plans: {error}</p>}
-      {!(plans && current) && !busy && !error && <p className="p-6 text-text-2">Choose a context and budget, then generate plans.</p>}
+      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Could not generate plans: {error}. Check the day and budget, then try again.</p>}
+      {!(plans && current) && !busy && !error && (
+        <div className="card flex flex-col items-center gap-2 px-6 py-12 text-center">
+          <Sparkles aria-hidden="true" className="h-8 w-8 text-ai-ink" />
+          <p className="font-medium">No plans yet for this day</p>
+          <p className="max-w-[56ch] text-sm text-text-2">Choose a day above, often one flagged on Early Warning, set what you can spend, then press <span className="font-medium text-text">Generate plans</span>. You will get three different options with costs and effects side by side.</p>
+        </div>
+      )}
+      {busy && <p role="status" className="card px-6 py-8 text-center text-sm text-text-2">Gemini is drafting three plans and the engine is testing each one…</p>}
       {plans && planCtx && current && (
         <>
-          <h2 className="text-lg font-semibold text-text">
+          <h2 className="text-lg font-semibold tracking-[-0.01em] text-text">
             Plans for {dateText(planCtx.date)}{planTitle ? <span className="text-text-2"> · {planTitle}</span> : null}
           </h2>
           <div className="grid grid-cols-3 gap-4">

@@ -1,16 +1,22 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { ChevronDown } from 'lucide-react';
 import type { InputBundle, Label } from '@engine/index.ts';
 import { describeInputs } from '../lib/provenance.ts';
 import { stampText } from '../lib/format.ts';
 import type { SourceInfo } from '../providers/types.ts';
 
-const STYLE: Record<Label, { word: string; dot: string }> = {
-  verified: { word: 'Verified', dot: 'bg-verified' },
-  baseline: { word: 'Baseline', dot: 'bg-baseline' },
-  ai: { word: 'AI-estimated', dot: 'bg-ai' },
+const STYLE: Record<Label, { word: string; dot: string; hint: string }> = {
+  verified: { word: 'Verified', dot: 'bg-verified', hint: 'From a public or official source' },
+  baseline: { word: 'Baseline', dot: 'bg-baseline', hint: 'Assumed APU figure you can replace by CSV' },
+  ai: { word: 'AI-estimated', dot: 'bg-ai', hint: 'Estimated by Gemini, with reasoning and a range' },
 };
-const BORDER: Record<Label, string> = { verified: 'border-verified', baseline: 'border-baseline', ai: 'border-ai' };
+const BORDER: Record<Label, string> = {
+  verified: 'border-verified/60 bg-verified/10 text-verified-ink',
+  baseline: 'border-baseline/70 bg-baseline/15 text-baseline-ink',
+  ai: 'border-ai/60 bg-ai/12 text-ai-ink',
+};
+const PILL = 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-medium';
 
 export function ProvenanceBadge({ label, inputs, bundle, sources }: {
   label: Label | null; inputs?: string[]; bundle?: InputBundle; sources?: SourceInfo[];
@@ -62,7 +68,7 @@ export function ProvenanceBadge({ label, inputs, bundle, sources }: {
   const s = STYLE[label];
   if (!inputs || !bundle) {
     return (
-      <span className={`inline-flex items-center gap-1.5 rounded-full border bg-panel-2 px-2.5 py-0.5 text-sm text-text ${BORDER[label]}`}>
+      <span className={`${PILL} ${BORDER[label]}`} title={s.hint}>
         <span aria-hidden="true" className={`h-2 w-2 rounded-full ${s.dot}`} />
         {s.word}
       </span>
@@ -73,17 +79,19 @@ export function ProvenanceBadge({ label, inputs, bundle, sources }: {
     <span ref={root} className="relative inline-block">
       <button
         ref={btn} type="button" aria-expanded={open} aria-controls={open ? popId : undefined}
-        onClick={() => setOpen((o) => !o)}
-        className={`inline-flex items-center gap-1.5 rounded-full border bg-panel-2 px-2.5 py-0.5 text-sm text-text ${BORDER[label]}`}
+        onClick={() => setOpen((o) => !o)} title={`${s.hint}. Click to see the inputs.`}
+        className={`${PILL} ${BORDER[label]} transition-colors hover:brightness-125`}
       >
         <span aria-hidden="true" className={`h-2 w-2 rounded-full ${s.dot}`} />
         {s.word}
+        <ChevronDown aria-hidden="true" className={`h-3 w-3 opacity-70 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && createPortal(
         <div ref={pop} id={popId} role="region" aria-label={`${s.word} inputs`}
           style={{ position: 'fixed', left: pos?.left ?? 0, top: pos?.top ?? 0, maxHeight: pos?.maxH, visibility: pos ? 'visible' : 'hidden' }}
-          className="z-[1000] w-96 max-w-[calc(100vw-16px)] overflow-y-auto rounded-lg border border-border bg-panel-2 p-3 text-left text-sm shadow-xl">
-          <p className="mb-2 font-semibold text-text">Inputs behind this figure</p>
+          className="z-[1000] w-96 max-w-[calc(100vw-16px)] overflow-y-auto rounded-xl border border-border-strong bg-panel-2 p-4 text-left text-sm shadow-[var(--shadow-pop)]">
+          <p className="font-semibold text-text">Where this number comes from</p>
+          <p className="mb-3 text-xs text-text-2">{s.word}: {s.hint.toLowerCase()}. It takes the weakest label of the inputs below.</p>
           {items.length === 0 && <p className="text-text-2">No inputs recorded.</p>}
           <ul className="space-y-2">
             {items.map((it) => (

@@ -69,15 +69,15 @@ export function MapPanel({ height = 260 }: { height?: number }) {
       <div
         role="status"
         style={{ height }}
-        className="flex items-center justify-center rounded-lg border border-border bg-panel px-4 text-center text-sm text-text-2"
+        className="flex items-center justify-center border-t border-border bg-panel-2/50 px-4 text-center text-sm text-text-3"
       >
-        Map unavailable — add VITE_GOOGLE_MAPS_KEY to .env.local
+        Live map is off: add VITE_GOOGLE_MAPS_KEY to .env.local to show real traffic
       </div>
     );
   }
 
   return (
-    <div style={{ height }} className="overflow-hidden rounded-lg border border-border bg-panel">
+    <div style={{ height }} className="overflow-hidden border-t border-border bg-panel">
       <APIProvider apiKey={apiKey}>
         <Map
           defaultCenter={CENTER}
@@ -91,8 +91,8 @@ export function MapPanel({ height = 260 }: { height?: number }) {
           <RouteLine encoded={encoded} />
           {MARKERS.map((m) => (
             <AdvancedMarker key={m.id} position={m.position} title={m.label}>
-              <div className="flex items-center gap-1.5 rounded-full border border-white bg-[#1d4ed8] px-2.5 py-1 text-xs font-semibold text-white shadow-lg">
-                <span aria-hidden="true">●</span>
+              <div className="flex items-center gap-1.5 rounded-full border border-white/80 bg-[#0b1017] px-2.5 py-1 text-xs font-semibold text-white shadow-lg">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
                 {m.label}
               </div>
             </AdvancedMarker>

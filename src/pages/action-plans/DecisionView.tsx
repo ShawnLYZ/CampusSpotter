@@ -7,8 +7,8 @@ import { TypedText } from '../../components/TypedText.tsx';
 import { Toast } from '../../components/Toast.tsx';
 import type { ContextRequest, PlanProposal } from '../../providers/types.ts';
 import { groupByTeam, TEAM_LABEL } from './planUtils.ts';
+import { Check, Copy, X } from 'lucide-react';
 
-const btn = 'rounded-md border px-3 py-1.5 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified';
 const NO_LEVERS: never[] = [];
 
 interface Props { plan: PlanProposal; ctx: ContextRequest; onClose: () => void; onConfirmed: () => void }
@@ -57,19 +57,20 @@ export function DecisionView({ plan, ctx, onClose, onConfirmed }: Props) {
   return (
     <section ref={ref} tabIndex={-1} role="dialog" aria-modal="false" aria-labelledby="decision-h"
       onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
-      className="flex flex-col gap-4 rounded-lg border border-verified bg-panel p-4 outline-none focus-visible:outline-2 focus-visible:outline-verified">
+      className="card flex flex-col gap-5 border-accent/60 p-5 shadow-[var(--shadow-pop)] outline-none focus-visible:outline-2 focus-visible:outline-accent">
       <div className="flex items-center justify-between">
         <h2 id="decision-h" className="text-lg font-semibold text-text">Confirm: {plan.name} · {rmText(plan.totalCostRm)}</h2>
-        <button type="button" onClick={onClose} className={`${btn} border-border bg-panel-2 text-text`}>Close</button>
+        <button type="button" onClick={onClose} className="btn btn-quiet btn-sm"><X aria-hidden="true" /> Close</button>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <section aria-label="Checklist preview">
-          <h3 className="mb-2 text-sm font-semibold text-text">Checklist</h3>
+          <h3 className="section-title mb-1">What each team needs to do</h3>
+          <p className="mb-3 text-xs text-text-2">Ready to send once you confirm. Due times come from each action's window.</p>
           {!checklist ? <p role="status" className="text-sm text-text-2">{fc.status === 'error' ? `Unavailable: ${fc.error}` : 'Loading checklist…'}</p> : (
             <div className="flex flex-col gap-3">
               {groups.map((g) => (
                 <div key={g.team}>
-                  <h4 className="text-sm font-medium text-text-2">{TEAM_LABEL[g.team]}</h4>
+                  <h4 className="mb-1 text-sm font-semibold text-text-2">{TEAM_LABEL[g.team]}</h4>
                   <ul className="flex flex-col gap-1 text-sm text-text">
                     {g.items.map((it, i) => (
                       <li key={i}>{it.text}{it.dueMin !== null && <span className="tabular text-text-2"> · due {clock12(it.dueMin)}</span>}</li>
@@ -81,26 +82,28 @@ export function DecisionView({ plan, ctx, onClose, onConfirmed }: Props) {
           )}
         </section>
         <section aria-label="Announcement" className="flex flex-col gap-2">
-          <h3 className="text-sm font-semibold text-text">Announcement draft</h3>
+          <h3 className="section-title">Message to students</h3>
+          <p className="text-xs text-text-2">A draft you can edit and copy.</p>
           {draft === null ? <p role="status" className="text-sm text-text-2">Drafting announcement…</p>
-            : typing ? <p className="whitespace-pre-wrap rounded-md border border-border bg-bg p-2 text-sm text-text"><TypedText text={draft} cps={120} onDone={() => setTyping(false)} /></p>
+            : typing ? <p className="whitespace-pre-wrap rounded-lg border border-border bg-bg p-3 text-sm text-text"><TypedText text={draft} cps={120} onDone={() => setTyping(false)} /></p>
               : (
                 <>
                   <label htmlFor="ann-text" className="sr-only">Announcement text</label>
                   <textarea id="ann-text" rows={8} value={text} onChange={(e) => setText(e.target.value)}
-                    className="rounded-md border border-border bg-bg p-2 text-sm text-text focus-visible:outline-2 focus-visible:outline-verified" />
-                  <div><button type="button" onClick={copy} className={`${btn} border-border bg-panel-2 text-text`}>Copy</button></div>
+                    className="field" />
+                  <div><button type="button" onClick={copy} className="btn btn-sm"><Copy aria-hidden="true" /> Copy message</button></div>
                 </>
               )}
-          <label htmlFor="dec-notes" className="text-sm text-text-2">Notes</label>
-          <textarea id="dec-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)}
-            className="rounded-md border border-border bg-bg p-2 text-sm text-text focus-visible:outline-2 focus-visible:outline-verified" />
+          <label htmlFor="dec-notes" className="field-label mt-2">Notes for the Decision Log (optional)</label>
+          <textarea id="dec-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} className="field" />
         </section>
       </div>
-      {error && <p role="alert" className="text-sm text-red">{error}</p>}
-      <div>
-        <button type="button" disabled={busy || draft === null} onClick={confirm}
-          className={`${btn} border-accent bg-accent text-white disabled:opacity-50`}>Confirm decision</button>
+      {error && <p role="alert" className="text-sm text-red-ink">{error}</p>}
+      <div className="flex items-center gap-3 border-t border-border pt-4">
+        <button type="button" disabled={busy || draft === null} onClick={confirm} className="btn btn-primary">
+          <Check aria-hidden="true" /> {busy ? 'Saving…' : 'Confirm decision'}
+        </button>
+        <span className="text-xs text-text-3">Adds this plan to the Decision Log with its checklist and message.</span>
       </div>
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
     </section>

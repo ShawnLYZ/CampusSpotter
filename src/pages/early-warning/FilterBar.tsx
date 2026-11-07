@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react';
 import type { DisruptionType, RiskLevel } from '@engine/index.ts';
 
 export const TYPE_CHIPS: { value: DisruptionType; label: string }[] = [
@@ -16,9 +17,8 @@ export const RISK_CHIPS: { value: RiskLevel; label: string }[] = [
 
 function Chip({ label, on, onClick }: { label: string; on: boolean; onClick: () => void }) {
   return (
-    <button type="button" aria-pressed={on} onClick={onClick}
-      className={`rounded-full border px-3 py-1 text-sm ${on ? 'border-verified bg-verified/20 text-text' : 'border-border bg-panel text-text-2 hover:text-text'}`}>
-      {on && <span aria-hidden="true">✓ </span>}{label}
+    <button type="button" aria-pressed={on} onClick={onClick} className="chip">
+      {on && <Check aria-hidden="true" className="h-3.5 w-3.5 text-accent" />}{label}
     </button>
   );
 }
@@ -35,11 +35,11 @@ export function FilterBar({ types, risks, onTypes, onRisks }: {
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
       <div role="group" aria-label="Filter by type" className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-text-3">Type</span>
+        <span className="mr-1 text-sm font-medium text-text-3">Show type</span>
         {TYPE_CHIPS.map((c) => <Chip key={c.value} label={c.label} on={types.has(c.value)} onClick={() => onTypes(toggle(types, c.value))} />)}
       </div>
       <div role="group" aria-label="Filter by risk" className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-text-3">Risk</span>
+        <span className="mr-1 text-sm font-medium text-text-3">Risk</span>
         {RISK_CHIPS.map((c) => <Chip key={c.value} label={c.label} on={risks.has(c.value)} onClick={() => onRisks(toggle(risks, c.value))} />)}
       </div>
     </div>

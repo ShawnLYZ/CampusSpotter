@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { worstPressureByStep } from '../../lib/worstPressure.ts';
 import { useNavigate } from 'react-router';
 import { stepOf } from '@engine/index.ts';
 import { FRIDAY_PRAYER_PLAN } from '@plans/fridayPlan.ts';
@@ -18,8 +19,10 @@ import { AskBox } from './AskBox.tsx';
 import { EstimatesPanel } from './EstimatesPanel.tsx';
 import { SmallMultiples } from './SmallMultiples.tsx';
 import { SummaryRow } from './SummaryRow.tsx';
+import { FlaskConical, MoonStar, RotateCcw, Sparkles } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
+import { Legend } from '../../components/Legend.tsx';
 
-const btn = 'rounded-md border border-border bg-panel-2 px-3 py-1.5 text-sm font-medium text-text hover:border-verified focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified';
 
 /** The next Friday on or after `date` (calendar arithmetic on Malaysia dates). */
 export function nextFriday(date: string): string {
@@ -67,36 +70,41 @@ export default function ScenarioLabPage() {
   };
 
   const ready = fc.status === 'ready' && fc.bundle && fc.noAction && fc.withPlan;
+  const strip = useMemo(() => (fc.withPlan ? worstPressureByStep(fc.withPlan) : undefined), [fc.withPlan]);
 
   return (
-    <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-4">
+    <div className="grid h-full min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] gap-4">
+      <PageIntro id="scenario-lab" Icon={FlaskConical} compact title="Scenario Lab"
+        summary="Try actions on any day and compare “No action” with “With plan” side by side."
+        steps={['Pick a day or disruption', 'Tick actions on the left, or ask Gemini', 'Compare the two futures and the summary']}
+        actions={<>
+          <button type="button" className="btn btn-quiet" onClick={reset} disabled={levers.length === 0}><RotateCcw aria-hidden="true" /> Reset to no action</button>
+          <button type="button" className="btn" onClick={fridayScenario} disabled={!today}><MoonStar aria-hidden="true" /> Friday prayer scenario</button>
+          {provider.info.kind === 'supabase' && <button type="button" className="btn" onClick={save}>Save forecast</button>}
+          <button type="button" className="btn btn-primary" onClick={() => void navigate('/action-plans')}><Sparkles aria-hidden="true" /> Generate plans</button>
+        </>} />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <ContextPicker today={today} />
-        <div className="flex items-center gap-2">
-          <button type="button" className={btn} onClick={reset}>Reset to no action</button>
-          <button type="button" className={btn} onClick={fridayScenario} disabled={!today}>Friday prayer scenario</button>
-          <button type="button" className={btn} onClick={() => void navigate('/action-plans')}>Generate plans</button>
-          {provider.info.kind === 'supabase' && <button type="button" className={btn} onClick={save}>Save forecast</button>}
-        </div>
+        <Legend />
       </div>
 
-      <div className="grid min-h-0 grid-cols-[380px_minmax(0,1fr)_360px] gap-4">
-        <aside aria-label="Levers" className="min-h-0 overflow-y-auto [color-scheme:dark] pr-1">
+      <div className="grid min-h-0 grid-cols-[360px_minmax(0,1fr)_340px] gap-4">
+        <aside aria-label="Levers" className="min-h-0 overflow-y-auto pr-1">
           {panelBundle
             ? <LeverPanel levers={levers} highlighted={highlighted} bundle={panelBundle} onUpsert={upsert} onRemove={remove} />
             : <p role="status" className="text-text-2">Loading levers…</p>}
         </aside>
 
-        <div className="flex min-h-0 min-w-0 flex-col gap-4 overflow-y-auto [color-scheme:dark] pr-1">
+        <div className="flex min-h-0 min-w-0 flex-col gap-4 overflow-y-auto pr-1">
           {ready ? (
             <>
-              <div className="h-[200px] shrink-0">
+              <div className="h-[280px] shrink-0">
                 <SceneSlot mode="split" forecasts={[fc.noAction!, fc.withPlan!]} captions={['No action', 'With plan']} step={step}
                   weatherMm={fc.bundle!.weather?.precipitationMm.map((p) => p?.value ?? null)} />
               </div>
-              <Timeline nowStep={nowStep} />
+              <Timeline nowStep={nowStep} pressures={strip} />
               <SmallMultiples noAction={fc.noAction!} withPlan={fc.withPlan!} thresholds={fc.bundle!.settings.thresholds} step={step} bundle={fc.bundle} />
-              <div className="rounded-lg border border-border bg-panel p-4">
+              <div className="card p-4">
                 <SummaryRow noAction={fc.noAction!.summary} withPlan={fc.withPlan!.summary} forecasts={[fc.noAction!, fc.withPlan!]} bundle={fc.bundle} />
               </div>
             </>
@@ -108,7 +116,7 @@ export default function ScenarioLabPage() {
           )}
         </div>
 
-        <aside aria-label="Ask and estimates" className="flex min-h-0 flex-col gap-4 overflow-y-auto [color-scheme:dark] pl-1">
+        <aside aria-label="Ask and estimates" className="flex min-h-0 flex-col gap-4 overflow-y-auto pl-1">
           <AskBox status={fc.status} noAction={fc.noAction} withPlan={fc.withPlan} />
           <EstimatesPanel estimates={fc.bundle?.estimates ?? []} />
         </aside>

@@ -23,6 +23,8 @@ import { MilestoneStrip } from './MilestoneStrip.tsx';
 import { replayNarrative } from './replayData.ts';
 import type { Milestone } from './replayData.ts';
 import { stationText } from './stationText.ts';
+import { History } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
 
 const REPLAY_CTX: ContextRequest = { date: '2026-11-04', disruptionId: 'weeknd-2026-11-04', reconstructed: true };
 /** Steps are 15 minutes from 7:00 AM: 12:00 PM is step 20, 6:15 PM is step 45. */
@@ -88,7 +90,7 @@ export default function ReplayPage() {
     main = <p role="status" className="p-6 text-text-2">{fc.status === 'error' ? `Forecast unavailable: ${fc.error}` : 'Loading forecast…'}</p>;
   } else if (active === 'oct21') {
     main = (
-      <section aria-label="Plan summary" className="rounded-lg border border-border bg-panel p-4">
+      <section aria-label="Plan summary" className="card p-5">
         <h2 className="text-lg font-semibold">Plan chosen on 21 Oct</h2>
         <p className="text-xs text-text-2">Costs are a {ESTIMATE}.</p>
         <ul className="mt-3 divide-y divide-border text-sm">
@@ -114,7 +116,7 @@ export default function ReplayPage() {
     );
   } else if (active === 'nov3') {
     main = (
-      <section aria-label="Student announcement" className="rounded-lg border border-border bg-panel p-4">
+      <section aria-label="Student announcement" className="card p-5">
         <h2 className="text-lg font-semibold">Student announcement, 3 Nov</h2>
         <p className="text-xs text-text-2">Plan figures are a {ESTIMATE}.</p>
         <p className="mt-3 whitespace-pre-line text-base"><TypedText text={announcement!} /></p>
@@ -128,9 +130,9 @@ export default function ReplayPage() {
             step={step} cameraPreset="overview" />
         </div>
         <Timeline nowStep={null} />
-        <div className="rounded-lg border border-border bg-panel p-4">
+        <div className="card p-4">
           <table className="w-full border-collapse text-sm">
-            <caption className="mb-2 text-left text-sm font-semibold text-text">Key figures — {ESTIMATE}</caption>
+            <caption className="section-title mb-3 text-left">Key figures — {ESTIMATE}</caption>
             <thead>
               <tr className="text-left text-xs text-text-2">
                 <th scope="col" className="py-1.5 pr-2 font-medium">Measure</th>
@@ -143,7 +145,7 @@ export default function ReplayPage() {
                 <tr key={r.label} className="border-t border-border">
                   <th scope="row" className="py-1.5 pr-2 text-left font-normal text-text-2">{r.label}</th>
                   <td className="tabular py-1.5 pr-2 text-text">{r.noAction}</td>
-                  <td className="tabular py-1.5 text-text">{r.withPlan}</td>
+                  <td className="tabular py-1.5 font-semibold text-text">{r.withPlan}</td>
                 </tr>
               ))}
             </tbody>
@@ -154,25 +156,27 @@ export default function ReplayPage() {
   }
 
   return (
-    <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-4">
+    <div className="grid h-full min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] gap-5">
+      <PageIntro id="replay" Icon={History} compact title="Replay: 4 Nov, night one"
+        summary="The Weeknd concert night as it happened with no action, next to what CampusSpotter would have done. Click a step to jump through the story." />
       <MilestoneStrip active={active} onSelect={setActive} />
       <div className="grid min-h-0 grid-cols-[minmax(0,1fr)_400px] gap-4">
-        <div className="flex min-h-0 min-w-0 flex-col gap-4 overflow-y-auto [color-scheme:dark] pr-1">{main}</div>
-        <aside aria-label="What happened" className="flex min-h-0 flex-col gap-4 overflow-y-auto [color-scheme:dark] pl-1">
-          <figure className="rounded-lg border border-border bg-panel p-2">
+        <div className="flex min-h-0 min-w-0 flex-col gap-4 overflow-y-auto pr-1">{main}</div>
+        <aside aria-label="What happened" className="flex min-h-0 flex-col gap-4 overflow-y-auto pl-1">
+          <figure className="card p-2">
             <img src="/replay/concert-lrt-traffic.png" alt="Traffic around LRT Bukit Jalil on concert day" className="w-full rounded-md" />
             <figcaption className="mt-1 text-xs text-text-2">Illustration</figcaption>
           </figure>
           {station && (
-            <div className="rounded-lg border border-border bg-panel p-3 text-sm">
+            <div className="card p-4 text-sm">
               <p className="tabular">{stationText(station)}</p>
               <p className="mt-2 flex flex-wrap items-center gap-2 text-xs text-text-2">
                 <ProvenanceBadge label="verified" /> <span>Source: data-gov-my-ridership</span>
               </p>
             </div>
           )}
-          <section className="rounded-lg border border-border bg-panel p-3">
-            <h2 className="text-base font-semibold">What happened</h2>
+          <section className="card p-4">
+            <h2 className="section-title">What happened</h2>
             <p className="mt-2 text-sm text-text-2">{narrative ? <TypedText text={narrative} /> : 'Loading…'}</p>
             <p className="mt-2 text-xs text-text-2">Figures: {ESTIMATE}.</p>
           </section>

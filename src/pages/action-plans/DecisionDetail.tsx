@@ -16,7 +16,7 @@ import { groupByTeam, TEAM_LABEL } from './planUtils.ts';
 
 const NO_LEVERS: never[] = [];
 type Loaded = DecisionBundle & { forecast: Forecast | null };
-const btn = 'rounded-md border border-border bg-panel-2 px-3 py-1.5 text-sm font-medium text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified';
+const btn = 'btn';
 
 export function DecisionDetail({ id }: { id: string }) {
   const provider = useProvider();
@@ -44,7 +44,7 @@ export function DecisionDetail({ id }: { id: string }) {
   const fc = useForecast(ctx, NO_LEVERS);
 
   if (data === undefined) return <p role="status" className="text-text-2">Loading decision…</p>;
-  if (data === null) return <p role="alert" className="text-red">Decision not found.</p>;
+  if (data === null) return <p role="alert" className="text-red-ink">Decision not found. It may have been removed.</p>;
 
   const groups = groupByTeam(data.checklist);
   const saved = data.forecast;
@@ -59,11 +59,11 @@ export function DecisionDetail({ id }: { id: string }) {
   };
 
   return (
-    <section aria-label={`Details for ${data.decision.planName}`} className="flex flex-col gap-4 rounded-lg border border-border bg-panel p-4">
+    <section aria-label={`Details for ${data.decision.planName}`} className="card flex flex-col gap-5 p-5">
       <h2 className="text-lg font-semibold text-text">{data.decision.planName}</h2>
       <div className="grid grid-cols-2 gap-4">
         <section aria-label="Checklist">
-          <h3 className="mb-2 text-sm font-semibold text-text">Checklist</h3>
+          <h3 className="section-title mb-2">Checklist by team</h3>
           <div className="flex flex-col gap-3">
             {groups.map((g) => (
               <fieldset key={g.team}>
@@ -73,7 +73,7 @@ export function DecisionDetail({ id }: { id: string }) {
                     <li key={it.id}>
                       <label className="flex items-start gap-2">
                         <input type="checkbox" checked={it.done} onChange={(e) => toggle(it.id, e.target.checked)}
-                          className="mt-0.5 h-4 w-4 focus-visible:outline-2 focus-visible:outline-verified" />
+                          className="mt-0.5 h-4 w-4" />
                         <span>{it.text}{it.dueAt && <span className="tabular text-text-2"> · due {clock12(mytMinutes(it.dueAt))}</span>}</span>
                       </label>
                     </li>
@@ -84,14 +84,14 @@ export function DecisionDetail({ id }: { id: string }) {
           </div>
         </section>
         <section aria-label="Announcement" className="flex flex-col gap-2">
-          <label htmlFor="detail-ann" className="text-sm font-semibold text-text">Announcement</label>
+          <label htmlFor="detail-ann" className="section-title">Message to students</label>
           <textarea id="detail-ann" rows={8} value={text} onChange={(e) => setText(e.target.value)}
-            className="rounded-md border border-border bg-bg p-2 text-sm text-text focus-visible:outline-2 focus-visible:outline-verified" />
+            className="field" />
           <div><button type="button" className={btn} onClick={saveText}>Save announcement</button></div>
         </section>
       </div>
       <section aria-label="Saved scenario" className="flex flex-col gap-3">
-        <h3 className="text-sm font-semibold text-text">Saved scenario</h3>
+        <h3 className="section-title">The scenario as predicted when decided</h3>
         {saved && fc.status === 'ready' && fc.noAction && fc.bundle ? (
           <>
             <div className="h-[200px]">

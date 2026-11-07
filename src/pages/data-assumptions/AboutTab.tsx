@@ -13,10 +13,10 @@ export function AboutTab() {
   return (
     <div className="grid grid-cols-3 gap-4">
       {CARDS.map((c) => (
-        <article key={c.title} className="flex flex-col rounded-lg border border-border bg-panel p-5">
+        <article key={c.title} className="flex flex-col card p-5">
           <h2 className="text-lg font-semibold text-text">{c.title}</h2>
           <p className="mt-2 flex-1 text-sm text-text-2">{c.text}</p>
-          <Link to={c.to} className="mt-4 text-sm text-verified underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified">{c.link}</Link>
+          <Link to={c.to} className="btn mt-4 self-start">{c.link}</Link>
         </article>
       ))}
     </div>

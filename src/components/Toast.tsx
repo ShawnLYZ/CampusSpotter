@@ -10,8 +10,8 @@ export function Toast({ message, onDone, ms = 3000 }: { message: string; onDone:
   }, [message, ms]);
   return (
     <div role="status" aria-live="polite"
-      className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-border bg-panel-2 px-4 py-2 text-sm text-text shadow-xl">
-      {message}
+      className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-xl border border-border-strong bg-panel-3 px-4 py-2.5 text-sm font-medium text-text shadow-[var(--shadow-pop)]">
+      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />{message}
     </div>
   );
 }

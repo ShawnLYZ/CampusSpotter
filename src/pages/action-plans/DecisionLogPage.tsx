@@ -5,10 +5,13 @@ import { clock12, dateText, durationText, rmText } from '../../lib/format.ts';
 import { mytDate, mytMinutes } from '../../lib/dates.ts';
 import type { Decision } from '../../providers/types.ts';
 import { DecisionDetail } from './DecisionDetail.tsx';
+import { Link } from 'react-router';
+import { BookOpen, ClipboardCheck } from 'lucide-react';
+import { PageIntro } from '../../components/PageIntro.tsx';
 
 const STATUSES: Decision['status'][] = ['planned', 'done', 'cancelled'];
 const STATUS_LABEL: Record<Decision['status'], string> = { planned: 'Planned', done: 'Done', cancelled: 'Cancelled' };
-const field = 'rounded-md border border-border bg-bg px-2 py-1 text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-verified';
+const field = 'field !py-1 !px-2';
 
 function NotesCell({ d, onSave }: { d: Decision; onSave: (notes: string | null) => void }) {
   const [v, setV] = useState(d.notes ?? '');
@@ -48,15 +51,23 @@ export default function DecisionLogPage() {
 
   const heads = ['Date and context', 'Plan', 'Status', 'Notes', 'Total cost', 'Predicted peak APU wait', 'Decided by', 'Decided at', 'Details'];
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto [color-scheme:dark] pr-1">
-      <h1 className="text-xl font-semibold text-text">Decision Log</h1>
-      {error && <p role="alert" className="text-sm text-red">{error}</p>}
+    <div className="flex h-full min-h-0 flex-col gap-5 overflow-y-auto pr-1">
+      <PageIntro id="decision-log" Icon={BookOpen} title="Decision Log"
+        summary="Every plan that was chosen, with its predicted effect, cost and progress. Open one to tick off checklist items." />
+      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">{error}</p>}
       {rows === null ? <p role="status" className="text-text-2">Loading decisions…</p>
-        : rows.length === 0 ? <p className="text-text-2">No decisions yet. Choose a plan on the Action Plans page.</p> : (
-          <div className="overflow-x-auto rounded-lg border border-border bg-panel">
+        : rows.length === 0 ? (
+          <div className="card flex flex-col items-center gap-2 px-6 py-12 text-center">
+            <ClipboardCheck aria-hidden="true" className="h-8 w-8 text-text-3" />
+            <p className="font-medium">No decisions yet</p>
+            <p className="text-sm text-text-2">Choose a plan on Action Plans and confirm it. It will appear here.</p>
+            <Link to="/action-plans" className="btn btn-primary mt-2">Go to Action Plans</Link>
+          </div>
+        ) : (
+          <div className="card overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-text-2">
+                <tr className="border-b border-border bg-panel-2/60 text-left text-text-2">
                   {heads.map((h) => <th key={h} scope="col" className="px-3 py-2 font-medium">{h}</th>)}
                 </tr>
               </thead>
@@ -80,7 +91,7 @@ export default function DecisionLogPage() {
                       <td className="tabular px-3 py-2 text-text">{dateText(mytDate(d.decidedAt))}, {clock12(mytMinutes(d.decidedAt))}</td>
                       <td className="px-3 py-2">
                         <button type="button" aria-expanded={open === d.id} onClick={() => setOpen(open === d.id ? null : d.id)}
-                          className="rounded-md border border-border bg-panel-2 px-3 py-1 text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verified">
+                          className={`btn btn-sm ${open === d.id ? 'btn-primary' : ''}`}>
                           {open === d.id ? 'Hide' : 'Open'}
                         </button>
                       </td>

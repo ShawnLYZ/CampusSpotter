@@ -24,7 +24,7 @@ export function SourcesTab() {
   if (!rows) return <p role="status" className="text-text-2">Loading sources…</p>;
   const heads = ['Source', 'Label', 'Link', 'Licence / attribution', 'Last updated', 'Status'];
   return (
-    <div className="overflow-x-auto rounded-lg border border-border bg-panel">
+    <div className="overflow-x-auto card">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border text-left text-text-2">
@@ -39,7 +39,7 @@ export function SourcesTab() {
                 <td className="px-3 py-2"><div className="font-medium text-text">{s.name}</div><div className="text-xs text-text-2">{s.description}</div></td>
                 <td className="px-3 py-2"><ProvenanceBadge label={s.label} /></td>
                 <td className="px-3 py-2">
-                  {s.url ? <a href={s.url} target="_blank" rel="noreferrer" className="text-verified underline focus-visible:outline-2 focus-visible:outline-verified">{s.url}</a> : <span className="text-text-2">—</span>}
+                  {s.url ? <a href={s.url} target="_blank" rel="noreferrer" className="text-verified-ink underline decoration-verified/50">{s.url}</a> : <span className="text-text-2">—</span>}
                 </td>
                 <td className="px-3 py-2 text-text">{s.licence}</td>
                 <td className="tabular px-3 py-2 text-text">

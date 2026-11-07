@@ -6,8 +6,7 @@ import { clock12 } from '../../../lib/format.ts';
 export const TIME_MIN = 420;
 export const TIME_MAX = 1560;
 const STEP = 15;
-const focus = 'focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-verified';
-export const inputCls = `rounded-md border border-border bg-bg px-2 py-1 text-sm text-text ${focus}`;
+export const inputCls = 'field !py-1 !px-2';
 
 const GRID = Array.from({ length: (TIME_MAX - TIME_MIN) / STEP + 1 }, (_, i) => TIME_MIN + i * STEP);
 
@@ -50,7 +49,7 @@ export function WindowFields({ fromMin, toMin, onChange }: {
 export function Stepper({ label, value, min, max, step = 1, unit, onChange }: {
   label: string; value: number; min: number; max: number; step?: number; unit?: string; onChange: (v: number) => void;
 }) {
-  const btn = `h-7 w-7 rounded-md border border-border bg-panel-2 text-text disabled:opacity-40 ${focus}`;
+  const btn = 'btn btn-sm !min-h-7 !w-7 !p-0';
   return (
     <div className="flex items-center justify-between gap-2">
       <span className="text-xs text-text-2">{label}</span>
@@ -86,8 +85,7 @@ function nextBlocks(sel: BlockSel, b: BlockId): BlockSel {
 }
 
 export function BlockPicker({ value, onChange }: { value: BlockSel; onChange: (v: BlockSel) => void }) {
-  const chip = (on: boolean) =>
-    `rounded-md border px-2 py-0.5 text-xs ${focus} ${on ? 'border-verified bg-verified/20 text-text' : 'border-border text-text-2'}`;
+  const chip = (_on: boolean) => 'chip !px-2.5 !py-0.5 !text-xs';
   return (
     <div role="group" aria-label="Blocks" className="flex flex-wrap items-center gap-1">
       <span className="mr-1 text-xs text-text-2">Blocks</span>

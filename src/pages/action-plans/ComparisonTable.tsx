@@ -9,11 +9,11 @@ interface Props { noAction: Summary; plans: PlanProposal[]; forecast?: Forecast;
 export function ComparisonTable({ noAction, plans, forecast, bundle }: Props) {
   const rows = comparisonRows(noAction, plans);
   return (
-    <div className="overflow-x-auto rounded-lg border border-border bg-panel">
+    <div className="card overflow-x-auto">
       <table className="w-full text-sm">
-        <caption className="px-3 py-2 text-left text-sm font-semibold text-text">Plan comparison</caption>
+        <caption className="section-title px-4 pb-2 pt-4 text-left">All three plans side by side</caption>
         <thead>
-          <tr className="border-b border-border text-left text-text-2">
+          <tr className="border-b border-border bg-panel-2/60 text-left text-text-2">
             <th scope="col" className="px-3 py-2 font-medium">Measure</th>
             <th scope="col" className="px-3 py-2 font-medium">No action</th>
             {plans.map((p, i) => <th key={p.id} scope="col" className="px-3 py-2 font-medium">Plan {i + 1}: {p.name}</th>)}
