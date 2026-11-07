@@ -1,0 +1,10 @@
+[
+  {
+    "id": "main-hall",
+    "name": "Main Hall, Block B (assumed)",
+    "block": "B",
+    "capacity": 400,
+    "load_kw": 30,
+    "label": "baseline"
+  }
+]

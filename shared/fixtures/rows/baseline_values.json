@@ -1,0 +1,305 @@
+[
+  {
+    "key": "population",
+    "value": 12000,
+    "unit": "students",
+    "label": "baseline",
+    "description": "Students and staff on campus population driving all demand (PRD 3.2).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "resident_share",
+    "value": 0.15,
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of the population living on campus (J1/J2/K1/K2); they do not use the shuttle.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "shuttle_share",
+    "value": 0.35,
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of commuting students using the LRT shuttle.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "attendees_per_session",
+    "value": 30,
+    "unit": "students",
+    "label": "baseline",
+    "description": "Students per timetabled session.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "attendance_rate",
+    "value": 0.85,
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of enrolled students who attend a session.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "leave_spread_min",
+    "value": 30,
+    "unit": "min",
+    "label": "baseline",
+    "description": "Students leaving after a session end are spread over this many following minutes.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "arrive_spread_min",
+    "value": 45,
+    "unit": "min",
+    "label": "baseline",
+    "description": "Students arriving for a session start are spread over this many preceding minutes.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "free_flow_one_way_min",
+    "value": 6,
+    "unit": "min",
+    "label": "baseline",
+    "description": "Free-flow one-way road time APU to LRT (4.1 km, OSRM); fallback when Google static duration is missing (D7).",
+    "source_id": "osrm",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "loading_min_per_terminal",
+    "value": 3,
+    "unit": "min",
+    "label": "baseline",
+    "description": "Loading time per terminal in the shuttle round-trip time.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "fleet_size",
+    "value": 6,
+    "unit": "buses",
+    "label": "baseline",
+    "description": "Fleet on the LRT route (fleet size unverified).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "bus_seats",
+    "value": 44,
+    "unit": "seats",
+    "label": "baseline",
+    "description": "Seats per shuttle bus.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "give_up_wait_min",
+    "value": 60,
+    "unit": "min",
+    "label": "baseline",
+    "description": "Wait above which queued students start giving up.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "give_up_rate_per_hour",
+    "value": 0.2,
+    "unit": "share per hour",
+    "label": "baseline",
+    "description": "Share of the queue that leaves per hour once the wait exceeds the give-up wait.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "default_stay_share",
+    "value": 0.3,
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of students giving up who stay on campus (feeds cafeteria and occupancy). See D18.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "stop_outdoor_capacity",
+    "value": 150,
+    "unit": "people",
+    "label": "baseline",
+    "description": "Outdoor capacity of a bus stop before it counts as overcrowded (D18).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "kept_open_block",
+    "value": "B",
+    "unit": "block",
+    "label": "baseline",
+    "description": "Block kept open for waiting students after hours (D18).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "rain_factor",
+    "value": 1.25,
+    "unit": "ratio",
+    "label": "baseline",
+    "description": "Road delay multiplier when rain is at or above the threshold.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "rain_threshold_mm_per_h",
+    "value": 5,
+    "unit": "mm/h",
+    "label": "baseline",
+    "description": "Rainfall rate at which the rain factor applies.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "eat_on_campus_share",
+    "value": 0.5,
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of students between classes who eat on campus at lunch.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "lunch_spread_min",
+    "value": 90,
+    "unit": "min",
+    "label": "baseline",
+    "description": "Lunch arrivals are spread over this many minutes (D21).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "walkway_capacity_per_min",
+    "value": 150,
+    "unit": "people/min",
+    "label": "baseline",
+    "description": "Capacity of the Spine walkway.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "friday_prayer_share",
+    "value": 0.3,
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of the on-campus population leaving for Friday prayer.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "seats_classroom",
+    "value": 40,
+    "unit": "seats",
+    "label": "baseline",
+    "description": "Seats in a classroom.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "seats_lab",
+    "value": 30,
+    "unit": "seats",
+    "label": "baseline",
+    "description": "Seats in a lab.",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "seats_auditorium",
+    "value": 150,
+    "unit": "seats",
+    "label": "baseline",
+    "description": "Seats in an auditorium (the largest is about 500).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "lrt_hourly_profile",
+    "value": [
+      0.085,
+      0.095,
+      0.06,
+      0.05,
+      0.05,
+      0.055,
+      0.055,
+      0.05,
+      0.05,
+      0.06,
+      0.08,
+      0.095,
+      0.075,
+      0.05,
+      0.035,
+      0.025,
+      0.015,
+      0.005,
+      0,
+      0
+    ],
+    "unit": "share",
+    "label": "baseline",
+    "description": "Share of daily LRT station flow per hour, 07:00 to 02:00 (20 points).",
+    "source_id": "apu-assumption",
+    "updated_at": "2026-11-05T12:00:00+08:00"
+  },
+  {
+    "key": "typical_road_ratio",
+    "value": [
+      0.951,
+      1.187,
+      1.219,
+      1.14,
+      1.017,
+      0.999,
+      1.08,
+      1.013,
+      1.052,
+      1.114,
+      1.101,
+      1.266,
+      1.115,
+      1.094,
+      1.017,
+      1.026,
+      0.995,
+      0.945,
+      0.896,
+      0.894
+    ],
+    "unit": "ratio",
+    "label": "baseline",
+    "description": "Typical hourly road ratio from Google predictions for Wed 18 Nov 2026 (D2)",
+    "source_id": "google-routes",
+    "updated_at": "2026-11-06T01:30:46+08:00"
+  },
+  {
+    "key": "google_static_one_way_min",
+    "value": 9.07,
+    "unit": "min",
+    "label": "verified",
+    "description": "Mean traffic-free one-way drive time APU to LRT Bukit Jalil, from Google Routes static duration",
+    "source_id": "google-routes",
+    "updated_at": "2026-11-06T01:30:46+08:00"
+  },
+  {
+    "key": "route_encoded_polyline",
+    "value": "s{sQqmvkRnEO@SHMRANFDP?RKLK@FdELrBb@IjGy@vCBCzEH~E`@BvFBx@FnA\\bAh@tBbBf@h@Zj@Nh@RfAH~AJnJLh@jDpGNfAJtBR`CLVNHFT?bHGTOHS?QKKUGe@SKSCuPFkCFuDEqLByNGw@@o@SKQEg@EyFK_BYuAUm@Yg@i@e@cAq@{@{@sB_CLK|@dA`DnC",
+    "unit": "polyline",
+    "label": "verified",
+    "description": "Shuttle road route APU ↔ LRT Bukit Jalil (map panel)",
+    "source_id": "google-routes",
+    "updated_at": "2026-11-06T01:30:46+08:00"
+  }
+]

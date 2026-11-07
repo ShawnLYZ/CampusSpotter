@@ -1,0 +1,31 @@
+# Secrets — never commit (PRD §3.20)
+API_Key_Configuration.md
+.env
+.env.*
+!.env.example
+supabase/.env
+supabase/.temp/
+
+# Large reference media (kept locally, not in the repo)
+Campus.mp4
+
+# Claude Code local settings
+.claude/
+
+# Build and tooling
+node_modules/
+dist/
+coverage/
+*.log
+.vite/
+.DS_Store
+Thumbs.db
+
+skills-lock.json
+PRD.md
+3_November_Concert_LRT_Traffic.png
+Campus (1).jpeg
+Campus (2).jpeg
+Campus_2050_完整内容.md
+Problem Statement.md
+docs/

@@ -1,0 +1,172 @@
+[
+  {
+    "id": "apu-timetable",
+    "name": "APU public timetable feed",
+    "label": "verified",
+    "url": "https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable",
+    "licence": "APU public feed",
+    "job_name": "sync-timetable",
+    "expected_interval_h": 24,
+    "description": "Weekly class timetable, aggregated to session groups (no lecturer, student or cohort data kept)."
+  },
+  {
+    "id": "apu-shuttle-2025-05",
+    "name": "APU shuttle timetable (May 2025)",
+    "label": "baseline",
+    "url": "https://publicwebsite-media.apu.edu.my/assets/2025-08/2025May02_APU-SHUTTLE-SERVICES.pdf",
+    "licence": "APU published PDF",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Published shuttle PDF of May 2025; used as the normal-service timetable."
+  },
+  {
+    "id": "apspace-2026-10-22",
+    "name": "APSpace shuttle schedule (22 Oct 2026)",
+    "label": "verified",
+    "url": "https://apspace.apu.edu.my",
+    "licence": "APU APSpace",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Shuttle schedule as shown in APSpace on 22 Oct 2026."
+  },
+  {
+    "id": "apu-shuttle-cny-2026",
+    "name": "APU shuttle timetable (CNY, from 20 Feb 2026)",
+    "label": "baseline",
+    "url": "https://publicwebsite-media.apu.edu.my/assets/2026-02/APU-SHUTTLE-SERVICES-WEF-20260220-CNY.pdf",
+    "licence": "APU published PDF",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Reduced-service shuttle timetable published for Chinese New Year 2026."
+  },
+  {
+    "id": "open-meteo",
+    "name": "Open-Meteo",
+    "label": "verified",
+    "url": "https://open-meteo.com/en/docs",
+    "licence": "CC BY 4.0 — Weather data by Open-Meteo.com",
+    "job_name": "sync-weather",
+    "expected_interval_h": 3,
+    "description": "Hourly precipitation and probability forecast for the campus."
+  },
+  {
+    "id": "esolat",
+    "name": "JAKIM e-Solat",
+    "label": "verified",
+    "url": "https://www.e-solat.gov.my",
+    "licence": "JAKIM e-Solat",
+    "job_name": "sync-prayer",
+    "expected_interval_h": 168,
+    "description": "Prayer times for zone WLY01 (Kuala Lumpur)."
+  },
+  {
+    "id": "google-routes",
+    "name": "Google Routes API",
+    "label": "verified",
+    "url": "https://developers.google.com/maps/documentation/routes/config_trade_offs",
+    "licence": "© Google",
+    "job_name": "sync-traffic",
+    "expected_interval_h": 24,
+    "description": "Predicted and static road durations between APU and LRT Bukit Jalil."
+  },
+  {
+    "id": "data-gov-my-ridership",
+    "name": "data.gov.my Rapid Rail daily ridership",
+    "label": "verified",
+    "url": "https://data.gov.my/data-catalogue/ridership_od_rapidrail_daily",
+    "licence": "CC BY 4.0",
+    "job_name": "sync-ridership",
+    "expected_interval_h": 24,
+    "description": "Daily origin-destination ridership for Bukit Jalil station."
+  },
+  {
+    "id": "osrm",
+    "name": "OSRM road routing",
+    "label": "baseline",
+    "url": null,
+    "licence": "ODbL (OpenStreetMap data)",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Road route 4.1 km, about 6 min free-flow; used as fallback free-flow time."
+  },
+  {
+    "id": "tnb-tariff",
+    "name": "TNB tariff (from 1 Jul 2025)",
+    "label": "verified",
+    "url": "https://www.mytnb.com.my/tariff/",
+    "licence": "Public tariff",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Time-of-use energy rates: peak 31.32, off-peak 27.23 sen/kWh. APU tariff category assumed."
+  },
+  {
+    "id": "bus-rental",
+    "name": "44-seater bus rental rates",
+    "label": "verified",
+    "url": "https://buslorryrental.com/bus-rental/44-seater-bus-rental/",
+    "licence": "Public price list",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Bus rental: one way, half day and full day rates."
+  },
+  {
+    "id": "staff-rate",
+    "name": "Minimum wage (aligned from Aug 2025)",
+    "label": "verified",
+    "url": "https://www.skrine.com/insights/alerts/july-2025/minimum-wage-throughout-malaysia-aligned-from-1-au",
+    "licence": "Public legal alert",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Minimum wage used for staff cost, RM 10 per hour."
+  },
+  {
+    "id": "apu-assumption",
+    "name": "CampusSpotter assumption",
+    "label": "baseline",
+    "url": null,
+    "licence": "Project assumption",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Editable starting assumption set by the project team, not verified with APU."
+  },
+  {
+    "id": "gemini",
+    "name": "Google Gemini",
+    "label": "ai",
+    "url": "https://aistudio.google.com/docs/models",
+    "licence": "Google Gemini API terms",
+    "job_name": "event-scan",
+    "expected_interval_h": 24,
+    "description": "AI event scan and AI parameter estimates, always shown with range and reasoning."
+  },
+  {
+    "id": "reconstruction-4nov",
+    "name": "Reconstruction of 4 Nov 2026",
+    "label": "baseline",
+    "url": null,
+    "licence": "Project reconstruction",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Reconstructed traffic and context for the 4 Nov 2026 concert evening."
+  },
+  {
+    "id": "mosque-shuttle-2025",
+    "name": "Friday mosque shuttle (May 2025)",
+    "label": "baseline",
+    "url": "https://publicwebsite-media.apu.edu.my/assets/2025-08/2025May02_APU-SHUTTLE-SERVICES.pdf",
+    "licence": "APU published PDF",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Friday-prayer shuttle in the May 2025 timetable (12:30 out, 14:10 back). Listed, not modelled (D23)."
+  },
+  {
+    "id": "google-maps",
+    "name": "Google Maps",
+    "label": "verified",
+    "url": "https://www.google.com/maps",
+    "licence": "© Google",
+    "job_name": null,
+    "expected_interval_h": null,
+    "description": "Maps and typical-traffic screenshots used for visual reference."
+  }
+]

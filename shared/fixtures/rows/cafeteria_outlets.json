@@ -1,0 +1,14 @@
+[
+  {
+    "id": "main",
+    "name": "Main Cafeteria (Centre Point & Atrium, assumed)",
+    "zone": "atrium",
+    "counters": 6,
+    "service_rate_per_counter_15min": 18,
+    "opens_min": 450,
+    "closes_min": 1200,
+    "staff": 6,
+    "diner_share": 0.5,
+    "label": "baseline"
+  }
+]

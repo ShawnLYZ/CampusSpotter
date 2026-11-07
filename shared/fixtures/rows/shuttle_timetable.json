@@ -1,0 +1,982 @@
+[
+  {
+    "service": "normal",
+    "direction": "loop",
+    "departure_min": 450,
+    "loop_to_min": 525,
+    "limited_seats": false,
+    "label": "verified",
+    "source_id": "apspace-2026-10-22",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 525,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 540,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 550,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 560,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 570,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 590,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 600,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 605,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 610,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 615,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 630,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 635,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 645,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 660,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 665,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 670,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 685,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 700,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 730,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 750,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 765,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 780,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 795,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 800,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 805,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 820,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 850,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 865,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 880,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 905,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 920,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 940,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 955,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 970,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 985,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 1030,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 1040,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 1050,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "lrt_to_apu",
+    "departure_min": 1100,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 635,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 645,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 690,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 710,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 730,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 755,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 770,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 785,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 790,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 795,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 810,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 840,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 855,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 870,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 885,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 910,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 920,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 930,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 945,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 950,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 960,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 975,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 990,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1005,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1010,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1020,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1030,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1040,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1050,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1060,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1080,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1090,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1095,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1110,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1120,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1135,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1155,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-2025-05",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1245,
+    "loop_to_min": null,
+    "limited_seats": true,
+    "label": "verified",
+    "source_id": "apspace-2026-10-22",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "normal",
+    "direction": "apu_to_lrt",
+    "departure_min": 1305,
+    "loop_to_min": null,
+    "limited_seats": true,
+    "label": "verified",
+    "source_id": "apspace-2026-10-22",
+    "effective_from": "2025-05-02"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 480,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 540,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 600,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 660,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 720,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 780,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 840,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 900,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 960,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "lrt_to_apu",
+    "departure_min": 1020,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 690,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 750,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 810,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 870,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 930,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 990,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 1050,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 1080,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  },
+  {
+    "service": "reduced",
+    "direction": "apu_to_lrt",
+    "departure_min": 1155,
+    "loop_to_min": null,
+    "limited_seats": false,
+    "label": "baseline",
+    "source_id": "apu-shuttle-cny-2026",
+    "effective_from": "2026-02-20"
+  }
+]

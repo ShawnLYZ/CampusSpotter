@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "updated_at": "2026-11-05T12:00:00+08:00",
+    "value": {
+      "defaultBudgetRm": {
+        "value": 2000,
+        "label": "baseline",
+        "sourceId": "apu-assumption"
+      },
+      "busOneWayRm": {
+        "value": 400,
+        "label": "verified",
+        "sourceId": "bus-rental"
+      },
+      "busHalfDayRm": {
+        "value": 650,
+        "label": "verified",
+        "sourceId": "bus-rental"
+      },
+      "busFullDayRm": {
+        "value": 950,
+        "label": "verified",
+        "sourceId": "bus-rental"
+      },
+      "staffRatePerHourRm": {
+        "value": 10,
+        "label": "verified",
+        "sourceId": "staff-rate"
+      },
+      "staffPerCounter": {
+        "value": 2,
+        "label": "baseline",
+        "sourceId": "apu-assumption"
+      },
+      "tariffPeakSenPerKwh": {
+        "value": 31.32,
+        "label": "verified",
+        "sourceId": "tnb-tariff"
+      },
+      "tariffOffPeakSenPerKwh": {
+        "value": 27.23,
+        "label": "verified",
+        "sourceId": "tnb-tariff"
+      },
+      "peakFromMin": 840,
+      "peakToMin": 1320,
+      "thresholds": {
+        "classroomOccupancy": {
+          "amberFrom": 85,
+          "redAbove": 100,
+          "greenInclusive": false
+        },
+        "cafeteriaQueue": {
+          "amberFrom": 10,
+          "redAbove": 20,
+          "greenInclusive": false
+        },
+        "buildingEnergy": {
+          "amberFrom": 10,
+          "redAbove": 25,
+          "greenInclusive": true
+        },
+        "walkwayTraffic": {
+          "amberFrom": 70,
+          "redAbove": 100,
+          "greenInclusive": false
+        },
+        "apuStopQueue": {
+          "amberFrom": 15,
+          "redAbove": 45,
+          "greenInclusive": false
+        },
+        "lrtStopQueue": {
+          "amberFrom": 15,
+          "redAbove": 45,
+          "greenInclusive": false
+        },
+        "shuttleRtt": {
+          "amberFrom": 25,
+          "redAbove": 45,
+          "greenInclusive": false
+        },
+        "roadDelay": {
+          "amberFrom": 1.3,
+          "redAbove": 2,
+          "greenInclusive": false
+        },
+        "lrtCrowding": {
+          "amberFrom": 1.5,
+          "redAbove": 3,
+          "greenInclusive": false
+        }
+      },
+      "risk": {
+        "criticalRedMin": 120,
+        "criticalApuWaitMin": 90,
+        "criticalLeftBehind": 100,
+        "highRedMin": 30,
+        "mediumAmberMin": 60
+      }
+    }
+  }
+]

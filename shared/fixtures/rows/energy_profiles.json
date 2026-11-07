@@ -1,0 +1,58 @@
+[
+  {
+    "block": "A",
+    "base_load_kw": 60,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "B",
+    "base_load_kw": 80,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "C",
+    "base_load_kw": 50,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "D",
+    "base_load_kw": 70,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "E",
+    "base_load_kw": 70,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "S",
+    "base_load_kw": 20,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "L",
+    "base_load_kw": 40,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  },
+  {
+    "block": "U",
+    "base_load_kw": 40,
+    "occupied_room_kw": 6,
+    "idle_room_kw": 2,
+    "label": "baseline"
+  }
+]

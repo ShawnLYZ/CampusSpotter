@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@engine": ["./shared/engine"],
+      "@engine/*": ["./shared/engine/*"],
+      "@bundle": ["./shared/bundle"],
+      "@bundle/*": ["./shared/bundle/*"],
+      "@parsers": ["./shared/parsers"],
+      "@parsers/*": ["./shared/parsers/*"],
+      "@plans": ["./shared/plans"],
+      "@plans/*": ["./shared/plans/*"],
+      "@fixtures": ["./shared/fixtures"],
+      "@fixtures/*": ["./shared/fixtures/*"]
+    }
+  },
+  "include": ["src", "shared", "scripts", "tests"]
+}
