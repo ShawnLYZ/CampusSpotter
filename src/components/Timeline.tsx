@@ -46,7 +46,7 @@ export function Timeline({ nowStep, pressures }: { nowStep: number | null; press
         <div role="group" aria-label="Playback speed" className="flex rounded-lg border border-border-strong p-0.5">
           {SPEEDS.map((s) => (
             <button key={s} type="button" aria-pressed={speed === s} onClick={() => setSpeed(s)}
-              className={`tabular rounded-md px-2.5 py-1 text-sm transition-colors ${speed === s ? 'bg-panel-3 font-semibold text-text' : 'text-text-2 hover:text-text'}`}>
+              className={`figure rounded-md px-2.5 py-1 text-[13px] transition-colors ${speed === s ? 'bg-panel-3 text-text' : 'text-text-2 hover:text-text'}`}>
               {s}×
             </button>
           ))}
@@ -54,7 +54,7 @@ export function Timeline({ nowStep, pressures }: { nowStep: number | null; press
         <span className="hidden text-xs text-text-3 @3xl:inline">Drag the slider to move through the day</span>
         <span className="ml-auto flex items-baseline gap-2" aria-hidden="true">
           <span className="text-xs text-text-3">Showing</span>
-          <span className="tabular text-xl font-semibold text-text">{clockAt(step)}</span>
+          <span className="figure text-xl font-medium text-text">{clockAt(step)}</span>
         </span>
       </div>
       <div className="relative mt-3 px-2">
@@ -65,23 +65,23 @@ export function Timeline({ nowStep, pressures }: { nowStep: number | null; press
         {nowStep !== null && (
           <div role="img" aria-label={`Now: ${clockAt(nowStep)}`}
             className="pointer-events-none absolute bottom-0 top-0 w-0.5 rounded bg-amber" style={{ left: `calc(0.5rem + (100% - 1rem) * ${nowStep / LAST_STEP})` }}>
-            <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-amber px-1 text-[10px] font-bold leading-4 text-[#1c1200]">NOW</span>
+            <span className="figure absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-amber px-1 text-[11px] font-medium leading-4 text-[#1c1200]">Now</span>
           </div>
         )}
       </div>
       {strip && (
         <div className="mx-2 mt-1" title="Busiest status across all metrics through the day">
-          <div className="h-1.5 rounded-full opacity-80" style={{ background: strip }} aria-hidden="true" />
+          <div className="h-1.5 rounded-sm opacity-80" style={{ background: strip }} aria-hidden="true" />
           <span className="sr-only">The coloured strip shows when the day is normal, busy or overloaded.</span>
         </div>
       )}
-      <div className="relative mx-2 mt-1.5 h-4 text-xs text-text-3" aria-hidden="true">
+      <div className="figure relative mx-2 mt-2 h-4 text-[11px] text-text-3" aria-hidden="true">
         {HOUR_STEPS.map((s, i) => (
-          <span key={s} className={`tabular absolute -translate-x-1/2 whitespace-nowrap ${labelClass(i)}`} style={{ left: pct(s) }}>
+          <span key={s} className={`figure absolute -translate-x-1/2 whitespace-nowrap ${labelClass(i)}`} style={{ left: pct(s) }}>
             {clockAt(s).replace(':00 ', ' ')}
           </span>
         ))}
-        <span className="tabular absolute left-full hidden -translate-x-1/2 whitespace-nowrap @5xl:inline">2 AM</span>
+        <span className="figure absolute left-full hidden -translate-x-1/2 whitespace-nowrap @5xl:inline">2 AM</span>
       </div>
     </div>
   );

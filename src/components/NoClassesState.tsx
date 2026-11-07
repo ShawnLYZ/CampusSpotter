@@ -7,7 +7,7 @@ export function NoClassesState({ dayType }: { dayType: DayType }) {
     : 'No classes today — public holiday or break.';
   return (
     <div className="card flex items-center gap-3 p-5 text-base text-text-2">
-      <MoonStar aria-hidden="true" className="h-5 w-5 shrink-0 text-accent" />{text}
+      <MoonStar aria-hidden="true" className="h-5 w-5 shrink-0 text-text-3" />{text}
     </div>
   );
 }

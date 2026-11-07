@@ -24,8 +24,8 @@ export function ComparisonTable({ noAction, plans, forecast, bundle }: Props) {
           {rows.map((r) => (
             <tr key={r.label} className="border-b border-border last:border-0">
               <th scope="row" className="px-3 py-2 text-left font-normal text-text-2">{r.label}</th>
-              <td className="tabular px-3 py-2 text-text">{r.noAction}</td>
-              {r.plans.map((v, i) => <td key={i} className="tabular px-3 py-2 text-text">{v}</td>)}
+              <td className="figure px-3 py-2 text-text">{r.noAction}</td>
+              {r.plans.map((v, i) => <td key={i} className="figure px-3 py-2 text-text">{v}</td>)}
               <td className="px-3 py-1 text-xs">
                 {rowMetrics(r.label) === null ? <CostBadge />
                   : forecast && rowMetrics(r.label) ? <FigureBadge forecasts={[forecast]} bundle={bundle} metrics={rowMetrics(r.label)!} note="Label reflects the plan context's inputs, not each plan's own levers." /> : null}

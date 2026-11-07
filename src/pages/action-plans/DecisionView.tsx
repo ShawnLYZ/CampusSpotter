@@ -59,7 +59,7 @@ export function DecisionView({ plan, ctx, onClose, onConfirmed }: Props) {
       onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
       className="card flex flex-col gap-5 border-accent/60 p-5 shadow-[var(--shadow-pop)] outline-none focus-visible:outline-2 focus-visible:outline-accent">
       <div className="flex items-center justify-between">
-        <h2 id="decision-h" className="text-lg font-semibold text-text">Confirm: {plan.name} · {rmText(plan.totalCostRm)}</h2>
+        <h2 id="decision-h" className="text-lg font-medium text-text">Confirm: {plan.name} · {rmText(plan.totalCostRm)}</h2>
         <button type="button" onClick={onClose} className="btn btn-quiet btn-sm"><X aria-hidden="true" /> Close</button>
       </div>
       <div className="grid grid-cols-2 gap-4">
@@ -70,7 +70,7 @@ export function DecisionView({ plan, ctx, onClose, onConfirmed }: Props) {
             <div className="flex flex-col gap-3">
               {groups.map((g) => (
                 <div key={g.team}>
-                  <h4 className="mb-1 text-sm font-semibold text-text-2">{TEAM_LABEL[g.team]}</h4>
+                  <h4 className="mb-1 text-sm font-medium text-text-2">{TEAM_LABEL[g.team]}</h4>
                   <ul className="flex flex-col gap-1 text-sm text-text">
                     {g.items.map((it, i) => (
                       <li key={i}>{it.text}{it.dueMin !== null && <span className="tabular text-text-2"> · due {clock12(it.dueMin)}</span>}</li>

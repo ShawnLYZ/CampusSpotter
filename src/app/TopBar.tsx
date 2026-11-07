@@ -54,23 +54,23 @@ export default function TopBar() {
     <header className="flex items-center gap-3 border-b border-border bg-panel px-6 text-sm">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-panel-2 px-3 py-1.5 font-medium">
-          <CalendarDays aria-hidden="true" className="h-4 w-4 text-accent" />
+          <CalendarDays aria-hidden="true" strokeWidth={1.75} className="h-4 w-4 text-text-3" />
           <span><span className="sr-only">Viewing </span>{ctx.date ? dateText(ctx.date) : ''}</span>
         </span>
         {title && <span className="truncate text-text-2">{title}</span>}
       </div>
-      <time className="tabular inline-flex items-center gap-1.5 text-text-2" aria-label="Current time in Malaysia">
-        <Clock aria-hidden="true" className="h-4 w-4 text-text-3" />{clock} MYT
+      <time className="figure inline-flex items-center gap-2 text-[13px] text-text-2" aria-label="Current time in Malaysia">
+        <Clock aria-hidden="true" strokeWidth={1.75} className="h-4 w-4 text-text-3" />{clock} MYT
       </time>
-      <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-text-2"
+      <span className="inline-flex items-center gap-2 px-2 text-xs text-text-3"
         title={demo ? 'Saved demo data; the forecast engine still recomputes live' : undefined}>
-        <span aria-hidden="true" className={`h-2 w-2 rounded-full ${dot}`} />{freshness}
+        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${dot}`} />{freshness}
       </span>
       <button type="button" onClick={openGuide} className="btn btn-sm">
-        <CircleHelp aria-hidden="true" className="text-accent" /> How it works
+        <CircleHelp aria-hidden="true" strokeWidth={1.75} /> How it works
       </button>
       <button type="button" className="btn btn-quiet btn-sm">
-        <UserRound aria-hidden="true" /> {user ?? 'Guest'}
+        <UserRound aria-hidden="true" strokeWidth={1.75} /> {user ?? 'Guest'}
       </button>
     </header>
   );

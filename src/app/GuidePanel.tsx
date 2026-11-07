@@ -50,7 +50,7 @@ export function GuidePanel() {
         className="absolute inset-y-0 right-0 flex w-[460px] max-w-full flex-col border-l border-border-strong bg-panel shadow-[var(--shadow-pop)]">
         <div className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
           <div>
-            <h2 id="guide-h" className="text-lg font-semibold">How CampusSpotter works</h2>
+            <h2 id="guide-h" className="text-lg font-medium">How CampusSpotter works</h2>
             <p className="mt-1 text-sm text-text-2">See it coming, test the response, act early.</p>
           </div>
           <button ref={closeBtn} type="button" onClick={close} className="btn btn-quiet btn-sm" aria-label="Close guide"><X aria-hidden="true" /></button>
@@ -63,9 +63,9 @@ export function GuidePanel() {
                 <li key={w.to}>
                   <button type="button" onClick={() => go(w.to)}
                     className="group flex w-full items-start gap-3 rounded-xl border border-border bg-panel-2 p-3 text-left transition-colors hover:border-accent/60">
-                    <span className="tabular grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent text-xs font-bold text-accent-ink">{i + 1}</span>
+                    <span className="figure grid h-6 w-6 shrink-0 place-items-center rounded-md border border-border-strong text-xs text-text-2">{i + 1}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-1.5 font-semibold text-text">{w.page}
+                      <span className="flex items-center gap-1.5 font-medium text-text">{w.page}
                         <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 text-text-3 transition-transform group-hover:translate-x-0.5 group-hover:text-accent" />
                       </span>
                       <span className="mt-0.5 block text-text-2">{w.text}</span>

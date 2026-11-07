@@ -91,20 +91,20 @@ export default function ReplayPage() {
   } else if (active === 'oct21') {
     main = (
       <section aria-label="Plan summary" className="card p-5">
-        <h2 className="text-lg font-semibold">Plan chosen on 21 Oct</h2>
+        <h2 className="text-lg font-medium">Plan chosen on 21 Oct</h2>
         <p className="text-xs text-text-2">Costs are a {ESTIMATE}.</p>
         <ul className="mt-3 divide-y divide-border text-sm">
           {fc.withPlan!.summary.costLines.map((c, i) => (
-            <li key={i} className="flex justify-between gap-4 py-1.5"><span>{c.text}</span><span className="tabular">{rmText(c.rm)}</span></li>
+            <li key={i} className="flex justify-between gap-4 py-1.5"><span>{c.text}</span><span className="figure">{rmText(c.rm)}</span></li>
           ))}
-          <li className="flex justify-between gap-4 py-1.5 font-semibold"><span>Total</span><span className="tabular">{rmText(fc.withPlan!.summary.totalCostRm)}</span></li>
+          <li className="flex justify-between gap-4 py-1.5 font-medium"><span>Total</span><span className="figure">{rmText(fc.withPlan!.summary.totalCostRm)}</span></li>
         </ul>
         <div className="mt-4 grid grid-cols-2 gap-4">
           {TEAMS.map((team) => {
             const items = checklist!.filter((c) => c.team === team);
             return items.length === 0 ? null : (
               <div key={team}>
-                <h3 className="text-sm font-semibold">{TEAM_TITLE[team]}</h3>
+                <h3 className="text-sm font-medium">{TEAM_TITLE[team]}</h3>
                 <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-text-2">
                   {items.map((c, i) => <li key={i}>{c.text}{c.dueMin !== null ? ` (by ${clock12(c.dueMin)})` : ''}</li>)}
                 </ul>
@@ -117,7 +117,7 @@ export default function ReplayPage() {
   } else if (active === 'nov3') {
     main = (
       <section aria-label="Student announcement" className="card p-5">
-        <h2 className="text-lg font-semibold">Student announcement, 3 Nov</h2>
+        <h2 className="text-lg font-medium">Student announcement, 3 Nov</h2>
         <p className="text-xs text-text-2">Plan figures are a {ESTIMATE}.</p>
         <p className="mt-3 whitespace-pre-line text-base"><TypedText text={announcement!} /></p>
       </section>
@@ -144,8 +144,8 @@ export default function ReplayPage() {
               {summaryRows(fc.noAction!.summary, fc.withPlan!.summary).map((r) => (
                 <tr key={r.label} className="border-t border-border">
                   <th scope="row" className="py-1.5 pr-2 text-left font-normal text-text-2">{r.label}</th>
-                  <td className="tabular py-1.5 pr-2 text-text">{r.noAction}</td>
-                  <td className="tabular py-1.5 font-semibold text-text">{r.withPlan}</td>
+                  <td className="figure py-1.5 pr-2 text-text">{r.noAction}</td>
+                  <td className="figure py-1.5 font-medium text-text">{r.withPlan}</td>
                 </tr>
               ))}
             </tbody>
@@ -169,7 +169,7 @@ export default function ReplayPage() {
           </figure>
           {station && (
             <div className="card p-4 text-sm">
-              <p className="tabular">{stationText(station)}</p>
+              <p className="figure">{stationText(station)}</p>
               <p className="mt-2 flex flex-wrap items-center gap-2 text-xs text-text-2">
                 <ProvenanceBadge label="verified" /> <span>Source: data-gov-my-ridership</span>
               </p>

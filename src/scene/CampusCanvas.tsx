@@ -51,7 +51,7 @@ export function CampusCanvas({ views, step, cameraPreset, onZoneClick, selectedZ
             role="img" aria-label={v.caption ? `3D campus view, ${v.caption}` : '3D campus view'}
             className="relative h-full min-h-48 overflow-hidden rounded-lg border border-border">
             {v.caption && (
-              <span className="pointer-events-none absolute left-3 top-3 rounded-md border border-border bg-panel/85 px-2 py-1 text-sm font-semibold text-text">
+              <span className="pointer-events-none absolute left-3 top-3 rounded-md border border-border bg-panel/85 px-2 py-1 text-sm font-medium text-text">
                 {v.caption}
               </span>
             )}

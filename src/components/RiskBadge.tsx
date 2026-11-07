@@ -11,12 +11,12 @@ const STYLE: Record<RiskLevel, { word: string; Icon: LucideIcon; cls: string }> 
 
 export function RiskBadge({ level, reason }: { level: RiskLevel | null; reason?: string }) {
   if (!level) {
-    return <span className="inline-flex shrink-0 rounded-full border border-border-strong px-2.5 py-0.5 text-sm text-text-2" title={reason}>Not assessed</span>;
+    return <span className="inline-flex shrink-0 rounded-md border border-border-strong px-2 py-0.5 text-sm text-text-2" title={reason}>Not assessed</span>;
   }
   const s = STYLE[level];
   return (
-    <span className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-sm font-semibold ${s.cls}`} title={reason}>
-      <s.Icon aria-hidden="true" className="h-4 w-4" strokeWidth={2.25} />
+    <span className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border px-2 py-0.5 text-sm font-medium ${s.cls}`} title={reason}>
+      <s.Icon aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
       {s.word}
     </span>
   );

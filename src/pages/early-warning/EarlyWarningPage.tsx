@@ -122,7 +122,7 @@ export default function EarlyWarningPage() {
             <RefreshCw aria-hidden="true" className={scanning ? 'animate-spin' : ''} />
             {scanning ? 'Scanning…' : 'Scan for events'}
           </button>
-          <button type="button" onClick={() => setForm({ kind: 'add' })} disabled={!today} className="btn btn-primary">
+          <button type="button" onClick={() => setForm({ kind: 'add' })} disabled={!today} className="btn">
             <Plus aria-hidden="true" /> Add disruption
           </button>
         </>} />
@@ -145,7 +145,7 @@ export default function EarlyWarningPage() {
         </div>
       ) : (
         <ul className="grid grid-cols-2 gap-4">
-          {visible.map((i) => <WarningCard key={i.id} item={i} actions={actions} />)}
+          {visible.map((i, n) => <WarningCard key={i.id} item={i} actions={actions} lead={n === 0 && (i.riskLevel === 'high' || i.riskLevel === 'critical')} />)}
         </ul>
       )}
       <details className="card p-4">

@@ -15,26 +15,27 @@ export default function LeftNav() {
       <div className="flex h-16 shrink-0 items-center gap-3 border-b border-border px-4">
         <BrandMark />
         <div className="leading-tight">
-          <div className="text-[15px] font-semibold tracking-[-0.01em]">CampusSpotter</div>
+          <div className="text-[15px] font-medium">CampusSpotter</div>
           <div className="text-xs text-text-2">for Asia Pacific University</div>
         </div>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-3 py-4">
+      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-3 py-4">
         {NAV_GROUPS.map((g) => (
           <div key={g.title}>
-            <p className="mb-1.5 px-3 text-xs font-medium text-text-3">{g.title}</p>
+            <p className="mb-2 px-3 text-xs text-text-3">{g.title}</p>
             <ul className="flex flex-col gap-0.5">
               {g.items.map((i) => (
                 <li key={i.to}>
                   <NavLink to={i.to} end={i.end}
-                    className={({ isActive }) => `group relative flex items-center gap-3 rounded-lg py-2 pr-3 transition-colors ${i.sub ? 'pl-6' : 'pl-3'} ${
-                      isActive ? 'bg-accent-soft text-text' : 'text-text-2 hover:bg-panel-2 hover:text-text'}`}>
+                    className={({ isActive }) => `group relative flex items-center gap-3 rounded-lg py-2 pr-3 transition-colors duration-150 ${i.sub ? 'pl-6' : 'pl-3'} ${
+                      isActive ? 'bg-panel-3 text-text shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]' : 'text-text-2 hover:bg-panel-2 hover:text-text'}`}>
                     {({ isActive }) => (
                       <>
-                        <i.Icon aria-hidden="true" strokeWidth={2}
-                          className={`shrink-0 ${i.sub ? 'h-4 w-4' : 'h-[18px] w-[18px]'} ${isActive ? 'text-accent' : 'text-text-3 group-hover:text-text-2'}`} />
+                        {isActive && <span aria-hidden="true" className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-accent" />}
+                        <i.Icon aria-hidden="true" strokeWidth={1.75}
+                          className={`h-4 w-4 shrink-0 ${isActive ? 'text-text' : 'text-text-3 group-hover:text-text-2'}`} />
                         <span className="min-w-0">
-                          <span className={`block text-sm ${isActive ? 'font-semibold' : 'font-medium'}`}>{i.label}</span>
+                          <span className="block text-sm font-medium">{i.label}</span>
                           {!i.sub && <span className={`block truncate text-xs ${isActive ? 'text-text-2' : 'text-text-3'}`}>{i.hint}</span>}
                         </span>
                       </>
@@ -48,8 +49,8 @@ export default function LeftNav() {
       </div>
       <div className="shrink-0 border-t border-border p-3">
         <button type="button" onClick={openGuide}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-text-2 transition-colors hover:bg-panel-2 hover:text-text">
-          <CircleHelp aria-hidden="true" className="h-[18px] w-[18px] text-accent" />
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-text-2 transition-colors hover:bg-panel-2 hover:text-text">
+          <CircleHelp aria-hidden="true" strokeWidth={1.75} className="h-4 w-4 text-text-3" />
           <span>
             <span className="block font-medium text-text">New here?</span>
             <span className="block text-xs text-text-3">How CampusSpotter works</span>

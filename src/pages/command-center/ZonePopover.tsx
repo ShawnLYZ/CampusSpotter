@@ -17,7 +17,7 @@ export function ZonePopover({ zoneId, forecast, step, bundle, sources, onClose }
     <div role="dialog" aria-label={`${name} details`}
       className="absolute right-4 top-4 z-10 max-h-[calc(100%-2rem)] w-80 overflow-y-auto rounded-xl border border-border-strong bg-panel-2 p-4 shadow-[var(--shadow-pop)]">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-text">{name}</h2>
+        <h2 className="text-base font-medium text-text">{name}</h2>
         <button type="button" autoFocus onClick={onClose} aria-label="Close zone details"
           className="btn btn-quiet btn-sm"><X aria-hidden="true" /> Close</button>
       </div>

@@ -41,7 +41,7 @@ export function LeverPanel({ levers, highlighted, bundle, onUpsert, onRemove }: 
       </div>
       {TEAMS.map((team) => (
         <section key={team.id} aria-labelledby={`team-${team.id}`}>
-          <h2 id={`team-${team.id}`} className="mb-2 flex items-center gap-2 px-1 text-sm font-semibold text-text-2">
+          <h2 id={`team-${team.id}`} className="mb-2 flex items-center gap-2 px-1 text-sm font-medium text-text-2">
             <team.Icon aria-hidden="true" className="h-4 w-4 text-text-3" />{team.title}
           </h2>
           <div className="flex flex-col gap-2">

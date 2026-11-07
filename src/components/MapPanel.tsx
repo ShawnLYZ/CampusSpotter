@@ -91,7 +91,7 @@ export function MapPanel({ height = 260 }: { height?: number }) {
           <RouteLine encoded={encoded} />
           {MARKERS.map((m) => (
             <AdvancedMarker key={m.id} position={m.position} title={m.label}>
-              <div className="flex items-center gap-1.5 rounded-full border border-white/80 bg-[#0b1017] px-2.5 py-1 text-xs font-semibold text-white shadow-lg">
+              <div className="flex items-center gap-1.5 rounded-full border border-white/80 bg-[#0b1017] px-2.5 py-1 text-xs font-medium text-white shadow-lg">
                 <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
                 {m.label}
               </div>

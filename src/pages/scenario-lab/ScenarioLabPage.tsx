@@ -19,7 +19,7 @@ import { AskBox } from './AskBox.tsx';
 import { EstimatesPanel } from './EstimatesPanel.tsx';
 import { SmallMultiples } from './SmallMultiples.tsx';
 import { SummaryRow } from './SummaryRow.tsx';
-import { FlaskConical, MoonStar, RotateCcw, Sparkles } from 'lucide-react';
+import { FlaskConical, ListChecks, MoonStar, RotateCcw } from 'lucide-react';
 import { PageIntro } from '../../components/PageIntro.tsx';
 import { Legend } from '../../components/Legend.tsx';
 
@@ -81,7 +81,7 @@ export default function ScenarioLabPage() {
           <button type="button" className="btn btn-quiet" onClick={reset} disabled={levers.length === 0}><RotateCcw aria-hidden="true" /> Reset to no action</button>
           <button type="button" className="btn" onClick={fridayScenario} disabled={!today}><MoonStar aria-hidden="true" /> Friday prayer scenario</button>
           {provider.info.kind === 'supabase' && <button type="button" className="btn" onClick={save}>Save forecast</button>}
-          <button type="button" className="btn btn-primary" onClick={() => void navigate('/action-plans')}><Sparkles aria-hidden="true" /> Generate plans</button>
+          <button type="button" className="btn btn-primary" onClick={() => void navigate('/action-plans')}><ListChecks aria-hidden="true" /> Generate plans</button>
         </>} />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <ContextPicker today={today} />

@@ -19,10 +19,10 @@ export function PressureBadge({ pressure, status, size = 'md' }: { pressure: Pre
   } else {
     Icon = CircleHelp; word = 'Not enough data'; cls = 'border-border-strong text-text-2';
   }
-  const sz = size === 'sm' ? 'gap-1 px-2 py-0.5 text-xs' : 'gap-1.5 px-2.5 py-0.5 text-sm';
+  const sz = size === 'sm' ? 'gap-1 px-1.5 py-0.5 text-xs' : 'gap-1.5 px-2 py-0.5 text-sm';
   return (
-    <span className={`inline-flex items-center whitespace-nowrap rounded-full border font-medium ${sz} ${cls}`}>
-      <Icon aria-hidden="true" className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} strokeWidth={2.25} />
+    <span className={`inline-flex items-center whitespace-nowrap rounded-md border font-medium ${sz} ${cls}`}>
+      <Icon aria-hidden="true" className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} strokeWidth={2} />
       <span>{word}</span>
     </span>
   );

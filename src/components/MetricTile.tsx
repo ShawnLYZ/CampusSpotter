@@ -21,8 +21,8 @@ export function MetricTile({ metric, series, step, bundle, sources }: {
   return (
     <section aria-label={METRIC_TITLES[metric]} className="card p-4">
       <h3 className="text-sm font-medium text-text-2">{METRIC_TITLES[metric]}</h3>
-      <p className="tabular mt-1 text-3xl font-semibold text-text">{sv ? formatMetric(metric, sv) : 'Not enough data'}</p>
-      <p className="tabular mt-1 text-sm text-text-2">{peakText}</p>
+      <p className="figure mt-1 text-3xl font-medium text-text">{sv ? formatMetric(metric, sv) : 'Not enough data'}</p>
+      <p className="figure mt-1 text-sm text-text-2">{peakText}</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <PressureBadge pressure={sv?.pressure ?? null} status={sv?.status ?? 'not_enough_data'} />
         <ProvenanceBadge label={sv?.provenance ?? null} inputs={series.inputs} bundle={bundle} sources={sources} />

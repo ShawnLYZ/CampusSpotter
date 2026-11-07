@@ -23,8 +23,8 @@ export function SummaryRow({ noAction, withPlan, forecasts, bundle, sources }: P
           return (
             <tr key={r.label} className="border-t border-border">
               <th scope="row" className="py-1.5 pr-2 text-left font-normal text-text-2">{r.label}</th>
-              <td className="tabular py-1.5 pr-2 text-text">{r.noAction}</td>
-              <td className="tabular py-1.5 pr-2 font-semibold text-text">{r.withPlan}</td>
+              <td className="figure py-1.5 pr-2 text-text">{r.noAction}</td>
+              <td className="figure py-1.5 pr-2 font-medium text-text">{r.withPlan}</td>
               <td className="py-1 text-xs">
                 {metrics === null ? <CostBadge /> : metrics ? <FigureBadge forecasts={forecasts} bundle={bundle} sources={sources} metrics={metrics} /> : null}
               </td>

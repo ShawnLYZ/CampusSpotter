@@ -27,7 +27,7 @@ export function ZoneDetails({ zoneId, forecast, step, bundle, sources }: {
         return (
           <li key={`${ref.metric}:${ref.scope}`}>
             <p className="text-sm text-text-2">{METRIC_TITLES[ref.metric]}</p>
-            <p className="tabular text-lg font-semibold text-text">{sv ? formatMetric(ref.metric, sv) : 'Not enough data'}</p>
+            <p className="figure text-lg font-medium text-text">{sv ? formatMetric(ref.metric, sv) : 'Not enough data'}</p>
             <div className="mt-1 flex flex-wrap items-center gap-2">
               <PressureBadge pressure={sv?.pressure ?? null} status={sv?.status ?? 'not_enough_data'} />
               <ProvenanceBadge label={sv?.provenance ?? null} inputs={forecast.metrics[ref.metric].inputs} bundle={bundle} sources={sources} />

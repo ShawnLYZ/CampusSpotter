@@ -48,7 +48,7 @@ function Section({ table }: { table: BaselineTable }) {
   const inputId = `upload-${table.name}`;
   return (
     <section aria-labelledby={`h-${table.name}`} className="card p-4">
-      <h2 id={`h-${table.name}`} className="mb-3 text-lg font-semibold text-text">{table.title}</h2>
+      <h2 id={`h-${table.name}`} className="mb-3 text-lg font-medium text-text">{table.title}</h2>
       <div className="max-h-72 overflow-auto rounded-md border border-border">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-panel-2">

@@ -85,8 +85,8 @@ export default function DecisionLogPage() {
                         </select>
                       </td>
                       <td className="px-3 py-2"><NotesCell d={d} onSave={(notes) => update(d.id, { notes })} /></td>
-                      <td className="tabular px-3 py-2 text-text">{rmText(d.totalCostRm)}</td>
-                      <td className="tabular px-3 py-2 text-text">{w === null ? 'No service' : durationText(w)}</td>
+                      <td className="figure px-3 py-2 text-text">{rmText(d.totalCostRm)}</td>
+                      <td className="figure px-3 py-2 text-text">{w === null ? 'No service' : durationText(w)}</td>
                       <td className="px-3 py-2 text-text">{d.decidedBy}</td>
                       <td className="tabular px-3 py-2 text-text">{dateText(mytDate(d.decidedAt))}, {clock12(mytMinutes(d.decidedAt))}</td>
                       <td className="px-3 py-2">

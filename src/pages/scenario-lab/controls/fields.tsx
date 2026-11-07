@@ -56,7 +56,7 @@ export function Stepper({ label, value, min, max, step = 1, unit, onChange }: {
       <div className="flex items-center gap-1.5">
         <button type="button" className={btn} aria-label={`Decrease ${label}`} disabled={value <= min}
           onClick={() => onChange(Math.max(min, value - step))}>−</button>
-        <output className="tabular w-14 text-center text-sm text-text" aria-label={label}>{value}{unit ?? ''}</output>
+        <output className="figure w-14 text-center text-sm text-text" aria-label={label}>{value}{unit ?? ''}</output>
         <button type="button" className={btn} aria-label={`Increase ${label}`} disabled={value >= max}
           onClick={() => onChange(Math.min(max, value + step))}>+</button>
       </div>

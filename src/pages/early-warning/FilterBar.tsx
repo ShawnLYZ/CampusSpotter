@@ -18,7 +18,7 @@ export const RISK_CHIPS: { value: RiskLevel; label: string }[] = [
 function Chip({ label, on, onClick }: { label: string; on: boolean; onClick: () => void }) {
   return (
     <button type="button" aria-pressed={on} onClick={onClick} className="chip">
-      {on && <Check aria-hidden="true" className="h-3.5 w-3.5 text-accent" />}{label}
+      {on && <Check aria-hidden="true" className="h-3.5 w-3.5 text-text" />}{label}
     </button>
   );
 }

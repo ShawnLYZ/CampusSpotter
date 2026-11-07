@@ -56,7 +56,7 @@ export function DisruptionForm({ item, defaultDate, onSubmit, onCancel }: {
   return (
     <form onSubmit={(ev) => void submit(ev)} noValidate onKeyDown={(ev) => { if (ev.key === 'Escape') onCancel(); }}
       className="card space-y-4 border-accent/50 p-5 shadow-[var(--shadow-pop)]" aria-label={item ? `Edit ${item.title}` : 'Add disruption'}>
-      <h3 className="text-base font-semibold">{item ? 'Edit disruption' : 'Add disruption'}</h3>
+      <h3 className="text-base font-medium">{item ? 'Edit disruption' : 'Add disruption'}</h3>
       <div className="grid grid-cols-4 gap-3">
         <label className="field-label col-span-2">Title
           <input ref={first} className={FIELD} value={title} onChange={(x) => setTitle(x.target.value)} required aria-invalid={submitted && !!titleErr}

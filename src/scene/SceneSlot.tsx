@@ -80,7 +80,7 @@ function PlaceholderPanels({ mode, forecasts, step, captions, onZoneClick }: Pic
             onClick={() => onZoneClick?.('campus')}
             onKeyDown={(e) => { if (e.key === 'Enter') onZoneClick?.('campus'); }}
             className="flex h-full min-h-32 cursor-pointer flex-col items-center justify-center card p-4 text-center">
-            {captions?.[i] && <p className="mb-2 text-lg font-semibold text-text">{captions[i]}</p>}
+            {captions?.[i] && <p className="mb-2 text-lg font-medium text-text">{captions[i]}</p>}
             <p className="tabular text-text">
               APU stop wait at {clock12(7 * 60 + step * 15)}: {sv ? formatMetric('apuStopQueue', sv) : 'Not enough data'}
             </p>

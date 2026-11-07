@@ -13,7 +13,7 @@ import { PlanCard } from './PlanCard.tsx';
 import { ComparisonTable } from './ComparisonTable.tsx';
 import { DecisionView } from './DecisionView.tsx';
 import type { PresenterAction } from '../../presenter/bus.ts';
-import { BookOpen, ClipboardCheck, Sparkles } from 'lucide-react';
+import { BookOpen, ClipboardCheck, ClipboardList, ListChecks, LoaderCircle } from 'lucide-react';
 import { PageIntro } from '../../components/PageIntro.tsx';
 
 const field = 'field';
@@ -130,14 +130,14 @@ export default function ActionPlansPage() {
             onChange={(e) => setBudget(e.target.value === '' ? null : Number(e.target.value))} />
         </div>
         <button type="button" onClick={generate} disabled={busy || budget === null || !ctx.date} className="btn btn-primary">
-          <Sparkles aria-hidden="true" className={busy ? 'animate-pulse' : ''} />
+          {busy ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : <ListChecks aria-hidden="true" />}
           {busy ? 'Generating…' : plans && current ? 'Generate again' : 'Generate plans'}
         </button>
       </div>
       {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Could not generate plans: {error}. Check the day and budget, then try again.</p>}
       {!(plans && current) && !busy && !error && (
         <div className="card flex flex-col items-center gap-2 px-6 py-12 text-center">
-          <Sparkles aria-hidden="true" className="h-8 w-8 text-ai-ink" />
+          <ClipboardList aria-hidden="true" strokeWidth={1.5} className="h-8 w-8 text-text-3" />
           <p className="font-medium">No plans yet for this day</p>
           <p className="max-w-[56ch] text-sm text-text-2">Choose a day above, often one flagged on Early Warning, set what you can spend, then press <span className="font-medium text-text">Generate plans</span>. You will get three different options with costs and effects side by side.</p>
         </div>
@@ -145,7 +145,7 @@ export default function ActionPlansPage() {
       {busy && <p role="status" className="card px-6 py-8 text-center text-sm text-text-2">Gemini is drafting three plans and the engine is testing each one…</p>}
       {plans && planCtx && current && (
         <>
-          <h2 className="text-lg font-semibold tracking-[-0.01em] text-text">
+          <h2 className="text-lg font-medium text-text">
             Plans for {dateText(planCtx.date)}{planTitle ? <span className="text-text-2"> · {planTitle}</span> : null}
           </h2>
           <div className="grid grid-cols-3 gap-4">

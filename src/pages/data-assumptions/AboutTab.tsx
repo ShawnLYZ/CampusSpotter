@@ -14,7 +14,7 @@ export function AboutTab() {
     <div className="grid grid-cols-3 gap-4">
       {CARDS.map((c) => (
         <article key={c.title} className="flex flex-col card p-5">
-          <h2 className="text-lg font-semibold text-text">{c.title}</h2>
+          <h2 className="text-lg font-medium text-text">{c.title}</h2>
           <p className="mt-2 flex-1 text-sm text-text-2">{c.text}</p>
           <Link to={c.to} className="btn mt-4 self-start">{c.link}</Link>
         </article>

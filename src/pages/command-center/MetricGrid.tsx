@@ -35,12 +35,12 @@ function MetricRow({ metric, series, step, bundle, sources }: {
       <Icon aria-hidden="true" strokeWidth={2.25} className={`h-5 w-5 shrink-0 ${style?.ink ?? 'text-text-3'}`} />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-text">{METRIC_TITLES[metric]}</p>
-        <p className="tabular truncate text-xs text-text-3">
-          <span className={`font-semibold ${style?.word ?? 'text-text-2'}`}>{word}</span> · {peakText(metric, series)}
+        <p className="figure truncate text-xs text-text-3">
+          <span className={`font-medium ${style?.word ?? 'text-text-2'}`}>{word}</span> · {peakText(metric, series)}
         </p>
       </div>
       <div className="flex shrink-0 flex-col items-end gap-0.5">
-        <span className="tabular text-[15px] font-semibold leading-5 text-text">{sv ? formatMetric(metric, sv) : 'Not enough data'}</span>
+        <span className="figure text-[15px] font-medium leading-5 text-text">{sv ? formatMetric(metric, sv) : 'Not enough data'}</span>
         <ProvenanceBadge label={sv?.provenance ?? null} inputs={series.inputs} bundle={bundle} sources={sources} />
       </div>
     </li>

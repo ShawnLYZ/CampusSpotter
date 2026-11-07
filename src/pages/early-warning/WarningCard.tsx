@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { ArrowRight, CalendarDays, CloudRain, ExternalLink, History, Music, Pencil, Repeat, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, CloudRain, ExternalLink, History, Music, Pencil, ListChecks, Repeat, Trash2, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { METRIC_TITLES } from '@engine/index.ts';
 import type { DisruptionType } from '@engine/index.ts';
@@ -46,10 +46,11 @@ export interface CardActions {
 
 
 type WarningCardProps =
-  | { item: EarlyWarningItem; actions: CardActions; past?: boolean; readOnly?: false }
-  | { item: EarlyWarningItem; actions?: CardActions; past?: boolean; readOnly: true };
+  | { item: EarlyWarningItem; actions: CardActions; past?: boolean; readOnly?: false; lead?: boolean }
+  | { item: EarlyWarningItem; actions?: CardActions; past?: boolean; readOnly: true; lead?: boolean };
 
-export function WarningCard({ item, actions, past = false, readOnly = false }: WarningCardProps) {
+/** `lead`: the most urgent card on the page; only it gets the filled primary button. */
+export function WarningCard({ item, actions, past = false, readOnly = false, lead = false }: WarningCardProps) {
   const icon = TYPE_ICON[item.type];
   const startDay = mytDate(item.startAt);
   const endDay = mytDate(item.endAt);
@@ -59,33 +60,32 @@ export function WarningCard({ item, actions, past = false, readOnly = false }: W
   const att = item.override?.expectedAttendance ?? item.expectedAttendance;
   const isWeeknd = item.id === 'weeknd-2026-11-04';
   const soon = !item.isPast && item.daysRemaining <= 7;
-  const urgent = item.riskLevel === 'high' || item.riskLevel === 'critical';
   return (
     <li className="card flex flex-col p-5" aria-label={item.title}>
       <div className="flex items-start gap-3">
-        <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-panel-3 text-text-2">
-          <icon.Icon className="h-5 w-5" />
+        <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-panel-2 text-text-2">
+          <icon.Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-xs font-medium text-text-3">{icon.word}</p>
-          <h3 className="text-lg font-semibold leading-snug">{item.title}</h3>
+          <h3 className="text-lg font-medium leading-snug">{item.title}</h3>
           <p className="mt-0.5 text-sm text-text-2">
             {dateText(startDay)} · {range}{item.venue ? ` · ${item.venue}` : ''}
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1.5">
           <RiskBadge level={item.riskLevel} reason={item.riskReason ?? undefined} />
-          <span className={`tabular text-sm font-semibold ${soon ? 'text-amber-ink' : 'text-text-2'}`}>{whenText(item)}</span>
+          <span className={`figure text-[13px] ${soon ? 'text-amber-ink' : 'text-text-2'}`}>{whenText(item)}</span>
         </div>
       </div>
       {(item.riskReason || item.topPeaks.length > 0) && (
-        <div className="mt-4 rounded-xl bg-bg/60 p-3">
+        <div className="mt-4 rounded-lg bg-bg/60 p-3">
           {item.riskReason && <p className="text-sm text-text"><span className="text-text-3">If nothing is done: </span>{item.riskReason}</p>}
           {item.topPeaks.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-2 text-xs">
               {item.topPeaks.slice(0, 3).map((p) => (
-                <li key={p.metric} className="tabular rounded-md border border-border px-2 py-1 text-text-2">
-                  {METRIC_TITLES[p.metric]} <span className="font-semibold text-text">{formatMetric(p.metric, { value: p.value, status: 'ok', pressure: null, provenance: null })}</span> at {clock12(p.atMin)}
+                <li key={p.metric} className="rounded-md border border-border px-2 py-1 text-text-2">
+                  {METRIC_TITLES[p.metric]} <span className="tabular font-medium text-text">{formatMetric(p.metric, { value: p.value, status: 'ok', pressure: null, provenance: null })}</span> at {clock12(p.atMin)}
                 </li>
               ))}
             </ul>
@@ -96,7 +96,7 @@ export function WarningCard({ item, actions, past = false, readOnly = false }: W
         <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-text-2">
           {att !== null && <span>Expected crowd: <span className="tabular font-medium text-text">{att.toLocaleString('en-MY')}</span></span>}
           <ProvenanceBadge label={item.attendanceLabel} />
-          {item.override && <span className="rounded-full border border-amber/60 px-2 py-0.5 text-xs text-amber-ink">Manual override</span>}
+          {item.override && <span className="rounded-md border border-amber/50 px-1.5 py-0.5 text-xs text-amber-ink">Manual override</span>}
         </p>
       )}
       {item.notes && <p className="mt-2 text-sm text-text-2">{item.notes}</p>}
@@ -124,8 +124,8 @@ export function WarningCard({ item, actions, past = false, readOnly = false }: W
           isWeeknd && <Link to="/replay" className="btn"><History aria-hidden="true" /> Open replay</Link>
         ) : (
           <>
-            <button type="button" className={`btn ${urgent ? 'btn-primary' : ''}`} onClick={() => actions.onScenario(item)}>Open in Scenario Lab <ArrowRight aria-hidden="true" /></button>
-            <button type="button" className="btn" onClick={() => actions.onPlans(item)}><Sparkles aria-hidden="true" /> Generate plans</button>
+            <button type="button" className={`btn ${lead ? 'btn-primary' : ''}`} onClick={() => actions.onScenario(item)}>Open in Scenario Lab <ArrowRight aria-hidden="true" /></button>
+            <button type="button" className="btn" onClick={() => actions.onPlans(item)}><ListChecks aria-hidden="true" /> Generate plans</button>
             <span className="flex-1" />
             {item.origin !== 'rule' && <button type="button" className="btn btn-quiet btn-sm" onClick={() => actions.onEdit(item)}><Pencil aria-hidden="true" /> Edit</button>}
             {item.origin === 'manual'

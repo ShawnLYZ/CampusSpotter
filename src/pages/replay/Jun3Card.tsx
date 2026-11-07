@@ -19,7 +19,7 @@ export function Jun3Card() {
   }, [provider]);
   return (
     <section aria-label="Early warning on 3 Jun">
-      <h2 className="mb-3 text-lg font-semibold">As it would have looked on {dateText('2026-06-03')}</h2>
+      <h2 className="mb-3 text-lg font-medium">As it would have looked on {dateText('2026-06-03')}</h2>
       {error && <p role="alert" className="text-text-2">Could not build the card: {error}</p>}
       {!item && !error && <p role="status" className="text-text-2">Loading…</p>}
       {item && <ul><WarningCard item={item} readOnly /></ul>}

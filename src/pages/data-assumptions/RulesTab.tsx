@@ -37,7 +37,7 @@ export function RulesTab() {
   return (
     <div className="flex flex-col gap-6">
       <section aria-labelledby="h-thr">
-        <h2 id="h-thr" className="mb-2 text-lg font-semibold text-text">Pressure thresholds</h2>
+        <h2 id="h-thr" className="mb-2 text-lg font-medium text-text">Pressure thresholds</h2>
         <div className="overflow-x-auto card">
           <table className="w-full text-sm">
             <thead>
@@ -65,19 +65,19 @@ export function RulesTab() {
         </div>
       </section>
       <section aria-labelledby="h-risk">
-        <h2 id="h-risk" className="mb-2 text-lg font-semibold text-text">Risk rules</h2>
+        <h2 id="h-risk" className="mb-2 text-lg font-medium text-text">Risk rules</h2>
         <p className="mb-2 text-sm text-text-2">The risk level comes from the no-action forecast for the day.</p>
         <dl className="space-y-2 card p-4 text-sm">
           {riskRuleLines(settings.risk).map((r) => (
             <div key={r.level} className="flex gap-3">
-              <dt className="w-20 shrink-0 font-semibold text-text">{r.level}</dt>
+              <dt className="w-20 shrink-0 font-medium text-text">{r.level}</dt>
               <dd className="text-text">{r.text}</dd>
             </div>
           ))}
         </dl>
       </section>
       <section aria-labelledby="h-cost">
-        <h2 id="h-cost" className="mb-2 text-lg font-semibold text-text">Cost rates</h2>
+        <h2 id="h-cost" className="mb-2 text-lg font-medium text-text">Cost rates</h2>
         <ul className="divide-y divide-border card text-sm">
           {costs.map((c) => (
             <li key={c.name} className="flex items-center justify-between px-4 py-2">

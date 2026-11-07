@@ -60,7 +60,7 @@ export function DecisionDetail({ id }: { id: string }) {
 
   return (
     <section aria-label={`Details for ${data.decision.planName}`} className="card flex flex-col gap-5 p-5">
-      <h2 className="text-lg font-semibold text-text">{data.decision.planName}</h2>
+      <h2 className="text-lg font-medium text-text">{data.decision.planName}</h2>
       <div className="grid grid-cols-2 gap-4">
         <section aria-label="Checklist">
           <h3 className="section-title mb-2">Checklist by team</h3>

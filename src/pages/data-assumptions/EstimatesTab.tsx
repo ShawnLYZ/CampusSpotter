@@ -21,7 +21,7 @@ export function EstimatesTab() {
     <div className="flex flex-col gap-6">
       {[...groups].map(([title, list]) => (
         <section key={title} aria-label={title}>
-          <h2 className="mb-2 text-lg font-semibold text-text">{title} <span className="text-sm font-normal text-text-2">· {dateText(list[0].date)}</span></h2>
+          <h2 className="mb-2 text-lg font-medium text-text">{title} <span className="text-sm font-normal text-text-2">· {dateText(list[0].date)}</span></h2>
           <div className="grid grid-cols-3 gap-3">
             {list.map((e) => <EstimateCard key={`${e.disruptionId}-${e.key}`} estimate={e} />)}
           </div>

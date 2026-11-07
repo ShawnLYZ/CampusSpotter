@@ -16,7 +16,7 @@ const BORDER: Record<Label, string> = {
   baseline: 'border-baseline/70 bg-baseline/15 text-baseline-ink',
   ai: 'border-ai/60 bg-ai/12 text-ai-ink',
 };
-const PILL = 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-medium';
+const PILL = 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border px-1.5 py-0.5 text-xs font-medium';
 
 export function ProvenanceBadge({ label, inputs, bundle, sources }: {
   label: Label | null; inputs?: string[]; bundle?: InputBundle; sources?: SourceInfo[];
@@ -80,17 +80,17 @@ export function ProvenanceBadge({ label, inputs, bundle, sources }: {
       <button
         ref={btn} type="button" aria-expanded={open} aria-controls={open ? popId : undefined}
         onClick={() => setOpen((o) => !o)} title={`${s.hint}. Click to see the inputs.`}
-        className={`${PILL} ${BORDER[label]} transition-colors hover:brightness-125`}
+        className={`${PILL} ${BORDER[label]} transition-colors hover:border-text-3`}
       >
         <span aria-hidden="true" className={`h-2 w-2 rounded-full ${s.dot}`} />
         {s.word}
-        <ChevronDown aria-hidden="true" className={`h-3 w-3 opacity-70 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown aria-hidden="true" className={`h-3 w-3 opacity-70 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && createPortal(
         <div ref={pop} id={popId} role="region" aria-label={`${s.word} inputs`}
           style={{ position: 'fixed', left: pos?.left ?? 0, top: pos?.top ?? 0, maxHeight: pos?.maxH, visibility: pos ? 'visible' : 'hidden' }}
           className="z-[1000] w-96 max-w-[calc(100vw-16px)] overflow-y-auto rounded-xl border border-border-strong bg-panel-2 p-4 text-left text-sm shadow-[var(--shadow-pop)]">
-          <p className="font-semibold text-text">Where this number comes from</p>
+          <p className="font-medium text-text">Where this number comes from</p>
           <p className="mb-3 text-xs text-text-2">{s.word}: {s.hint.toLowerCase()}. It takes the weakest label of the inputs below.</p>
           {items.length === 0 && <p className="text-text-2">No inputs recorded.</p>}
           <ul className="space-y-2">

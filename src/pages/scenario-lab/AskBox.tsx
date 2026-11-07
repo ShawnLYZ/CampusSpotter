@@ -8,7 +8,7 @@ import { TypedText } from '../../components/TypedText.tsx';
 import { SCRIPTED_ASKS } from '../../providers/demo/scripted/ask.ts';
 import { usePresenterAction, usePresenterCancel } from '../../presenter/usePresenterAction.ts';
 import { explainGate, type ForecastStatus } from './explainGate.ts';
-import { CornerDownLeft, Sparkles } from 'lucide-react';
+import { CornerDownLeft, MessageSquareText } from 'lucide-react';
 
 interface Props { status: ForecastStatus; noAction?: Forecast; withPlan?: Forecast }
 
@@ -88,7 +88,7 @@ export function AskBox({ status, noAction, withPlan }: Props) {
 
   return (
     <section aria-labelledby="ask-gemini" className="card border-ai/40 p-4">
-      <h2 id="ask-gemini" className="flex items-center gap-2 section-title"><Sparkles aria-hidden="true" className="h-4 w-4 text-ai-ink" />Ask Gemini</h2>
+      <h2 id="ask-gemini" className="flex items-center gap-2 section-title"><MessageSquareText aria-hidden="true" strokeWidth={1.75} className="h-4 w-4 text-ai-ink" />Ask Gemini</h2>
       <p className="mb-3 mt-1 text-xs text-text-2">Describe an action in plain English. Gemini ticks the matching actions for you; the numbers come from the forecast engine.</p>
       <form onSubmit={onSubmit} className="flex flex-col gap-2">
         <label htmlFor="ask-input" className="sr-only">Ask a what-if question</label>
@@ -97,12 +97,12 @@ export function AskBox({ status, noAction, withPlan }: Props) {
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void submit(question); } }}
           className="field w-full resize-none" />
         <button type="submit" disabled={busy || question.trim() === ''}
-          className="btn btn-primary">
+          className="btn">
           {busy ? 'Asking…' : <>Ask <CornerDownLeft aria-hidden="true" /></>}
         </button>
       </form>
-      <p className="mt-4 text-xs font-medium text-text-3">Or try one of these</p>
-      <div className="mt-1.5 flex flex-col gap-1.5" role="group" aria-label="Suggested questions">
+      <p className="mt-4 text-xs text-text-3">Or try one of these</p>
+      <div className="mt-2 flex flex-col gap-2" role="group" aria-label="Suggested questions">
         {SUGGESTED_QUESTIONS.map((q) => (
           <button key={q} type="button" disabled={busy} onClick={() => { setQuestion(q); void submit(q); }}
             className="rounded-lg border border-border bg-panel-2 px-3 py-2 text-left text-xs leading-relaxed text-text-2 transition-colors hover:border-ai/60 hover:text-text disabled:opacity-50">
@@ -117,7 +117,7 @@ export function AskBox({ status, noAction, withPlan }: Props) {
         )}
         {restDone && (pending || explanation) && (
           <div>
-            <h3 className="mb-1 text-sm font-semibold text-ai-ink">Why the results changed</h3>
+            <h3 className="mb-1 text-sm font-medium text-ai-ink">Why the results changed</h3>
             {explanation
               ? <p className="text-sm text-text"><TypedText key={explanation} text={explanation} /></p>
               : <p className="text-sm text-text-2">Working out why…</p>}

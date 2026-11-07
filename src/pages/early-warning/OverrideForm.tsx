@@ -42,7 +42,7 @@ export function OverrideForm({ item, onSubmit, onCancel }: {
   return (
     <form onSubmit={(ev) => void submit(ev)} onKeyDown={(ev) => { if (ev.key === 'Escape') onCancel(); }}
       className="card space-y-4 border-accent/50 p-5 shadow-[var(--shadow-pop)]" aria-label={`Override ${item.title}`}>
-      <h3 className="text-base font-semibold">Override: {item.title}</h3>
+      <h3 className="text-base font-medium">Override: {item.title}</h3>
       <div className="grid grid-cols-3 gap-3">
         <label className="field-label">Start (Malaysia time)
           <input ref={first} type="datetime-local" className={FIELD} value={start} onChange={(x) => setStart(x.target.value)} aria-describedby={msg ? errId : undefined} />
