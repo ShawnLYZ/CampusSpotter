@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import Shell from './Shell.tsx';
+import RequireAuth from './RequireAuth.tsx';
+import LoginPage from '../pages/login/LoginPage.tsx';
 import CommandCenterPage from '../pages/command-center/CommandCenterPage.tsx';
 import EarlyWarningPage from '../pages/early-warning/EarlyWarningPage.tsx';
 import ScenarioLabPage from '../pages/scenario-lab/ScenarioLabPage.tsx';
@@ -8,10 +10,10 @@ import DecisionLogPage from '../pages/action-plans/DecisionLogPage.tsx';
 import ReplayPage from '../pages/replay/ReplayPage.tsx';
 import DataAssumptionsPage from '../pages/data-assumptions/DataAssumptionsPage.tsx';
 
-// /login is added in P9.
 export const router = createBrowserRouter([
+  { path: '/login', element: <LoginPage /> },
   {
-    element: <Shell />,
+    element: <RequireAuth><Shell /></RequireAuth>,
     children: [
       { path: '/', element: <CommandCenterPage /> },
       { path: '/early-warning', element: <EarlyWarningPage /> },

@@ -2,7 +2,6 @@ import { Outlet } from 'react-router';
 import LeftNav from './LeftNav.tsx';
 import TopBar from './TopBar.tsx';
 import Footer from './Footer.tsx';
-import { PresenterHost } from '../presenter/PresenterHost.tsx';
 import { GuidePanel } from './GuidePanel.tsx';
 
 export default function Shell() {
@@ -16,7 +15,6 @@ export default function Shell() {
         </main>
         <Footer />
       </div>
-      <PresenterHost />
       <GuidePanel />
     </div>
   );

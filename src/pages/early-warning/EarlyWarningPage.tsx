@@ -6,6 +6,7 @@ import { useSubscription } from '../../hooks/useSubscription.ts';
 import { useContextStore } from '../../store/context.ts';
 import { Toast } from '../../components/Toast.tsx';
 import { addDays, mytDate } from '../../lib/dates.ts';
+import { withoutEndPeriod } from '../../lib/format.ts';
 import type { DisruptionInput, EarlyWarningItem, OverridePatch, ScanRun, Today } from '../../providers/types.ts';
 import { DisruptionForm } from './DisruptionForm.tsx';
 import { FilterBar } from './FilterBar.tsx';
@@ -127,7 +128,7 @@ export default function EarlyWarningPage() {
           </button>
         </>} />
       <FilterBar types={types} risks={risks} onTypes={setTypes} onRisks={setRisks} />
-      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Something went wrong: {error}. Try again, or reload the page.</p>}
+      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Something went wrong: {withoutEndPeriod(error)}. Try again, or reload the page.</p>}
       {form?.kind === 'add' && <DisruptionForm defaultDate={defaultDate} onSubmit={submitForm} onCancel={() => setForm(null)} />}
       {form?.kind === 'edit' && form.item.origin === 'manual' && (
         <DisruptionForm key={form.item.id} item={form.item} defaultDate={defaultDate} onSubmit={submitForm} onCancel={() => setForm(null)} />

@@ -1,0 +1,16 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          { "text": "{\"headline\":\"Shuttle crowding expected at 5pm\",\"levers\":[{\"kind\":\"shuttle_extra\",\"count\":2}]}" }
+        ]
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": { "promptTokenCount": 412, "candidatesTokenCount": 38, "totalTokenCount": 450 },
+  "modelVersion": "gemini-3.8-flash"
+}

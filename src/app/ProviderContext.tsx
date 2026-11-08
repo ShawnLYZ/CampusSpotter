@@ -1,20 +1,30 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { DataProvider } from '../providers/DataProvider.ts';
-import { createDemoProvider } from '../providers/demo/createDemoProvider.ts';
+import { createSupabaseProvider } from '../providers/supabase/createSupabaseProvider.ts';
+import { createBrowserClient } from '../providers/supabase/client.ts';
 import { clearForecastCache } from '../hooks/forecastCache.ts';
 import { useContextStore } from '../store/context.ts';
 
 const Ctx = createContext<DataProvider | null>(null);
 
-function chooseProvider(): DataProvider {
-  // P9 adds the Supabase branch here (VITE_DATA_PROVIDER === 'supabase').
-  return createDemoProvider();
+// Async so a missing setting in .env surfaces as a startup failure message.
+async function createProvider(): Promise<DataProvider> {
+  return createSupabaseProvider(createBrowserClient());
 }
 
 export function ProviderRoot({ children }: { children: ReactNode }) {
-  const provider = useMemo(chooseProvider, []);
+  const [provider, setProvider] = useState<DataProvider | null>(null);
   const [ready, setReady] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
   useEffect(() => {
+    let cancelled = false;
+    createProvider().then((p) => { if (!cancelled) setProvider(p); }, (e: unknown) => {
+      if (!cancelled) setFailure(e instanceof Error ? e.message : 'CampusSpotter could not start.');
+    });
+    return () => { cancelled = true; };
+  }, []);
+  useEffect(() => {
+    if (!provider) return;
     let cancelled = false;
     void provider.getToday().then((t) => {
       if (cancelled) return;
@@ -24,14 +34,13 @@ export function ProviderRoot({ children }: { children: ReactNode }) {
     return () => { cancelled = true; };
   }, [provider]);
   useEffect(() => {
+    if (!provider) return;
     const offs = (['disruptions', 'baseline'] as const).map((c) => provider.subscribe(c, clearForecastCache));
     return () => offs.forEach((off) => off());
   }, [provider]);
-  return (
-    <Ctx.Provider value={provider}>
-      {ready ? children : <p className="p-6 text-text-2">Loading CampusSpotter…</p>}
-    </Ctx.Provider>
-  );
+  if (failure) return <p role="alert" className="p-6 text-text-2">{failure}</p>;
+  if (!provider || !ready) return <p className="p-6 text-text-2">Loading CampusSpotter…</p>;
+  return <Ctx.Provider value={provider}>{children}</Ctx.Provider>;
 }
 
 export function useProvider(): DataProvider {

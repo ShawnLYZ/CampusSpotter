@@ -1,0 +1,41 @@
+{
+  "events": [
+    {
+      "title": "BTS World Tour KL",
+      "venue": "Stadium Nasional Bukit Jalil",
+      "startDate": "2026-12-12",
+      "endDate": "2026-12-13",
+      "expectedAttendance": 55000,
+      "attendanceStated": true,
+      "isApuCalendar": false,
+      "sourceUrls": [
+        "https://news.example.my/articles/bts-world-tour-kl-stadium-nasional",
+        "https://news.example.my/articles/bts-fans-lrt-bukit-jalil"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "title": "Harimau Malaysia friendly",
+      "venue": "Stadium Merdeka",
+      "venueLat": 3.1408,
+      "venueLng": 101.7011,
+      "startDate": "2026-11-28",
+      "startTime": "20:45",
+      "expectedAttendance": null,
+      "attendanceStated": false,
+      "isApuCalendar": false,
+      "sourceUrls": ["https://news.example.my/articles/harimau-friendly-stadium-merdeka"],
+      "confidence": "high"
+    },
+    {
+      "title": "Bukit Jalil mid-year festival",
+      "venue": "Stadium Nasional Bukit Jalil",
+      "startDate": "2027-05-26",
+      "expectedAttendance": null,
+      "attendanceStated": false,
+      "isApuCalendar": false,
+      "sourceUrls": ["https://news.example.my/articles/bukit-jalil-2027-festival"],
+      "confidence": "low"
+    }
+  ]
+}

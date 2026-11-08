@@ -1,0 +1,16 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          { "text": "Sure! Here is my suggestion: add two extra shuttles around five pm." }
+        ]
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": { "promptTokenCount": 412, "candidatesTokenCount": 17, "totalTokenCount": 429 },
+  "modelVersion": "gemini-3.8-flash"
+}

@@ -31,6 +31,6 @@ export interface SourceInfo { id: string; name: string; label: Label; url: strin
 export interface BaselineTable { name: BaselineTableName; title: string; columns: string[]; rows: Record<string, unknown>[] }
 export interface CsvReport { ok: boolean; applied: boolean; rowCount: number; errors: CsvError[] }
 export interface EstimateView extends Estimate { date: string; disruptionTitle: string }
-export type Channel = 'disruptions' | 'job_runs' | 'decisions' | 'checklist_items' | 'baseline';
-export interface ProviderInfo { kind: 'demo' | 'supabase'; dataNote: string }
+export type Channel = 'disruptions' | 'job_runs' | 'decisions' | 'checklist_items' | 'baseline' | 'auth';
+export interface ProviderInfo { dataNote: string }
 export interface StationDay { date: string; boardings: number; alightings: number; typicalBoardings: number | null; typicalAlightings: number | null }

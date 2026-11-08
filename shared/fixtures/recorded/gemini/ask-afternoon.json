@@ -1,0 +1,21 @@
+{
+  "levers": {
+    "classesOnline": [
+      {
+        "fromMin": 810,
+        "toMin": 1020,
+        "blocks": [
+          "all"
+        ]
+      }
+    ],
+    "extraBuses": [
+      {
+        "buses": 3,
+        "fromMin": 960,
+        "toMin": 1140
+      }
+    ]
+  },
+  "restatement": "Move classes online from 13:30 to 17:00 and hire 3 extra buses from 16:00 to 19:00."
+}

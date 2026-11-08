@@ -2,17 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useProvider } from '../../app/ProviderContext.tsx';
 import { useContextStore } from '../../store/context.ts';
-import { usePresenterAction, usePresenterCancel } from '../../presenter/usePresenterAction.ts';
 import { useLeverStore } from '../../store/levers.ts';
 import { useForecast } from '../../hooks/useForecast.ts';
 import type { LeverSet } from '@engine/index.ts';
 import type { ContextRequest, PlanProposal, Today } from '../../providers/types.ts';
-import { dateText } from '../../lib/format.ts';
+import { dateText, withoutEndPeriod } from '../../lib/format.ts';
 import { ContextPicker } from '../scenario-lab/ContextPicker.tsx';
 import { PlanCard } from './PlanCard.tsx';
 import { ComparisonTable } from './ComparisonTable.tsx';
 import { DecisionView } from './DecisionView.tsx';
-import type { PresenterAction } from '../../presenter/bus.ts';
 import { BookOpen, ClipboardCheck, ClipboardList, ListChecks, LoaderCircle } from 'lucide-react';
 import { PageIntro } from '../../components/PageIntro.tsx';
 
@@ -58,18 +56,6 @@ export default function ActionPlansPage() {
 
   const generate = () => generateFor(ctx);
 
-  // Presenter: set the budget, press Generate once it has applied, then Choose a plan after a delay.
-  // Each phase is an effect, so unmount, a new script or a step change cancels the pending choose timer.
-  const [script, setScript] = useState<Extract<PresenterAction, { type: 'plans.generate' }> | null>(null);
-  const scriptGenerated = useRef<typeof script>(null);
-  usePresenterAction('plans.generate', (a) => { scriptGenerated.current = null; setScript(a); setBudget(a.budgetRm); });
-  usePresenterCancel(() => { scriptGenerated.current = null; setScript(null); });
-  useEffect(() => {
-    if (!script || scriptGenerated.current === script || budget !== script.budgetRm || !ctx.date) return;
-    scriptGenerated.current = script;
-    generateFor(ctx);
-  });
-
   // A changed context invalidates plans, the chosen plan and any in-flight request.
   const key = ctxKey(ctx);
   const planKey = planCtx ? ctxKey(planCtx) : null;
@@ -101,15 +87,6 @@ export default function ActionPlansPage() {
     return () => window.clearTimeout(t);
   }, [budget, hasPlans]);
 
-  const scriptReady = script !== null && scriptGenerated.current === script && plans !== null && current && !busy;
-  useEffect(() => {
-    if (!script || !scriptReady || script.chooseIndex === null) return;
-    const pick = plans?.[script.chooseIndex];
-    if (!pick) return;
-    const t = window.setTimeout(() => { setChosen(pick); setScript(null); }, script.chooseAfterMs);
-    return () => window.clearTimeout(t);
-  }, [script, scriptReady, plans]);
-
   const openLab = (plan: PlanProposal) => {
     useContextStore.getState().setCtx(planCtx ?? ctx);
     useLeverStore.getState().setLevers(plan.levers, plan.levers.map((l) => l.kind));
@@ -134,7 +111,7 @@ export default function ActionPlansPage() {
           {busy ? 'Generating…' : plans && current ? 'Generate again' : 'Generate plans'}
         </button>
       </div>
-      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Could not generate plans: {error}. Check the day and budget, then try again.</p>}
+      {error && <p role="alert" className="rounded-xl border border-red/60 bg-red/10 px-4 py-3 text-sm text-red-ink">Could not generate plans: {withoutEndPeriod(error)}. Check the day and budget, then try again.</p>}
       {!(plans && current) && !busy && !error && (
         <div className="card flex flex-col items-center gap-2 px-6 py-12 text-center">
           <ClipboardList aria-hidden="true" strokeWidth={1.5} className="h-8 w-8 text-text-3" />

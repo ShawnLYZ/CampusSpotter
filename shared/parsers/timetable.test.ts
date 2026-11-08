@@ -41,3 +41,47 @@ describe('timetable aggregation', () => {
     for (const k of ['LECTID', 'NAME', 'SAMACCOUNTNAME', 'INTAKE']) expect(text).not.toContain(`"${k}"`);
   });
 });
+
+import sampleFeed from '../fixtures/recorded/timetable-feed-sample.json';
+import { assertFeedShape, sessionsFromFeed } from './timetable.ts';
+
+describe('sessionsFromFeed', () => {
+  const sessions = sessionsFromFeed(assertFeedShape(sampleFeed));
+  const find = (date: string, room: string, start: string) =>
+    sessions.find((s) => s.date === date && s.room === room && s.start === `${date}T${start}:00+08:00`)!;
+
+  it('derives intakes, firstOfDay, lastOfDay and type per (room, start) session', () => {
+    expect(sessions).toHaveLength(10);
+    expect(find('2026-11-09', 'B-01-01', '08:30')).toMatchObject({ intakes: 2, firstOfDay: 2, lastOfDay: 0, type: 'L', end: '2026-11-09T10:30:00+08:00', location: 'APU CAMPUS' });
+    expect(find('2026-11-09', 'C-02-03', '11:00')).toMatchObject({ intakes: 1, firstOfDay: 0, lastOfDay: 0, type: 'T' });
+    expect(find('2026-11-09', 'Lab 3 @ Block D', '11:00')).toMatchObject({ intakes: 1, firstOfDay: 0, lastOfDay: 0, type: 'LAB' });
+    expect(find('2026-11-10', 'B-01-01', '14:00')).toMatchObject({ intakes: 1, firstOfDay: 0, lastOfDay: 1, type: '?' });
+    expect(find('2026-11-10', 'ONLMCO3-1', '15:00')).toMatchObject({ intakes: 1, firstOfDay: 0, lastOfDay: 1, type: 'P' });
+  });
+
+  it('aggregates like the snapshot pipeline (online rooms excluded)', () => {
+    const agg = aggregateSessions(sessions, '2026-11-09T21:00:00Z');
+    expect(agg.days.map((d) => [d.date, d.sessions])).toEqual([['2026-11-09', 4], ['2026-11-10', 4]]);
+  });
+
+  it('carries no personal fields or cohort codes', () => {
+    const out = JSON.stringify(sessions);
+    for (const s of ['Test Lecturer', 'L999', 'tl999', 'UCDF2401', 'UCDF2402', 'LECTID', 'SAMACCOUNTNAME']) expect(out).not.toContain(s);
+  });
+});
+
+describe('assertFeedShape', () => {
+  it('throws schema for a non-array, an empty array and malformed leading rows', () => {
+    expect(() => assertFeedShape({})).toThrow(/^schema/);
+    expect(() => assertFeedShape([])).toThrow(/^schema/);
+    expect(() => assertFeedShape([{ ROOM: 'A' }])).toThrow(/^schema/);
+  });
+  it('keeps only the allowed keys on new objects and drops malformed rows beyond the first 50', () => {
+    const good = { ...(sampleFeed[0] as object) };
+    const rows = [...Array.from({ length: 50 }, () => good), { ROOM: 'x' }, good];
+    const out = assertFeedShape(rows);
+    expect(out).toHaveLength(51);
+    expect(out[0]).not.toBe(good);
+    expect(Object.keys(out[0]).sort()).toEqual(['CLASS_CODE', 'DATESTAMP_ISO', 'INTAKE', 'LOCATION', 'ROOM', 'TIME_FROM_ISO', 'TIME_TO_ISO']);
+  });
+});

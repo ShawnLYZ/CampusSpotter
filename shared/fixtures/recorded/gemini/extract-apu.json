@@ -1,0 +1,26 @@
+{
+  "events": [
+    {
+      "title": "Intake: Foundation",
+      "venue": "APU campus",
+      "startDate": "2026-11-17",
+      "expectedAttendance": null,
+      "attendanceStated": false,
+      "isApuCalendar": true,
+      "calendarKind": "intake",
+      "sourceUrls": ["https://www.apu.edu.my/intake-calendar"],
+      "confidence": "high"
+    },
+    {
+      "title": "Intake: Degree Level 1",
+      "venue": "APU campus",
+      "startDate": "2026-12-01",
+      "expectedAttendance": null,
+      "attendanceStated": false,
+      "isApuCalendar": true,
+      "calendarKind": "intake",
+      "sourceUrls": ["https://www.apu.edu.my/intake-calendar"],
+      "confidence": "high"
+    }
+  ]
+}

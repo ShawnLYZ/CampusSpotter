@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   server: { port: 5173, strictPort: true },
-  // Demo fixtures and the engine ship in the main chunk until later tasks code-split pages.
+  // The forecast engine and the 3D scene are large, and pages are not code-split yet.
   build: { chunkSizeWarningLimit: 2500 },
   test: {
     include: ['shared/**/*.test.ts', 'src/**/*.test.ts', 'scripts/**/*.test.ts'],

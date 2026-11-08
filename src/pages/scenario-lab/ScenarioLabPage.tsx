@@ -39,7 +39,7 @@ export default function ScenarioLabPage() {
   const highlighted = useLeverStore((s) => s.highlighted);
   const { setLevers, upsert, remove, reset } = useLeverStore.getState();
   const step = useTimeStore((s) => s.step);
-  const fc = useForecast(ctx, levers);
+  const fc = useForecast(ctx, levers, { refreshEstimates: true });
 
   // Keep the lever panel mounted (and its highlight timer running) while a new day's bundle loads.
   const lastBundle = useRef(fc.bundle);
@@ -80,7 +80,7 @@ export default function ScenarioLabPage() {
         actions={<>
           <button type="button" className="btn btn-quiet" onClick={reset} disabled={levers.length === 0}><RotateCcw aria-hidden="true" /> Reset to no action</button>
           <button type="button" className="btn" onClick={fridayScenario} disabled={!today}><MoonStar aria-hidden="true" /> Friday prayer scenario</button>
-          {provider.info.kind === 'supabase' && <button type="button" className="btn" onClick={save}>Save forecast</button>}
+          <button type="button" className="btn" onClick={save}>Save forecast</button>
           <button type="button" className="btn btn-primary" onClick={() => void navigate('/action-plans')}><ListChecks aria-hidden="true" /> Generate plans</button>
         </>} />
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -118,7 +118,7 @@ export default function ScenarioLabPage() {
 
         <aside aria-label="Ask and estimates" className="flex min-h-0 flex-col gap-4 overflow-y-auto pl-1">
           <AskBox status={fc.status} noAction={fc.noAction} withPlan={fc.withPlan} />
-          <EstimatesPanel estimates={fc.bundle?.estimates ?? []} />
+          <EstimatesPanel estimates={fc.bundle?.estimates ?? []} stale={fc.estimatesStale} />
         </aside>
       </div>
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}

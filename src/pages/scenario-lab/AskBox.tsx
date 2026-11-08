@@ -5,8 +5,6 @@ import { useProvider } from '../../app/ProviderContext.tsx';
 import { useContextStore } from '../../store/context.ts';
 import { useLeverStore } from '../../store/levers.ts';
 import { TypedText } from '../../components/TypedText.tsx';
-import { SCRIPTED_ASKS } from '../../providers/demo/scripted/ask.ts';
-import { usePresenterAction, usePresenterCancel } from '../../presenter/usePresenterAction.ts';
 import { explainGate, type ForecastStatus } from './explainGate.ts';
 import { CornerDownLeft, MessageSquareText } from 'lucide-react';
 
@@ -61,28 +59,8 @@ export function AskBox({ status, noAction, withPlan }: Props) {
     }
   };
 
-  // Presenter: type the scripted question at 30 cps, then submit it the normal way. One typer at a time.
-  const submitRef = useRef(submit);
-  submitRef.current = submit;
-  const typer = useRef<number | null>(null);
-  const stopTyping = () => { if (typer.current !== null) { window.clearInterval(typer.current); typer.current = null; } };
-  // Also drop any in-flight answer so it cannot touch levers after the next presenter step has reset them.
-  // The bumped token makes submit's finally skip setBusy(false), so clear busy here.
-  const cancelAsk = () => { stopTyping(); token.current++; setBusy(false); };
-  usePresenterAction('lab.ask', (a) => {
-    const q = SCRIPTED_ASKS.find((x) => x.id === a.askId)?.question;
-    if (!q) return;
-    stopTyping();
-    let n = 0;
-    setQuestion('');
-    typer.current = window.setInterval(() => {
-      n += 1;
-      setQuestion(q.slice(0, n));
-      if (n >= q.length) { stopTyping(); void submitRef.current(q); }
-    }, 1000 / 30);
-  });
-  usePresenterCancel(cancelAsk);
-  useEffect(() => cancelAsk, []);
+  // Drop any in-flight answer on unmount so it cannot touch levers afterwards.
+  useEffect(() => () => { token.current++; }, []);
 
   const onSubmit = (e: FormEvent) => { e.preventDefault(); void submit(question); };
 

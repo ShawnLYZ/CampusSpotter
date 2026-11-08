@@ -103,3 +103,61 @@ export function aggregateSessions(sessions: SnapshotSession[], syncedAt: string)
 
   return { days, groups, conditioned, rooms };
 }
+
+/** The only feed fields the pipeline reads. LECTID, NAME and SAMACCOUNTNAME are never accessed. */
+export interface FeedRow { INTAKE: string; ROOM: string; LOCATION: string; DATESTAMP_ISO: string; TIME_FROM_ISO: string; TIME_TO_ISO: string; CLASS_CODE?: string }
+
+const REQUIRED = ['INTAKE', 'ROOM', 'LOCATION', 'DATESTAMP_ISO', 'TIME_FROM_ISO', 'TIME_TO_ISO'] as const;
+const hasRequired = (r: unknown): r is Record<(typeof REQUIRED)[number], string> =>
+  typeof r === 'object' && r !== null && REQUIRED.every((k) => typeof (r as Record<string, unknown>)[k] === 'string');
+
+/** Validates the feed's shape and returns new objects holding only the allowed keys. Error messages never embed row data. */
+export function assertFeedShape(json: unknown): FeedRow[] {
+  if (!Array.isArray(json)) throw new Error('schema: feed is not an array');
+  if (json.length === 0) throw new Error('schema: empty feed');
+  for (let i = 0; i < Math.min(50, json.length); i++) {
+    if (!hasRequired(json[i])) throw new Error(`schema: row ${i} is missing a required field`);
+  }
+  const out: FeedRow[] = [];
+  for (const r of json) {
+    if (!hasRequired(r)) continue;
+    const row: FeedRow = { INTAKE: r.INTAKE, ROOM: r.ROOM, LOCATION: r.LOCATION, DATESTAMP_ISO: r.DATESTAMP_ISO, TIME_FROM_ISO: r.TIME_FROM_ISO, TIME_TO_ISO: r.TIME_TO_ISO };
+    const cc = (r as Record<string, unknown>).CLASS_CODE;
+    if (typeof cc === 'string') row.CLASS_CODE = cc;
+    out.push(row);
+  }
+  return out;
+}
+
+/** Counts-only sessions, one per (ROOM, TIME_FROM_ISO). Cohort codes are used in memory to derive firstOfDay/lastOfDay and are not returned. */
+export function sessionsFromFeed(rows: FeedRow[]): SnapshotSession[] {
+  const cohortDay = new Map<string, { first: number; last: number }>();
+  for (const r of rows) {
+    const k = `${r.DATESTAMP_ISO.slice(0, 10)}|${r.INTAKE}`;
+    const from = isoToMin(r.TIME_FROM_ISO), to = isoToMin(r.TIME_TO_ISO);
+    const c = cohortDay.get(k);
+    if (!c) cohortDay.set(k, { first: from, last: to });
+    else { c.first = Math.min(c.first, from); c.last = Math.max(c.last, to); }
+  }
+  const sessions = new Map<string, { s: SnapshotSession; cohorts: Set<string>; start: number; end: number }>();
+  for (const r of rows) {
+    const date = r.DATESTAMP_ISO.slice(0, 10);
+    const key = `${r.ROOM}|${r.TIME_FROM_ISO}`;
+    let e = sessions.get(key);
+    if (!e) {
+      e = { s: { date, room: r.ROOM, location: r.LOCATION, start: r.TIME_FROM_ISO, end: r.TIME_TO_ISO, type: '?', intakes: 0, firstOfDay: 0, lastOfDay: 0 }, cohorts: new Set(), start: isoToMin(r.TIME_FROM_ISO), end: isoToMin(r.TIME_TO_ISO) };
+      sessions.set(key, e);
+    }
+    if (e.s.type === '?' && r.CLASS_CODE) {
+      const m = /-(L|T|LAB|P)-/.exec(r.CLASS_CODE);
+      if (m) e.s.type = m[1];
+    }
+    if (e.cohorts.has(r.INTAKE)) continue;
+    e.cohorts.add(r.INTAKE);
+    const c = cohortDay.get(`${date}|${r.INTAKE}`)!;
+    e.s.intakes += 1;
+    if (c.first === e.start) e.s.firstOfDay += 1;
+    if (c.last === e.end) e.s.lastOfDay += 1;
+  }
+  return [...sessions.values()].map((e) => e.s);
+}

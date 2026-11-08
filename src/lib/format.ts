@@ -50,3 +50,8 @@ export function stampText(iso: string): string {
   if (Number.isNaN(Date.parse(iso))) return iso;
   return `${dateText(mytDate(iso))}, ${clock12(mytMinutes(iso))}`;
 }
+
+/** Error text for a banner that adds its own period after the message. */
+export function withoutEndPeriod(message: string): string {
+  return message.trim().replace(/\.+$/, '');
+}

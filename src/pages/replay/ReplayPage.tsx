@@ -9,17 +9,14 @@ import { Timeline } from '../../components/Timeline.tsx';
 import { TypedText } from '../../components/TypedText.tsx';
 import { useForecast } from '../../hooks/useForecast.ts';
 import { clock12, rmText } from '../../lib/format.ts';
-import { announcementScripted } from '../../providers/demo/scripted/announcement.ts';
-import type { ContextRequest, PlanProposal, StationDay } from '../../providers/types.ts';
+import type { ContextRequest, StationDay } from '../../providers/types.ts';
 import { SceneSlot } from '../../scene/SceneSlot.tsx';
 import { useContextStore } from '../../store/context.ts';
 import { useTimeStore } from '../../store/time.ts';
-import { usePresenterAction } from '../../presenter/usePresenterAction.ts';
-import { usePresenterStore } from '../../presenter/store.ts';
 import { summaryRows } from '../scenario-lab/summaryRows.ts';
-import { shouldAutoplay } from './shouldAutoplay.ts';
 import { Jun3Card } from './Jun3Card.tsx';
 import { MilestoneStrip } from './MilestoneStrip.tsx';
+import { replayAnnouncement } from './replayAnnouncement.ts';
 import { replayNarrative } from './replayData.ts';
 import type { Milestone } from './replayData.ts';
 import { stationText } from './stationText.ts';
@@ -43,15 +40,6 @@ export default function ReplayPage() {
   const fc = useForecast(REPLAY_CTX, REPLAY_PLAN_4NOV);
   const [station, setStation] = useState<StationDay | null>(null);
 
-  usePresenterAction('replay.milestone', (a) => { setActive(a.id); });
-  usePresenterAction('replay.play', (a) => {
-    const t = useTimeStore.getState();
-    t.setRange({ from: a.from, to: a.to });
-    t.setStep(a.from);
-    t.setSpeed(a.speed);
-    t.play();
-  });
-
   useEffect(() => { setCtx(REPLAY_CTX); }, [setCtx]);
   useEffect(() => {
     let cancelled = false;
@@ -63,7 +51,7 @@ export default function ReplayPage() {
   const ready = fc.status === 'ready' && !!fc.bundle && !!fc.noAction && !!fc.withPlan;
   useEffect(() => {
     const prevSpeed = useTimeStore.getState().speed;
-    if (shouldAutoplay(active === 'nov4', ready, usePresenterStore.getState().active)) {
+    if (active === 'nov4' && ready) {
       const t = useTimeStore.getState();
       t.setRange({ from: PLAY_FROM, to: PLAY_TO });
       t.setStep(PLAY_FROM);
@@ -75,7 +63,7 @@ export default function ReplayPage() {
 
   const checklist = useMemo(() => (fc.bundle ? buildChecklist(REPLAY_PLAN_4NOV, fc.bundle) : null), [fc.bundle]);
   const announcement = useMemo(
-    () => (checklist ? announcementScripted({ levers: REPLAY_PLAN_4NOV } as PlanProposal, REPLAY_CTX, null, checklist) : null),
+    () => (checklist ? replayAnnouncement(REPLAY_PLAN_4NOV, checklist) : null),
     [checklist],
   );
   const narrative = useMemo(

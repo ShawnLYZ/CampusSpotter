@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatMetric, pressureText, stampText } from './format.ts';
+import { formatMetric, pressureText, stampText, withoutEndPeriod } from './format.ts';
 import type { StepValue } from '@engine/index.ts';
 
 const sv = (value: number | null, status: StepValue['status'] = 'ok'): StepValue => ({ value, status, pressure: null, provenance: null });
@@ -34,5 +34,14 @@ describe('stampText', () => {
   });
   it('returns unparsable input unchanged', () => {
     expect(stampText('not a date')).toBe('not a date');
+  });
+});
+
+describe('withoutEndPeriod', () => {
+  it('drops trailing periods so a banner can add its own', () => {
+    expect(withoutEndPeriod('AI is unavailable right now.')).toBe('AI is unavailable right now');
+    expect(withoutEndPeriod('Bad input..  ')).toBe('Bad input');
+    expect(withoutEndPeriod('No period')).toBe('No period');
+    expect(withoutEndPeriod('Wait…')).toBe('Wait…');
   });
 });

@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import { usePresenterAction } from '../../presenter/usePresenterAction.ts';
 import { SourcesTab } from './SourcesTab.tsx';
 import { BaselineTab } from './BaselineTab.tsx';
 import { EstimatesTab } from './EstimatesTab.tsx';
@@ -22,7 +21,6 @@ const TABS = [
 export default function DataAssumptionsPage() {
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  usePresenterAction('data.tab', (a) => setActive(Math.max(0, TABS.findIndex((t) => t.id === a.tab))));
 
   const onKey = (e: KeyboardEvent) => {
     const n = TABS.length;

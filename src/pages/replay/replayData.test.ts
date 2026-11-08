@@ -1,10 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { durationText, rmText } from '@engine/index.ts';
 import type { Summary } from '@engine/index.ts';
-import { createDemoProvider } from '../../providers/demo/createDemoProvider.ts';
+import { fixtureBundle } from '@fixtures/engine/index.ts';
+import type { DataProvider } from '../../providers/DataProvider.ts';
+import type { ContextRequest } from '../../providers/types.ts';
 import { MILESTONES, buildJun3Card, replayNarrative } from './replayData.ts';
 
-const provider = () => createDemoProvider({ latencyMs: [0, 0] });
+// Only the two calls buildJun3Card makes, served from the saved fixture data.
+const provider = (): DataProvider => ({
+  getDisruption: async (id: string) => ({ id }),
+  getInputBundle: (ctx: ContextRequest) => fixtureBundle(ctx.date, { reconstructed: ctx.reconstructed }),
+}) as unknown as DataProvider;
 const summary = (wait: number, queue: number, cost: number): Summary => ({
   peakApuWaitMin: wait, peakApuQueue: { value: queue, atMin: 13 * 60 }, totalCostRm: cost,
 }) as unknown as Summary;
@@ -21,14 +27,6 @@ describe('replay data', () => {
     expect(card.daysRemaining).toBe(154);
     expect(card.isPast).toBe(false);
     expect(['high', 'critical']).toContain(card.riskLevel);
-  });
-
-  it('gives the Demo provider the 4 Nov station day with typical figures', async () => {
-    const day = await provider().getStationDay('2026-11-04');
-    expect(day).not.toBeNull();
-    expect(day).toMatchObject({ boardings: 24238, alightings: 33804 });
-    expect(day!.typicalBoardings).toBeGreaterThan(0);
-    expect(await provider().getStationDay('2030-01-01')).toBeNull();
   });
 
   it('writes a narrative whose numbers come from its inputs', () => {

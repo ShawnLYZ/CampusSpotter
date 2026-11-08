@@ -1,0 +1,63 @@
+{
+  "plans": [
+    {
+      "name": "Hire three evening buses",
+      "levers": {
+        "extraBuses": [
+          {
+            "buses": 3,
+            "fromMin": 900,
+            "toMin": 1260
+          }
+        ],
+        "advisory": [
+          {
+            "advisedMin": 1020,
+            "message": "leave_before"
+          }
+        ]
+      },
+      "rationale": "Three hired buses cover the evening peak at the APU stop. A student advisory encourages leaving before the rush."
+    },
+    {
+      "name": "Online late classes and loop",
+      "levers": {
+        "classesOnline": [
+          {
+            "fromMin": 1020,
+            "toMin": 1260,
+            "blocks": [
+              "all"
+            ]
+          }
+        ],
+        "nonstopLoop": [
+          {
+            "fromMin": 1020,
+            "toMin": 1200
+          }
+        ]
+      },
+      "rationale": "Moving late sessions online removes demand from the evening window. The existing fleet runs a nonstop loop at no extra cost."
+    },
+    {
+      "name": "One bus and advisory",
+      "levers": {
+        "extraBuses": [
+          {
+            "buses": 1,
+            "fromMin": 1020,
+            "toMin": 1200
+          }
+        ],
+        "advisory": [
+          {
+            "advisedMin": 1020,
+            "message": "expect_delays"
+          }
+        ]
+      },
+      "rationale": "A single hired bus eases the busiest hour while keeping spend low. Students are warned to expect delays."
+    }
+  ]
+}

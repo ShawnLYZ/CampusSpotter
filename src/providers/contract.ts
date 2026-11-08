@@ -102,7 +102,7 @@ export function providerContract(name: string, setup: () => Promise<ContractSetu
     const plansFor4Nov = async (): Promise<PlanProposal[]> => ctx.provider.generatePlans(c4, 2000);
     const decide = async (): Promise<{ plan: PlanProposal; id: string }> => {
       const plan = (await plansFor4Nov())[0];
-      const made = await ctx.provider.createDecision({ plan, ctx: c4, notes: null, announcementText: 'Dear students,' });
+      const made = await ctx.provider.createDecision({ plan, ctx: c4, notes: '[contract] decision', announcementText: 'Dear students,' });
       return { plan, id: made.decision.id };
     };
 
@@ -136,7 +136,7 @@ export function providerContract(name: string, setup: () => Promise<ContractSetu
 
     it('creates a decision whose checklist covers the teams of its levers', async () => {
       const plan = (await plansFor4Nov())[0];
-      const made = await ctx.provider.createDecision({ plan, ctx: c4, notes: null, announcementText: 'Dear students,' });
+      const made = await ctx.provider.createDecision({ plan, ctx: c4, notes: '[contract] decision', announcementText: 'Dear students,' });
       const b = await ctx.provider.getInputBundle(c4);
       const expected = new Set(plan.levers
         .filter((l) => buildChecklist([l], b).length > 0)
@@ -147,11 +147,11 @@ export function providerContract(name: string, setup: () => Promise<ContractSetu
 
     it('updates a decision', async () => {
       const { id } = await decide();
-      const updated = await ctx.provider.updateDecision(id, { status: 'done', notes: 'ok' });
+      const updated = await ctx.provider.updateDecision(id, { status: 'done', notes: '[contract] ok' });
       expect(updated.status).toBe('done');
       const read = (await ctx.provider.getDecision(id))!.decision;
       expect(read.status).toBe('done');
-      expect(read.notes).toBe('ok');
+      expect(read.notes).toBe('[contract] ok');
     });
 
     it('marks a checklist item done', async () => {

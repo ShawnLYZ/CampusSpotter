@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Toast } from '../components/Toast.tsx';
 import { useProvider } from './ProviderContext.tsx';
+import { noteSignOut } from './redirect.ts';
 import { useContextStore } from '../store/context.ts';
 import { clockNowMyt, dateText } from '../lib/format.ts';
-import type { SourceInfo } from '../providers/types.ts';
+import { useNavigate } from 'react-router';
+import type { AppUser, SourceInfo } from '../providers/types.ts';
 import { CalendarDays, CircleHelp, Clock, UserRound } from 'lucide-react';
 import { useGuide } from './guide.ts';
 
@@ -16,7 +19,10 @@ export default function TopBar() {
   const [clock, setClock] = useState(clockNowMyt);
   const [title, setTitle] = useState<string | null>(null);
   const [worst, setWorst] = useState<SourceInfo['status'] | null>(null);
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  const clearToast = useCallback(() => setToast(null), []);
+  const navigate = useNavigate();
   const openGuide = useGuide((x) => x.open);
 
   useEffect(() => {
@@ -36,19 +42,16 @@ export default function TopBar() {
 
   useEffect(() => {
     let cancelled = false;
-    void provider.currentUser().then((u) => { if (!cancelled) setUser(u?.displayName ?? null); });
-    if (provider.info.kind !== 'demo') {
-      void provider.listSources().then((src) => {
-        if (cancelled || src.length === 0) return;
-        setWorst(src.reduce((w, s) => (SEVERITY[s.status] > SEVERITY[w] ? s.status : w), src[0].status));
-      });
-    }
+    provider.currentUser().then((u) => { if (!cancelled) setUser(u); }, () => { /* the guard handles sign-in problems */ });
+    provider.listSources().then((src) => {
+      if (cancelled || src.length === 0) return;
+      setWorst(src.reduce((w, s) => (SEVERITY[s.status] > SEVERITY[w] ? s.status : w), src[0].status));
+    }, () => { /* the freshness badge stays on "Checking" */ });
     return () => { cancelled = true; };
   }, [provider]);
 
-  const demo = provider.info.kind === 'demo';
-  const freshness = demo ? 'Demo data · saved 5 Nov 2026' : `Data: ${worst ? STATUS_TEXT[worst] : 'Checking'}`;
-  const dot = demo ? 'bg-accent' : worst ? STATUS_DOT[worst] : 'bg-text-3';
+  const freshness = `Data: ${worst ? STATUS_TEXT[worst] : 'Checking'}`;
+  const dot = worst ? STATUS_DOT[worst] : 'bg-text-3';
 
   return (
     <header className="flex items-center gap-3 border-b border-border bg-panel px-6 text-sm">
@@ -62,16 +65,18 @@ export default function TopBar() {
       <time className="figure inline-flex items-center gap-2 text-[13px] text-text-2" aria-label="Current time in Malaysia">
         <Clock aria-hidden="true" strokeWidth={1.75} className="h-4 w-4 text-text-3" />{clock} MYT
       </time>
-      <span className="inline-flex items-center gap-2 px-2 text-xs text-text-3"
-        title={demo ? 'Saved demo data; the forecast engine still recomputes live' : undefined}>
+      <span className="inline-flex items-center gap-2 px-2 text-xs text-text-3">
         <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${dot}`} />{freshness}
       </span>
       <button type="button" onClick={openGuide} className="btn btn-sm">
         <CircleHelp aria-hidden="true" strokeWidth={1.75} /> How it works
       </button>
-      <button type="button" className="btn btn-quiet btn-sm">
-        <UserRound aria-hidden="true" strokeWidth={1.75} /> {user ?? 'Guest'}
-      </button>
+      <span className="inline-flex items-center gap-2 text-text-2">
+        <UserRound aria-hidden="true" strokeWidth={1.75} className="h-4 w-4" /> {user?.displayName ?? 'Guest'}
+        {user && <span className="rounded-full border border-border px-2 py-0.5 text-xs">{user.role === 'manager' ? 'Manager' : 'View only'}</span>}
+      </span>
+      <button type="button" className="btn btn-quiet btn-sm" onClick={() => { noteSignOut(true); provider.signOut().then(() => navigate('/login'), (e: unknown) => { noteSignOut(false); setToast(e instanceof Error ? e.message : 'Couldn’t sign you out.'); }); }}>Sign out</button>
+      {toast && <Toast message={toast} onDone={clearToast} />}
     </header>
   );
 }

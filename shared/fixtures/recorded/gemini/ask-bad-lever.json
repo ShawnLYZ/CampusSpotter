@@ -1,0 +1,16 @@
+{
+  "levers": [
+    {
+      "kind": "extraBuses",
+      "buses": 2,
+      "fromMin": 960,
+      "toMin": 1140
+    },
+    {
+      "kind": "teleport",
+      "fromMin": 900,
+      "toMin": 960
+    }
+  ],
+  "restatement": "Hire 2 extra buses from 16:00 to 19:00."
+}

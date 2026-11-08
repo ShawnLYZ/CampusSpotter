@@ -1,0 +1,28 @@
+{
+  "events": [
+    {
+      "title": "BTS Kuala Lumpur 2026",
+      "venue": "Stadium Nasional Bukit Jalil",
+      "startDate": "2026-12-12",
+      "startTime": "19:30",
+      "endDate": "2026-12-13",
+      "endTime": "22:30",
+      "expectedAttendance": null,
+      "attendanceStated": false,
+      "isApuCalendar": false,
+      "sourceUrls": ["https://www.livenation.my/event/bts-kuala-lumpur-2026-edp123456"],
+      "confidence": "high"
+    },
+    {
+      "title": "Indie Night",
+      "venue": "Zepp Kuala Lumpur",
+      "startDate": "2026-11-21",
+      "startTime": "20:00",
+      "expectedAttendance": null,
+      "attendanceStated": false,
+      "isApuCalendar": false,
+      "sourceUrls": ["https://www.livenation.my/event/indie-night-zepp-kl-edp123457"],
+      "confidence": "high"
+    }
+  ]
+}

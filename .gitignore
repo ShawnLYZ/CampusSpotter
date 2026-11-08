@@ -31,3 +31,5 @@ Problem Statement.md
 docs/
 PRODUCT.md
 CampusSpotter_Icon.png
+supabase/.branches
+supabase/.env.functions
