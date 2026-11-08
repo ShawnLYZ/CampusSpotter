@@ -1,12 +1,12 @@
 import { clock12 as clock } from '@engine/index.ts';
-import type { LeverSet } from '@engine/index.ts';
 import type { ChecklistDraft } from '@plans/checklist.ts';
+import type { ContextRequest, PlanProposal } from '../../providers/types.ts';
 
-/** Student-facing notice for the replay plan, one fixed sentence per student-facing lever. Outlet and hall names come from the checklist text. */
-export function replayAnnouncement(levers: LeverSet, checklist: ChecklistDraft[]): string {
-  const lines: string[] = ['Please note the following arrangements.'];
+/** Student-facing notice, one fixed sentence per student-facing lever. Outlet and hall names come from the checklist text. */
+export function announcementScripted(plan: PlanProposal, _ctx: ContextRequest, title: string | null, checklist: ChecklistDraft[]): string {
+  const lines: string[] = [title ? `Please note the following arrangements for ${title}.` : 'Please note the following arrangements.'];
   const nameFrom = (re: RegExp, fallback: string): string => checklist.map((c) => re.exec(c.text)?.[1]).find((n) => n) ?? fallback;
-  for (const l of levers) {
+  for (const l of plan.levers) {
     switch (l.kind) {
       case 'classesOnline': lines.push(`All classes from ${clock(l.fromMin)} will run online.`); break;
       case 'nonstopLoop': lines.push(`Shuttles will run nonstop between ${clock(l.fromMin)} and ${clock(l.toMin)}.`); break;

@@ -2,12 +2,12 @@ import { assert, assertEquals } from 'jsr:@std/assert@1';
 import sample from '../../../shared/fixtures/recorded/routes-sample.json' with { type: 'json' };
 import type { DisruptionRow, TrafficRow } from '../../../shared/bundle/rows.ts';
 import { handle, ROUTES_URL } from './handler.ts';
-import { SERVICE_TOKEN, seededRepo } from '../_shared/testkit.ts';
+import { SECRET_KEY, seededRepo, SECRET_KEYS, callerHeaders } from '../_shared/testkit.ts';
 
 type Repo = ReturnType<typeof seededRepo>;
 
-const req = (token: string | null = SERVICE_TOKEN) =>
-  new Request('http://localhost/sync-traffic', { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {} });
+const req = (token: string | null = SECRET_KEY) =>
+  new Request('http://localhost/sync-traffic', { method: 'POST', headers: callerHeaders(token) });
 // Frozen clock: 2026-11-17T22:00:00Z = 06:00 MYT on 18 Nov, before the 07:00 first departure.
 const now = () => new Date('2026-11-17T22:00:00Z');
 const FETCHED_AT = now().toISOString();
@@ -22,7 +22,7 @@ function routesFetch(calls: Call[], failAt = Infinity) {
     return Promise.resolve(new Response(bad ? 'secret upstream body' : JSON.stringify(sample), { status: bad ? 500 : 200 }));
   }) as typeof fetch;
 }
-const deps = (repo: Repo, fetchFn: typeof fetch) => ({ repo, fetchFn, now, routesKey: 'test-key' });
+const deps = (repo: Repo, fetchFn: typeof fetch) => ({ repo, fetchFn, now, routesKey: 'test-key', secretKeys: SECRET_KEYS });
 const usage = (repo: Repo) =>
   (repo.tables.api_usage as { service: string; month: string; count: number }[]).find((r) => r.service === 'google_routes' && r.month === MONTH)?.count;
 const fresh = (repo: Repo) => (repo.tables.traffic_cache as TrafficRow[]).filter((r) => r.kind === 'google' && r.fetched_at === FETCHED_AT);
@@ -109,7 +109,7 @@ Deno.test('a non-OK Routes response saves earlier rows and fails without the res
   assert(!String(job?.errorSummary).includes('secret'));
 });
 
-Deno.test('requires the service role', async () => {
+Deno.test('requires the secret key', async () => {
   const res = await handle(req(null), deps(seededRepo(), routesFetch([])));
   assertEquals(res.status, 401);
 });

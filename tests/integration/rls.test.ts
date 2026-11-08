@@ -5,7 +5,7 @@ import { liveEnv } from './env.ts';
 const env = liveEnv();
 
 function client(e: NonNullable<typeof env>): SupabaseClient {
-  return createClient(e.url, e.anonKey, {
+  return createClient(e.url, e.publishableKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

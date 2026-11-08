@@ -114,14 +114,17 @@ describe('computeQueues', () => {
     expect(q.departuresLrtToApu[20]).toBe(2);
     expect(q.departuresLrtToApu[19]).toBe(0);
   });
-  it('advisory leave_before moves compliant riders earlier', () => {
+  it('advisory leave_before moves compliant riders due in the hour after the advised time into the hour before', () => {
     const dis: DisruptionRef = { id: 'c1', type: 'manual', kind: 'concert', title: 'c1', venue: null, startMin: 1080, endMin: 1260, expectedAttendance: null };
     const est: Estimate = { key: 'advisoryCompliance', disruptionId: 'c1', likely: 0.6, low: 0.6, high: 0.6, unit: 'share', reasoning: '', confidence: 'medium', model: 't', createdAt: 't', clamped: false };
     const b = makeBundle(base, { roadRatio: 1, disruptions: [dis], estimates: [est] });
     const sa = fill(false);
-    const q = run(mkPlan({ serviceApu: sa }), arr({ 25: 100 }), zeros(),
+    // 12:00 pm is step 20: steps 20–23 move into steps 16–19; step 24 (1:00 pm) and later stay.
+    const q = run(mkPlan({ serviceApu: sa }), arr({ 23: 100, 24: 100, 40: 100 }), zeros(),
       [{ kind: 'advisory', advisedMin: 720, message: 'leave_before' }], b);
-    expect(q.apu.arrivals[25]).toBeCloseTo(40);
+    expect(q.apu.arrivals[23]).toBeCloseTo(40);
+    expect(q.apu.arrivals[24]).toBe(100);
+    expect(q.apu.arrivals[40]).toBe(100);
     for (const t of [16, 17, 18, 19]) expect(q.apu.arrivals[t]).toBeCloseTo(15);
     expect(q.apu.arrivals[15]).toBe(0);
     expect(q.inputs).toContain('estimate:advisoryCompliance:c1');
@@ -206,7 +209,7 @@ describe('computeQueues', () => {
     const lateApu = () => { const s = fill(true); for (let t = 0; t < 5; t++) s[t] = false; return s; };
     it('advisory compliance: ai from the first changed APU step, unchanged before', () => {
       const b = makeBundle(base, { roadRatio: 1, disruptions: [dis], estimates: [est('advisoryCompliance', 0.6)] });
-      const q = run(mkPlan({ serviceApu: fill(false) }), arr({ 25: 100 }), zeros(),
+      const q = run(mkPlan({ serviceApu: fill(false) }), arr({ 22: 100 }), zeros(),
         [{ kind: 'advisory', advisedMin: 720, message: 'leave_before' }], b);
       expect(q.labels[15]).toBe('baseline');
       for (let t = 16; t < STEPS; t++) expect(q.labels[t]).toBe('ai');

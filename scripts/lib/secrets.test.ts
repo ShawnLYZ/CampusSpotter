@@ -10,6 +10,24 @@ describe('scanForSecrets', () => {
     expect(findings.map((f) => f.kind)).toEqual(['gemini_key']);
   });
 
+  it('flags a Supabase secret key', () => {
+    const findings = scanForSecrets([{ path: 'assets/app.js', content: 'const k="sb_secret_FAKEtest0000-_0000"' }], {});
+    expect(findings.map((f) => f.kind)).toEqual(['supabase_secret_key']);
+  });
+
+  it('ignores a Supabase publishable key', () => {
+    expect(scanForSecrets([{ path: 'assets/app.js', content: 'const k="sb_publishable_FAKEtest0000_0000"' }], {})).toEqual([]);
+  });
+
+  it('flags the exact Gemini key when it has no AQ. prefix, once', () => {
+    const geminiKey = 'AIzaSyGEMINI000000000000000000000000000';
+    const findings = scanForSecrets([{ path: 'assets/app.js', content: `const k="${geminiKey}"` }], { geminiKey });
+    expect(findings.map((f) => f.kind)).toEqual(['gemini_key']);
+    expect(findings[0].excerpt).not.toContain(geminiKey);
+    const aq = 'AQ.FAKEtestKEY0000000000000000000';
+    expect(scanForSecrets([{ path: 'assets/app.js', content: `const k="${aq}"` }], { geminiKey: aq })).toHaveLength(1);
+  });
+
   it('flags a Supabase PAT', () => {
     const findings = scanForSecrets([{ path: 'assets/app.js', content: 'const t="sbp_0123456789abcdefghij0123"' }], {});
     expect(findings.map((f) => f.kind)).toEqual(['supabase_pat']);

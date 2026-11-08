@@ -1,13 +1,13 @@
-// Disables public signup and pins the site URL on the live Supabase project.
+// Disables public signup and pins the site URL on the Supabase project in VITE_SUPABASE_URL.
 // Run: node --env-file=.env scripts/auth-config.ts
-import { projectRef } from './lib/project.ts';
+import { managementUrl } from './lib/project.ts';
 
-const REF = projectRef();
+const CONFIG_URL = managementUrl('/config/auth');
 
 const token = process.env.SUPABASE_ACCESS_TOKEN;
 if (!token) throw new Error('SUPABASE_ACCESS_TOKEN is not set');
 
-const res = await fetch(`https://api.supabase.com/v1/projects/${REF}/config/auth`, {
+const res = await fetch(CONFIG_URL, {
   method: 'PATCH',
   headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -22,7 +22,7 @@ if (!res.ok) {
   process.exit(1);
 }
 
-const check = await fetch(`https://api.supabase.com/v1/projects/${REF}/config/auth`, {
+const check = await fetch(CONFIG_URL, {
   headers: { Authorization: `Bearer ${token}` },
 });
 const cfg = check.ok ? ((await check.json()) as { disable_signup?: boolean }) : null;
@@ -31,5 +31,3 @@ if (cfg?.disable_signup !== true) {
   process.exit(1);
 }
 console.log('auth config: ok');
-
-export {};

@@ -1,6 +1,6 @@
 import { assembleBundle, fetchBundleRows } from '../_shared/bundle.ts';
 import type { ContextRequest, PlanProposal } from '../_shared/api.ts';
-import { evaluatePlan, durationText } from '../_shared/engine.ts';
+import { ENGINE_VERSION, evaluatePlan, durationText } from '../_shared/engine.ts';
 import type { AiDeps } from '../_shared/estimate.ts';
 import { GeminiError } from '../_shared/gemini.ts';
 import { canonicalJson, sha256Hex } from '../_shared/hash.ts';
@@ -28,7 +28,10 @@ export function handle(req: Request, deps: AiDeps): Promise<Response> {
 
     const bundle = assembleBundle(await fetchBundleRows(deps.repo.rows, date), { reconstructed: !!context.reconstructed });
     const inputHash = await sha256Hex(canonicalJson(bundle));
-    const hash = await sha256Hex(canonicalJson({ fn: 'plans', promptVersion: PROMPT_VERSION, date, disruptionId, budgetRm, inputHash }));
+    // The cached plans hold engine numbers, so a new engine version is a cache miss.
+    const hash = await sha256Hex(canonicalJson({
+      fn: 'plans', promptVersion: PROMPT_VERSION, engineVersion: ENGINE_VERSION, date, disruptionId, budgetRm, inputHash,
+    }));
     const hit = await deps.repo.getCache(hash) as { plans: PlanProposal[]; dropped?: unknown } | null;
     if (hit) {
       // Cached ids must still exist for decision-create. If plan rows were deleted, re-insert them from the cache (no Gemini).

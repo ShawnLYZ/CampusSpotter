@@ -43,17 +43,20 @@ export async function runJob<T extends { itemsFound: number; itemsChanged: numbe
   return json(200, { jobRunId, ...result });
 }
 
-/** True when the bearer JWT carries role 'service_role'. The payload is decoded, not verified: the runtime has already verified the token. */
-export function requireServiceRole(req: Request): boolean {
-  try {
-    const token = /^Bearer\s+(.+)$/i.exec(req.headers.get('Authorization') ?? '')?.[1];
-    const payload = token?.split('.')[1];
-    if (!payload) return false;
-    const b64 = payload.replaceAll('-', '+').replaceAll('_', '/');
-    const bytes = Uint8Array.from(atob(b64.padEnd(Math.ceil(b64.length / 4) * 4, '=')), (c) => c.charCodeAt(0));
-    const claims = JSON.parse(new TextDecoder().decode(bytes));
-    return claims?.role === 'service_role';
-  } catch {
-    return false;
-  }
+function sameText(a: string, b: string): boolean {
+  const x = new TextEncoder().encode(a);
+  const y = new TextEncoder().encode(b);
+  if (x.length !== y.length) return false;
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0;
+}
+
+/**
+ * True when the request's `apikey` header is one of the project's secret keys. pg_cron and the setup scripts call the
+ * jobs this way. The functions run with verify_jwt off, so this check is the only gate; the comparison is constant-time.
+ */
+export function requireSecretKey(req: Request, secretKeys: readonly string[]): boolean {
+  const given = req.headers.get('apikey');
+  return !!given && secretKeys.some((key) => sameText(given, key));
 }

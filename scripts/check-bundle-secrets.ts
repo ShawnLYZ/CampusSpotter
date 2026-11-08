@@ -14,7 +14,7 @@ const walk = (dir: string): string[] =>
 const files = walk(dist).map((path) => ({ path: path.replaceAll('\\', '/'), content: readFileSync(path, 'utf8') }));
 const dbPassword = process.env.SUPABASE_DB_PASSWORD || undefined;
 if (!dbPassword) console.error('SUPABASE_DB_PASSWORD is not set; the db_password rule was skipped');
-const findings = scanForSecrets(files, { dbPassword });
+const findings = scanForSecrets(files, { dbPassword, geminiKey: process.env.GEMINI_API_KEY || undefined });
 
 if (findings.length > 0) {
   for (const f of findings) console.error(`${f.kind} in ${f.file}: ${f.excerpt}`);

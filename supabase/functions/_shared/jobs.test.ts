@@ -1,6 +1,6 @@
 import { assertEquals, assert } from 'jsr:@std/assert@1';
 import { createMemoryRepo } from './repo.ts';
-import { FINISH_FAILED_MESSAGE, requireServiceRole, runJob } from './jobs.ts';
+import { FINISH_FAILED_MESSAGE, requireSecretKey, runJob } from './jobs.ts';
 import type { DisruptionRow } from '../../../shared/bundle/rows.ts';
 
 const row = (over: Partial<DisruptionRow>): DisruptionRow => ({
@@ -12,7 +12,8 @@ const row = (over: Partial<DisruptionRow>): DisruptionRow => ({
 });
 
 const jwt = (payload: unknown) => `h.${btoa(JSON.stringify(payload)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')}.s`;
-const reqWith = (auth?: string) => new Request('http://localhost/fn', { headers: auth ? { Authorization: auth } : {} });
+const reqWith = (headers: Record<string, string> = {}) => new Request('http://localhost/fn', { headers });
+const KEYS = ['sb_secret_default-0123456789', 'sb_secret_second-0123456789'];
 
 Deno.test('runJob records a failed run with the error text and returns 500', async () => {
   const repo = createMemoryRepo();
@@ -43,13 +44,21 @@ Deno.test('runJob records counts on success and returns 200 with the result', as
   assertEquals(job?.id, body.jobRunId);
 });
 
-Deno.test('requireServiceRole accepts only a service_role JWT', () => {
-  assert(requireServiceRole(reqWith(`Bearer ${jwt({ role: 'service_role' })}`)));
-  assert(!requireServiceRole(reqWith(`Bearer ${jwt({ role: 'authenticated' })}`)));
-  assert(!requireServiceRole(reqWith()));
-  assert(!requireServiceRole(reqWith('Bearer garbage')));
-  assert(!requireServiceRole(reqWith('Bearer a.!!!.c')));
-  assert(!requireServiceRole(reqWith(`Bearer h.${btoa('not json')}.s`)));
+Deno.test('requireSecretKey accepts any of the project secret keys on the apikey header', () => {
+  assert(requireSecretKey(reqWith({ apikey: KEYS[0] }), KEYS));
+  assert(requireSecretKey(reqWith({ apikey: KEYS[1] }), KEYS));
+});
+
+Deno.test('requireSecretKey refuses everything else, including a forged legacy service_role JWT', () => {
+  assert(!requireSecretKey(reqWith(), KEYS));
+  assert(!requireSecretKey(reqWith({ apikey: '' }), KEYS));
+  assert(!requireSecretKey(reqWith({ apikey: 'sb_secret_default-012345678' }), KEYS));
+  assert(!requireSecretKey(reqWith({ apikey: 'sb_secret_default-0123456780' }), KEYS));
+  assert(!requireSecretKey(reqWith({ apikey: 'sb_publishable_abc' }), KEYS));
+  assert(!requireSecretKey(reqWith({ Authorization: `Bearer ${KEYS[0]}` }), KEYS));
+  assert(!requireSecretKey(reqWith({ Authorization: `Bearer ${jwt({ role: 'service_role' })}` }), KEYS));
+  assert(!requireSecretKey(reqWith({ apikey: jwt({ role: 'service_role' }) }), KEYS));
+  assert(!requireSecretKey(reqWith({ apikey: KEYS[0] }), []));
 });
 
 Deno.test('upsertScannedDisruption keeps overrides and dismissal, updates title and sources', async () => {

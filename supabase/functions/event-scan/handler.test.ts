@@ -8,7 +8,7 @@ import type { DisruptionRow, DisruptionSourceRow } from '../../../shared/bundle/
 import { GeminiError } from '../_shared/gemini.ts';
 import type { callGemini } from '../_shared/gemini.ts';
 import { SYSTEM_PROMPTS } from '../_shared/prompts.ts';
-import { DEMO_TOKEN, SERVICE_TOKEN, TOKEN, seededRepo } from '../_shared/testkit.ts';
+import { DEMO_TOKEN, SECRET_KEY, TOKEN, seededRepo, SECRET_KEYS, callerHeaders } from '../_shared/testkit.ts';
 import { APU_URLS, handle, LIVENATION_URL, NEWS_QUERIES, newsUrl } from './handler.ts';
 
 type Repo = ReturnType<typeof seededRepo>;
@@ -24,7 +24,7 @@ const APU_INTAKE = fixture('apu-intake-calendar.html');
 const LN_BTS_URL = 'https://www.livenation.my/event/bts-kuala-lumpur-2026-edp123456';
 
 const req = (token: string | null) =>
-  new Request('http://localhost/event-scan', { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  new Request('http://localhost/event-scan', { method: 'POST', headers: callerHeaders(token) });
 
 /** Fake fetch serving the recorded pages; the Indie Night event page and the APU holiday page are 404. `fail` makes every fetch throw. */
 function pagesFetch(calls: string[], fail = false) {
@@ -68,13 +68,13 @@ function scanGemini(calls: GCall[], o: { grounding?: unknown; estimate?: unknown
   }) as unknown as typeof callGemini;
 }
 
-const deps = (repo: Repo, fetchFn: typeof fetch, gemini: typeof callGemini, clock?: () => number) => ({ repo, fetchFn, gemini, apiKey: 'k', now, clock });
+const deps = (repo: Repo, fetchFn: typeof fetch, gemini: typeof callGemini, clock?: () => number) => ({ repo, fetchFn, gemini, apiKey: 'k', now, clock, secretKeys: SECRET_KEYS });
 const disruptions = (repo: Repo) => repo.tables.disruptions as DisruptionRow[];
 const sourcesOf = (repo: Repo, id: string) => (repo.tables.disruption_sources as DisruptionSourceRow[]).filter((s) => s.disruption_id === id);
 const byKey = (repo: Repo, key: string) => disruptions(repo).filter((d) => d.dedupe_key === key);
 const jobRuns = (repo: Repo) => repo.tables.job_runs as { job_name: string }[];
 
-async function scan(repo = seededRepo(), token: string | null = SERVICE_TOKEN, gOpts = {}, clock?: () => number) {
+async function scan(repo = seededRepo(), token: string | null = SECRET_KEY, gOpts = {}, clock?: () => number) {
   const fetches: string[] = [];
   const gcalls: GCall[] = [];
   const res = await handle(req(token), deps(repo, pagesFetch(fetches), scanGemini(gcalls, gOpts), clock));
@@ -101,6 +101,20 @@ Deno.test('grounding refused: falls back, fetches every source and asks Gemini t
   // Accepted: BTS x2 (RSS) + BTS x2 (Live Nation) + 2 intakes; rejected: Stadium Merdeka, 200 days ahead, Zepp KL.
   assertEquals([body.itemsFound, body.rejected, body.itemsChanged], [6, 3, 4]);
   assertEquals(body.estimatesFailed, 0);
+});
+
+Deno.test('news items carry their MYT publish date, so "tomorrow" is read from the article and not from today', async () => {
+  // 17:30 UTC on 19 Oct is 01:30 MYT on 20 Oct.
+  const late = RSS.replace('Tue, 20 Oct 2026 02:00:00 GMT', 'Mon, 19 Oct 2026 17:30:00 GMT');
+  const base = pagesFetch([]);
+  const fetchFn = ((url: string | URL | Request) =>
+    String(url).startsWith('https://news.google.com/rss/search?') ? Promise.resolve(new Response(late, { status: 200 })) : base(url)) as typeof fetch;
+  const gcalls: GCall[] = [];
+  await handle(req(SECRET_KEY), deps(seededRepo(), fetchFn, scanGemini(gcalls)));
+  const extract = gcalls.find((c) => !c.grounded && c.system === SYSTEM_PROMPTS.extract)!;
+  assert(extract.prompt.includes('https://news.example.my/articles/bts-world-tour-kl-stadium-nasional\nPublished: 2026-10-20\n'), 'MYT publish date');
+  assert(extract.prompt.includes('https://news.example.my/articles/bts-fans-lrt-bukit-jalil\nPublished: 2026-11-04\n'));
+  assert(extract.prompt.includes('from that publish date, never from today'), 'relative-date rule');
 });
 
 Deno.test('BTS 12 and 13 Dec are stored as 2 rows, each with RSS and Live Nation sources', async () => {
@@ -176,7 +190,7 @@ Deno.test('a second scan finds nothing new to change', async () => {
 });
 
 Deno.test('grounding success: method grounding, no page fetches', async () => {
-  const { body, fetches, repo } = await scan(seededRepo(), SERVICE_TOKEN, { grounding: extractLn });
+  const { body, fetches, repo } = await scan(seededRepo(), SECRET_KEY, { grounding: extractLn });
   assertEquals(body.method, 'grounding');
   assertEquals(fetches.length, 0);
   assertEquals([body.itemsFound, body.rejected, body.itemsChanged, body.sourcesFailed], [2, 1, 2, 0]);
@@ -184,14 +198,14 @@ Deno.test('grounding success: method grounding, no page fetches', async () => {
 });
 
 Deno.test('a grounding error other than refusal falls back and notes the error', async () => {
-  const { res, body } = await scan(seededRepo(), SERVICE_TOKEN, { grounding: new GeminiError('http', 'upstream 500', 500) });
+  const { res, body } = await scan(seededRepo(), SECRET_KEY, { grounding: new GeminiError('http', 'upstream 500', 500) });
   assertEquals(res.status, 200);
   assertEquals(body.method, 'fallback');
   assertEquals(body.groundingError, 'http');
 });
 
 Deno.test('estimate failures are counted, not fatal', async () => {
-  const { res, body } = await scan(seededRepo(), SERVICE_TOKEN, { estimate: new GeminiError('rate_limited', 'slow down', 429) });
+  const { res, body } = await scan(seededRepo(), SECRET_KEY, { estimate: new GeminiError('rate_limited', 'slow down', 429) });
   assertEquals(res.status, 200);
   assertEquals(body.estimatesFailed, 2);
   assertEquals(body.itemsChanged, 4);
@@ -201,7 +215,7 @@ Deno.test('every source fetch failing fails the job and leaves disruptions untou
   const repo = seededRepo();
   const before = structuredClone(disruptions(repo));
   const fetches: string[] = [];
-  const res = await handle(req(SERVICE_TOKEN), deps(repo, pagesFetch(fetches, true), scanGemini([])));
+  const res = await handle(req(SECRET_KEY), deps(repo, pagesFetch(fetches, true), scanGemini([])));
   assertEquals(res.status, 500);
   const body = await res.json();
   assertEquals(body.error, 'event-scan: all sources failed');
@@ -213,7 +227,7 @@ Deno.test('every source fetch failing fails the job and leaves disruptions untou
 
 Deno.test('every extraction batch failing fails the job', async () => {
   const repo = seededRepo();
-  const res = await handle(req(SERVICE_TOKEN), deps(repo, pagesFetch([]), scanGemini([], { extract: new GeminiError('schema', 'bad') })));
+  const res = await handle(req(SECRET_KEY), deps(repo, pagesFetch([]), scanGemini([], { extract: new GeminiError('schema', 'bad') })));
   assertEquals(res.status, 500);
   assertEquals((await repo.latestJob('event-scan'))?.status, 'failed');
 });
@@ -231,11 +245,11 @@ Deno.test('a demo caller within 10 minutes of a successful scan gets reused: tru
   assertEquals([fetches.length, gcalls.length], [0, 0]);
 });
 
-Deno.test('a manager after 10 minutes, after a failed scan, or the service role always scans', async () => {
+Deno.test('a manager after 10 minutes, after a failed scan, or a secret-key caller always scans', async () => {
   for (const [token, startedAt, status] of [
     [TOKEN, '2026-11-07T21:49:00.000Z', 'success'],
     [TOKEN, '2026-11-07T21:58:00.000Z', 'failed'],
-    [SERVICE_TOKEN, '2026-11-07T21:58:00.000Z', 'success'],
+    [SECRET_KEY, '2026-11-07T21:58:00.000Z', 'success'],
   ] as const) {
     const repo = seededRepo();
     seedJob(repo, startedAt, status);
@@ -274,7 +288,7 @@ Deno.test('stored event A keeps its row when the scan lists another event B firs
   const repo = seededRepo();
   const before = storedA(repo);
   const a = apuEvent('Intake: Degree Level 2');
-  const { body } = await scan(repo, SERVICE_TOKEN, { grounding: { events: [apuEvent('Graduation rehearsal'), { ...a, calendarKind: 'intake' }] } });
+  const { body } = await scan(repo, SECRET_KEY, { grounding: { events: [apuEvent('Graduation rehearsal'), { ...a, calendarKind: 'intake' }] } });
   assertEquals(body.method, 'grounding');
   const rowA = disruptions(repo).find((d) => d.id === 'intake-2026-11-12')!;
   assertEquals([rowA.title, rowA.kind, rowA.dedupe_key], [before.title, 'intake', 'APU|2026-11-12']);
@@ -286,7 +300,7 @@ Deno.test('stored event A keeps its row when the scan lists another event B firs
 Deno.test('only event B (a single cluster) updates the scan fields of stored A; its override and dismissed status stay', async () => {
   const repo = seededRepo();
   storedA(repo);
-  const { body } = await scan(repo, SERVICE_TOKEN, { grounding: { events: [apuEvent('Graduation rehearsal')] } });
+  const { body } = await scan(repo, SECRET_KEY, { grounding: { events: [apuEvent('Graduation rehearsal')] } });
   assertEquals(body.itemsChanged, 1);
   const rowA = disruptions(repo).find((d) => d.id === 'intake-2026-11-12')!;
   assertEquals([rowA.title, rowA.dedupe_key, rowA.start_at], ['Graduation rehearsal', 'APU|2026-11-12', '2026-11-12T00:00:00+08:00']);
@@ -297,7 +311,7 @@ Deno.test('only event B (a single cluster) updates the scan fields of stored A; 
 Deno.test('two dissimilar clusters, B listed first: stored A is untouched and both get slug keys', async () => {
   const repo = seededRepo();
   const before = storedA(repo);
-  const { body } = await scan(repo, SERVICE_TOKEN, { grounding: { events: [apuEvent('Graduation rehearsal'), apuEvent('Library closure')] } });
+  const { body } = await scan(repo, SECRET_KEY, { grounding: { events: [apuEvent('Graduation rehearsal'), apuEvent('Library closure')] } });
   assertEquals(body.itemsChanged, 2);
   assertEquals(disruptions(repo).find((d) => d.id === 'intake-2026-11-12'), before);
   assertEquals(byKey(repo, 'APU|2026-11-12|graduation-rehearsal').length, 1);
@@ -309,7 +323,7 @@ Deno.test('a single scanned cluster with a dissimilar title updates the seeded r
   const d12 = disruptions(repo).find((d) => d.id === 'bts-2026-12-12')!;
   Object.assign(d12, { override_attendance: 60000, overridden_by: 'u1', status: 'dismissed' });
   const ev = { ...extractLn.events[0], title: 'BTS Arirang Tour', endDate: undefined };
-  const { body } = await scan(repo, SERVICE_TOKEN, { grounding: { events: [ev] } });
+  const { body } = await scan(repo, SECRET_KEY, { grounding: { events: [ev] } });
   assertEquals(body.itemsChanged, 1);
   const rows = byKey(repo, 'TM Stadium Nasional|2026-12-12');
   assertEquals(rows.map((r) => [r.id, r.title, r.override_attendance, r.overridden_by, r.status]), [['bts-2026-12-12', 'BTS Arirang Tour', 60000, 'u1', 'dismissed']]);
@@ -319,7 +333,7 @@ Deno.test('a single scanned cluster with a dissimilar title updates the seeded r
 // Review fix 3: time budget.
 Deno.test('the grounding call is capped at 40 s; extract calls share the 95 s run deadline', async () => {
   const T0 = 1_000_000;
-  const { body, gcalls } = await scan(seededRepo(), SERVICE_TOKEN, {}, () => T0);
+  const { body, gcalls } = await scan(seededRepo(), SECRET_KEY, {}, () => T0);
   assertEquals(body.method, 'fallback');
   assertEquals(gcalls[0].grounded, true);
   assertEquals(gcalls[0].deadlineAt, T0 + 40_000);
@@ -340,7 +354,7 @@ Deno.test('fetches are skipped (and count as failed) once less than 20 s remain'
     if (o.tools) t = T0 + 76_000;
     return scanGemini(gcalls)(o as never);
   }) as unknown as typeof callGemini;
-  const res = await handle(req(SERVICE_TOKEN), deps(repo, pagesFetch(fetches), gemini, clock));
+  const res = await handle(req(SECRET_KEY), deps(repo, pagesFetch(fetches), gemini, clock));
   assertEquals(res.status, 500);
   assertEquals((await res.json()).error, 'event-scan: all sources failed');
   assertEquals(fetches.length, 0);
@@ -369,7 +383,7 @@ Deno.test('extract batches run at most 3 at a time and keep batch order', async 
     return { data: { events: [ev] }, attempts: 1, model: 'm' };
   }) as unknown as typeof callGemini;
   const repo = seededRepo();
-  const res = await handle(req(SERVICE_TOKEN), deps(repo, fetchFn, gemini));
+  const res = await handle(req(SECRET_KEY), deps(repo, fetchFn, gemini));
   assertEquals(res.status, 200);
   assert(order.length >= 4, `batches: ${order.length}`);
   assertEquals(peak, 3);
@@ -395,7 +409,7 @@ Deno.test('estimates get the shared 95 s deadline, and risks are refreshed befor
     }
     return inner(o as never);
   }) as unknown as typeof callGemini;
-  const res = await handle(req(SERVICE_TOKEN), deps(repo, pagesFetch([]), gemini, () => t));
+  const res = await handle(req(SECRET_KEY), deps(repo, pagesFetch([]), gemini, () => t));
   assertEquals(res.status, 200);
   assertEquals(estimateDeadlines, [T0 + 95_000, T0 + 95_000]);
   assert(riskAtFirstEstimate.every((r) => r !== null), 'risk set before estimates');
@@ -413,7 +427,7 @@ Deno.test('estimates are skipped (and counted as failed) when less than 15 s rem
     if (!o.tools && o.system === SYSTEM_PROMPTS.extract) t = T0 + 81_000;
     return inner(o as never);
   }) as unknown as typeof callGemini;
-  const res = await handle(req(SERVICE_TOKEN), deps(repo, pagesFetch([]), gemini, () => t));
+  const res = await handle(req(SECRET_KEY), deps(repo, pagesFetch([]), gemini, () => t));
   const body = await res.json();
   assertEquals(res.status, 200);
   assertEquals(body.estimatesFailed, 2);
@@ -423,7 +437,7 @@ Deno.test('estimates are skipped (and counted as failed) when less than 15 s rem
 });
 
 Deno.test('a fallback scan with a grounding error and failed sources records success with a note as error_summary', async () => {
-  const { res, body, repo } = await scan(seededRepo(), SERVICE_TOKEN, { grounding: new GeminiError('rate_limited', 'slow down', 429) });
+  const { res, body, repo } = await scan(seededRepo(), SECRET_KEY, { grounding: new GeminiError('rate_limited', 'slow down', 429) });
   assertEquals(res.status, 200);
   assertEquals(body.note, 'grounding: rate_limited; sources failed 2/10');
   const job = await repo.latestJob('event-scan');
@@ -431,7 +445,7 @@ Deno.test('a fallback scan with a grounding error and failed sources records suc
 });
 
 Deno.test('a clean grounding scan records no error_summary', async () => {
-  const { body, repo } = await scan(seededRepo(), SERVICE_TOKEN, { grounding: extractLn });
+  const { body, repo } = await scan(seededRepo(), SECRET_KEY, { grounding: extractLn });
   assertEquals(body.note, undefined);
   assertEquals((await repo.latestJob('event-scan'))?.errorSummary, null);
 });

@@ -7,8 +7,8 @@ import { useContextStore } from '../store/context.ts';
 
 const Ctx = createContext<DataProvider | null>(null);
 
-// Async so a missing setting in .env surfaces as a startup failure message.
-async function createProvider(): Promise<DataProvider> {
+/** Async so a missing Supabase key surfaces as the start-up failure message below. */
+async function startProvider(): Promise<DataProvider> {
   return createSupabaseProvider(createBrowserClient());
 }
 
@@ -18,7 +18,7 @@ export function ProviderRoot({ children }: { children: ReactNode }) {
   const [failure, setFailure] = useState<string | null>(null);
   useEffect(() => {
     let cancelled = false;
-    createProvider().then((p) => { if (!cancelled) setProvider(p); }, (e: unknown) => {
+    startProvider().then((p) => { if (!cancelled) setProvider(p); }, (e: unknown) => {
       if (!cancelled) setFailure(e instanceof Error ? e.message : 'CampusSpotter could not start.');
     });
     return () => { cancelled = true; };

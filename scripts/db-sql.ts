@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
-import { projectRef } from './lib/project.ts';
+import { managementUrl } from './lib/project.ts';
 
-// Runs SQL against the Supabase project in VITE_SUPABASE_URL via the Management API.
+// Runs SQL against the project in VITE_SUPABASE_URL via the Management API.
 // usage: node --env-file=.env scripts/db-sql.ts (--query "<sql>" | --file <path>)
-const URL = `https://api.supabase.com/v1/projects/${projectRef()}/database/query`;
+const URL = managementUrl('/database/query');
 
 const args = process.argv.slice(2);
 const flag = (name: string): string | undefined => {

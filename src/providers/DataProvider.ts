@@ -3,11 +3,10 @@ import type { ChecklistDraft } from '@plans/checklist.ts';
 import type {
   Announcement, AppUser, AskResult, BaselineTable, BaselineTableName, Channel, ChecklistItem, ContextRequest, CsvReport, Decision,
   DecisionBundle, DecisionInput, DisruptionFilter, DisruptionInput, EarlyWarningItem, EstimateView, OverridePatch, PlanProposal,
-  ProviderInfo, ScanRun, SourceInfo, StationDay, Today,
+  ScanRun, SourceInfo, StationDay, Today,
 } from './types.ts';
 
 export interface DataProvider {
-  info: ProviderInfo;
   getToday(): Promise<Today>;
   listDisruptions(f: DisruptionFilter): Promise<EarlyWarningItem[]>;        // sorted by startAt ascending
   getDisruption(id: string): Promise<EarlyWarningItem | null>;

@@ -3,6 +3,8 @@ import reply from '../../../shared/fixtures/recorded/gemini/plans-weeknd.json' w
 import { handle } from './handler.ts';
 import { assembleBundle, fetchBundleRows } from '../_shared/bundle.ts';
 import { evaluatePlan } from '../_shared/engine.ts';
+import { canonicalJson, sha256Hex } from '../_shared/hash.ts';
+import { PROMPT_VERSION } from '../_shared/prompts.ts';
 import { authedRequest, fakeGemini, seededRepo } from '../_shared/testkit.ts';
 
 const context = { date: '2026-11-04', disruptionId: 'weeknd-2026-11-04' };
@@ -60,6 +62,17 @@ Deno.test('a repeated request is served from cache without Gemini or new rows', 
   const second = await (await handle(authedRequest(body()), deps)).json();
   assertEquals(g.state.calls, 1);
   assertEquals(second, first); // same ids, so no new rows were inserted
+});
+
+Deno.test('plans cached without the engine version are not served: their numbers came from an older engine', async () => {
+  const g = fakeGemini(reply);
+  const { repo, deps } = mk(g);
+  const inputHash = await sha256Hex(canonicalJson(bundle));
+  const oldKey = await sha256Hex(canonicalJson({ fn: 'plans', promptVersion: PROMPT_VERSION, ...context, budgetRm: 2000, inputHash }));
+  await repo.setCache(oldKey, 'plans', { plans: [], dropped: [] });
+  const { plans } = await (await handle(authedRequest(body()), deps)).json();
+  assertEquals(g.state.calls, 1);
+  assertEquals(plans.length, 3);
 });
 
 Deno.test('a cache hit whose plan rows were deleted restores them without Gemini', async () => {

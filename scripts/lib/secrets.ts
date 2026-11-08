@@ -1,15 +1,18 @@
 export interface Finding {
   file: string;
-  kind: 'gemini_key' | 'supabase_pat' | 'service_role_jwt' | 'db_password';
+  kind: 'gemini_key' | 'supabase_pat' | 'supabase_secret_key' | 'service_role_jwt' | 'db_password';
   excerpt: string;
 }
 
 export interface ScanOptions {
   dbPassword?: string;
+  /** The exact GEMINI_API_KEY, so a key without the AQ. prefix (an AIza… Google Cloud key) is caught too. */
+  geminiKey?: string;
 }
 
 const GEMINI_KEY = /AQ\.[A-Za-z0-9_-]{20,}/g;
 const SUPABASE_PAT = /sbp_[A-Za-z0-9]{20,}/g;
+const SUPABASE_SECRET_KEY = /sb_secret_[A-Za-z0-9_-]{8,}/g;
 const JWT = /eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g;
 const CONTEXT_CHARS = 6;
 const MASK = '***';
@@ -39,6 +42,8 @@ function excerptAround(content: string, start: number, end: number, secrets: str
 export function scanForSecrets(files: { path: string; content: string }[], opts: ScanOptions): Finding[] {
   const findings: Finding[] = [];
   const dbPassword = opts.dbPassword ? opts.dbPassword : undefined;
+  // An AQ. key is already caught by GEMINI_KEY.
+  const geminiKey = opts.geminiKey && !opts.geminiKey.startsWith('AQ.') ? opts.geminiKey : undefined;
   const secretsFor = (matched: string) => (dbPassword ? [matched, dbPassword] : [matched]);
 
   for (const { path, content } of files) {
@@ -52,13 +57,17 @@ export function scanForSecrets(files: { path: string; content: string }[], opts:
 
     addMatches(GEMINI_KEY, 'gemini_key');
     addMatches(SUPABASE_PAT, 'supabase_pat');
+    addMatches(SUPABASE_SECRET_KEY, 'supabase_secret_key');
     addMatches(JWT, 'service_role_jwt', isServiceRoleJwt);
 
-    if (dbPassword) {
-      for (let at = content.indexOf(dbPassword); at !== -1; at = content.indexOf(dbPassword, at + dbPassword.length)) {
-        findings.push({ file: path, kind: 'db_password', excerpt: excerptAround(content, at, at + dbPassword.length, [dbPassword]) });
+    const addExact = (value: string | undefined, kind: Finding['kind']) => {
+      if (!value) return;
+      for (let at = content.indexOf(value); at !== -1; at = content.indexOf(value, at + value.length)) {
+        findings.push({ file: path, kind, excerpt: excerptAround(content, at, at + value.length, secretsFor(value)) });
       }
-    }
+    };
+    addExact(geminiKey, 'gemini_key');
+    addExact(dbPassword, 'db_password');
   }
   return findings;
 }

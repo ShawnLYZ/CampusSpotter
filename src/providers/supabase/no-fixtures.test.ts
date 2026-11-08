@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 const FORBIDDEN = [['fixtures', '/'].join('')];
 
 describe('Supabase provider isolation', () => {
-  it('does not reference the saved fixture data', () => {
+  it('never references fixture data', () => {
     const dir = import.meta.dirname;
     const files = readdirSync(dir, { recursive: true, withFileTypes: true }).filter((f) => f.isFile());
     expect(files.length).toBeGreaterThan(0);

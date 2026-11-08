@@ -163,7 +163,6 @@ export function createSupabaseProvider(client: SupabaseClient): DataProvider {
   }
 
   return {
-    info: { dataNote: 'Live campus data from the CampusSpotter database.' },
     async getToday() { return todayMyt(); },
     currentUser,
     signIn: signInWith,

@@ -2,7 +2,7 @@ import { mytParts } from '../../../shared/bundle/assemble.ts';
 import { heavyRainRows } from '../../../shared/bundle/rules.ts';
 import { addDays } from '../../../shared/engine/grid.ts';
 import { fail } from '../_shared/http.ts';
-import { requireServiceRole, runJob } from '../_shared/jobs.ts';
+import { requireSecretKey, runJob } from '../_shared/jobs.ts';
 import { parseOpenMeteoHourly } from '../_shared/parsers.ts';
 import type { Repo } from '../_shared/repo.ts';
 import { refreshRisks, ruleRefreshDates } from '../_shared/risk.ts';
@@ -10,13 +10,13 @@ import { refreshRisks, ruleRefreshDates } from '../_shared/risk.ts';
 export const WEATHER_URL =
   'https://api.open-meteo.com/v1/forecast?latitude=3.05607&longitude=101.70047&hourly=precipitation,precipitation_probability&timezone=Asia%2FKuala_Lumpur&forecast_days=16&past_days=1';
 
-export interface SyncWeatherDeps { repo: Repo; fetchFn: typeof fetch; now: () => Date }
+export interface SyncWeatherDeps { repo: Repo; fetchFn: typeof fetch; now: () => Date; secretKeys: readonly string[] }
 
 const RAIN_DAYS = 16;
 
 /** Refreshes the hourly forecast and regenerates the rule-based heavy-rain items from it. */
 export async function handle(req: Request, deps: SyncWeatherDeps): Promise<Response> {
-  if (!requireServiceRole(req)) return fail(401, 'service role required');
+  if (!requireSecretKey(req, deps.secretKeys)) return fail(401, 'secret key required');
   const { repo, fetchFn, now } = deps;
   return runJob(repo, 'sync-weather', async () => {
     const res = await fetchFn(WEATHER_URL);

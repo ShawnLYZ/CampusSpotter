@@ -1,18 +1,18 @@
 import { mytParts } from '../../../shared/bundle/assemble.ts';
 import { fail } from '../_shared/http.ts';
-import { requireServiceRole, runJob } from '../_shared/jobs.ts';
+import { requireSecretKey, runJob } from '../_shared/jobs.ts';
 import { BUKIT_JALIL, stationDailyFromOd } from '../_shared/parsers.ts';
 import type { Repo } from '../_shared/repo.ts';
 import { readStationRows } from './parquet.ts';
 import type { ParquetLib } from './parquet.ts';
 
-export interface SyncRidershipDeps { repo: Repo; now: () => Date; lib: ParquetLib }
+export interface SyncRidershipDeps { repo: Repo; now: () => Date; lib: ParquetLib; secretKeys: readonly string[] }
 
 const MIN_DATES = 30;
 
 /** Updates LRT Bukit Jalil daily ridership from the yearly rapid-rail Parquet file (range reads only). */
 export async function handle(req: Request, deps: SyncRidershipDeps): Promise<Response> {
-  if (!requireServiceRole(req)) return fail(401, 'service role required');
+  if (!requireSecretKey(req, deps.secretKeys)) return fail(401, 'secret key required');
   const { repo, now, lib } = deps;
   return runJob(repo, 'sync-ridership', async () => {
     const yearMyt = mytParts(now().toISOString()).date.slice(0, 4);

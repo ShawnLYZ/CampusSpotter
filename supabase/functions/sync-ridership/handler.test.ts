@@ -2,12 +2,12 @@ import { assert, assertEquals } from 'jsr:@std/assert@1';
 import type { RidershipRow } from '../../../shared/bundle/rows.ts';
 import { handle } from './handler.ts';
 import type { ParquetLib } from './parquet.ts';
-import { SERVICE_TOKEN, seededRepo } from '../_shared/testkit.ts';
+import { SECRET_KEY, seededRepo, SECRET_KEYS, callerHeaders } from '../_shared/testkit.ts';
 
 type Repo = ReturnType<typeof seededRepo>;
 
-const req = (token: string | null = SERVICE_TOKEN) =>
-  new Request('http://localhost/sync-ridership', { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {} });
+const req = (token: string | null = SECRET_KEY) =>
+  new Request('http://localhost/sync-ridership', { method: 'POST', headers: callerHeaders(token) });
 const now = () => new Date('2026-11-07T04:00:00Z'); // 12:00 MYT, year 2026
 const BJ = 'SP17: Bukit Jalil';
 const ALL = 'A0: All Stations';
@@ -36,7 +36,7 @@ function stubLib(reads: { rowStart?: number; rowEnd?: number; url?: string }[], 
     compressors: {},
   } as unknown as ParquetLib;
 }
-const deps = (repo: Repo, lib: ParquetLib) => ({ repo, now, lib });
+const deps = (repo: Repo, lib: ParquetLib) => ({ repo, now, lib, secretKeys: SECRET_KEYS });
 const ridership = (repo: Repo) => repo.tables.lrt_ridership_daily as RidershipRow[];
 
 Deno.test('reads only the matching row group and upserts station daily rows', async () => {
@@ -77,7 +77,7 @@ Deno.test('fewer than 30 dates fails and keeps existing rows', async () => {
   assertEquals(ridership(repo), before);
 });
 
-Deno.test('requires the service role', async () => {
+Deno.test('requires the secret key', async () => {
   const res = await handle(req(null), deps(seededRepo(), stubLib([], 40)));
   assertEquals(res.status, 401);
 });

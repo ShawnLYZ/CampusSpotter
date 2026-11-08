@@ -1,22 +1,35 @@
 import { describe, expect, it } from 'vitest';
-import { projectRef, projectUrl } from './project.ts';
+import { pickSecretKey, project } from './project.ts';
 
-describe('project address', () => {
-  it('reads the project ID and base address from VITE_SUPABASE_URL', () => {
-    const env = { VITE_SUPABASE_URL: 'https://abcdefghijklmnopqrst.supabase.co' };
-    expect(projectRef(env)).toBe('abcdefghijklmnopqrst');
-    expect(projectUrl(env)).toBe('https://abcdefghijklmnopqrst.supabase.co');
+describe('project', () => {
+  it('reads the origin and project ID, with or without a path', () => {
+    expect(project('https://abcdefghijklmnopqrst.supabase.co')).toEqual({ url: 'https://abcdefghijklmnopqrst.supabase.co', ref: 'abcdefghijklmnopqrst' });
+    expect(project('https://abcdefghijklmnopqrst.supabase.co/rest/v1/')).toEqual({ url: 'https://abcdefghijklmnopqrst.supabase.co', ref: 'abcdefghijklmnopqrst' });
   });
 
-  it('drops a /rest/v1/ path', () => {
-    const env = { VITE_SUPABASE_URL: 'https://abcdefghijklmnopqrst.supabase.co/rest/v1/' };
-    expect(projectUrl(env)).toBe('https://abcdefghijklmnopqrst.supabase.co');
-    expect(projectRef(env)).toBe('abcdefghijklmnopqrst');
+  it('rejects anything else with the same message', () => {
+    for (const raw of ['', 'abcdefghijklmnopqrst', 'http://abc.supabase.co', 'https://example.com', 'https://a.b.supabase.co']) {
+      expect(() => project(raw)).toThrow('VITE_SUPABASE_URL must look like https://<project-id>.supabase.co');
+    }
+  });
+});
+
+describe('pickSecretKey', () => {
+  const legacy = { name: 'service_role', type: 'legacy', api_key: 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIn0.sig' };
+  const pub = { name: 'default', type: 'publishable', api_key: 'sb_publishable_abc' };
+
+  it('prefers the secret key named default', () => {
+    const rows = [legacy, pub, { name: 'cron', type: 'secret', api_key: 'sb_secret_cron' }, { name: 'default', type: 'secret', api_key: 'sb_secret_dflt' }];
+    expect(pickSecretKey(rows)).toBe('sb_secret_dflt');
   });
 
-  it('explains a missing or malformed setting', () => {
-    expect(() => projectRef({})).toThrow('VITE_SUPABASE_URL is not set');
-    expect(() => projectRef({ VITE_SUPABASE_URL: 'not a url' })).toThrow('not a web address');
-    expect(() => projectRef({ VITE_SUPABASE_URL: 'https://example.com' })).toThrow('<project-id>.supabase.co');
+  it('falls back to the first secret key', () => {
+    expect(pickSecretKey([pub, { name: 'cron', type: 'secret', api_key: 'sb_secret_cron' }])).toBe('sb_secret_cron');
+  });
+
+  it('never returns a legacy key, and says how to create a secret key when there is none', () => {
+    expect(() => pickSecretKey([legacy, pub])).toThrow(/no secret API key; create one/);
+    expect(() => pickSecretKey([{ name: 'default', type: 'secret', api_key: null }])).toThrow(/no secret API key/);
+    expect(() => pickSecretKey({ error: 'nope' })).toThrow(/no secret API key/);
   });
 });

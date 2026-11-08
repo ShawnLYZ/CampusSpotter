@@ -1,17 +1,17 @@
 import { mytParts } from '../../../shared/bundle/assemble.ts';
 import { fail } from '../_shared/http.ts';
-import { requireServiceRole, runJob } from '../_shared/jobs.ts';
+import { requireSecretKey, runJob } from '../_shared/jobs.ts';
 import { aggregateSessions, assertFeedShape, sessionsFromFeed } from '../_shared/parsers.ts';
 import type { Repo } from '../_shared/repo.ts';
 import { refreshRisks } from '../_shared/risk.ts';
 
 export const FEED_URL = 'https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable';
 
-export interface SyncTimetableDeps { repo: Repo; fetchFn: typeof fetch; now: () => Date }
+export interface SyncTimetableDeps { repo: Repo; fetchFn: typeof fetch; now: () => Date; secretKeys: readonly string[] }
 
 /** Pulls the public timetable feed and stores counts-only session groups. Personal fields and cohort codes are never stored or logged. */
 export async function handle(req: Request, deps: SyncTimetableDeps): Promise<Response> {
-  if (!requireServiceRole(req)) return fail(401, 'service role required');
+  if (!requireSecretKey(req, deps.secretKeys)) return fail(401, 'secret key required');
   const { repo, fetchFn, now } = deps;
   return runJob(repo, 'sync-timetable', async () => {
     const res = await fetchFn(FEED_URL);

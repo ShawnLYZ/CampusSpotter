@@ -103,7 +103,7 @@ export default function CommandCenterPage() {
           <AlertBanner item={alert} onOpen={openAlert} forecast={alertFc.noAction} bundle={alertFc.bundle} sources={sources} />
           {(dayType === 'weekend' || dayType === 'no_class') && <NoClassesState dayType={dayType} />}
           {fc.status === 'ready' && fc.noAction && fc.bundle && <MetricGrid forecast={fc.noAction} step={step} bundle={fc.bundle} sources={sources} />}
-          <section aria-label="Live traffic map" className="card overflow-hidden">
+          <section aria-label="Live traffic map" className="card shrink-0 overflow-hidden">
             <h2 className="section-title px-4 py-2.5">Live traffic: APU to LRT Bukit Jalil</h2>
             <MapPanel height={220} />
           </section>

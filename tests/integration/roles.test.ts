@@ -3,21 +3,21 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { csvTemplate } from '@bundle/csv.ts';
 import { createSupabaseProvider } from '../../src/providers/supabase/createSupabaseProvider.ts';
 import { cleanupContractRows, newTracker, track } from './cleanup.ts';
-import { liveEnv, serviceRoleKey } from './env.ts';
+import { liveEnv, secretKey } from './env.ts';
 
 const env = liveEnv();
-const serviceKey = await serviceRoleKey();
+const adminKey = await secretKey();
 const opts = { auth: { persistSession: false, autoRefreshToken: false } };
 
-describe.skipIf(!env || !serviceKey)('demo role against the live provider', () => {
+describe.skipIf(!env || !adminKey)('demo role against the live provider', () => {
   const e = env!;
   let admin: SupabaseClient;
   const tracker = newTracker();
-  beforeAll(async () => { admin = createClient(e.url, serviceKey!, opts); await cleanupContractRows(admin); }, 60_000);
+  beforeAll(async () => { admin = createClient(e.url, adminKey!, opts); await cleanupContractRows(admin); }, 60_000);
   afterAll(async () => { await cleanupContractRows(admin, tracker); }, 60_000);
 
   async function demoProvider() {
-    const provider = track(createSupabaseProvider(createClient(e.url, e.anonKey, opts)), tracker);
+    const provider = track(createSupabaseProvider(createClient(e.url, e.publishableKey, opts)), tracker);
     await provider.signIn(e.demo.email, e.demo.password);
     return provider;
   }

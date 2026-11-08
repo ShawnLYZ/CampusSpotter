@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LEVER_CATALOGUE, addDays, runForecast, validateLevers } from '@engine/index.ts';
 import { buildChecklist } from '@plans/checklist.ts';
-import { csvTemplate, rowsToCsv } from '@bundle/csv.ts';
+import { csvTemplate } from '@bundle/csv.ts';
 import type { DataProvider } from './DataProvider.ts';
 import type { DisruptionInput, PlanProposal } from './types.ts';
 
@@ -9,7 +9,6 @@ export interface ContractSetup {
   provider: DataProvider;
   cleanup?: () => Promise<void>;
   seedScanItem: (input: DisruptionInput) => Promise<string>;
-  capabilities: { roles: boolean };
 }
 
 /** Shared behaviour every DataProvider must satisfy. Part A: Early Warning. Part B (the rest) is a second describe block. */
@@ -190,18 +189,6 @@ export function providerContract(name: string, setup: () => Promise<ContractSetu
       expect(r.ok).toBe(false);
       expect(r.applied).toBe(false);
       expect(r.errors[0].row).toBe(2);
-    });
-
-    it('applies a good energy CSV and reflects it in the next bundle', async () => {
-      if (ctx.capabilities.roles) return;
-      const energy = (await ctx.provider.listBaselineTables()).find((t) => t.name === 'energy_profiles')!;
-      const rows = energy.rows.map((r) => ({ ...r, base_load_kw: (r.base_load_kw as number) + 10 }));
-      const before = (await ctx.provider.getInputBundle({ date: '2026-11-18' })).baseline.energy.A.baseLoadKw.value;
-      const r = await ctx.provider.uploadBaselineCsv('energy_profiles', rowsToCsv('energy_profiles', rows), { markVerified: true });
-      expect(r.applied).toBe(true);
-      const after = await ctx.provider.getInputBundle({ date: '2026-11-18' });
-      expect(after.baseline.energy.A.baseLoadKw.value).toBe(before + 10);
-      expect(after.baseline.energy.A.baseLoadKw.label).toBe('verified');
     });
 
     it('returns the 4 Nov station day, or null when the provider has no data', async () => {

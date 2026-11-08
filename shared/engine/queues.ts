@@ -39,9 +39,11 @@ function applyAdvisories(bundle: InputBundle, levers: LeverSet, apu: number[], l
   for (const a of advisories) {
     const s = Math.max(0, stepOf(a.advisedMin));
     if (a.message === 'leave_before') {
+      // Riders due in the hour after the advised time leave in the hour before; later riders (still in class) stay.
       const from = stepOf(a.advisedMin - 60);
       const to = stepOf(a.advisedMin);
-      for (let t = s; t < STEPS; t++) {
+      const end = Math.min(STEPS, stepOf(a.advisedMin + 60));
+      for (let t = s; t < end; t++) {
         const m = c * apu[t];
         apu[t] -= m;
         for (let k = from; k < to; k++) if (inGrid(k)) apu[k] += m / 4;

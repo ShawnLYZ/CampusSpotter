@@ -1,15 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { durationText, rmText } from '@engine/index.ts';
 import type { Summary } from '@engine/index.ts';
-import { fixtureBundle } from '@fixtures/engine/index.ts';
+import { assembleBundle, fetchBundleRows, memoryRowsClient } from '@bundle/assemble.ts';
+import { fixtureTables } from '@fixtures/rows/index.ts';
 import type { DataProvider } from '../../providers/DataProvider.ts';
-import type { ContextRequest } from '../../providers/types.ts';
+import type { ContextRequest, EarlyWarningItem } from '../../providers/types.ts';
 import { MILESTONES, buildJun3Card, replayNarrative } from './replayData.ts';
 
-// Only the two calls buildJun3Card makes, served from the saved fixture data.
+/** Just the two reads buildJun3Card makes, answered from the saved fixture rows. */
 const provider = (): DataProvider => ({
-  getDisruption: async (id: string) => ({ id }),
-  getInputBundle: (ctx: ContextRequest) => fixtureBundle(ctx.date, { reconstructed: ctx.reconstructed }),
+  async getDisruption(id: string) { return { id } as EarlyWarningItem; },
+  async getInputBundle(ctx: ContextRequest) {
+    return assembleBundle(await fetchBundleRows(memoryRowsClient(structuredClone(fixtureTables)), ctx.date), { reconstructed: ctx.reconstructed });
+  },
 }) as unknown as DataProvider;
 const summary = (wait: number, queue: number, cost: number): Summary => ({
   peakApuWaitMin: wait, peakApuQueue: { value: queue, atMin: 13 * 60 }, totalCostRm: cost,

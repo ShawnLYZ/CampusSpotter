@@ -9,14 +9,14 @@ import { Timeline } from '../../components/Timeline.tsx';
 import { TypedText } from '../../components/TypedText.tsx';
 import { useForecast } from '../../hooks/useForecast.ts';
 import { clock12, rmText } from '../../lib/format.ts';
-import type { ContextRequest, StationDay } from '../../providers/types.ts';
+import { announcementScripted } from './announcement.ts';
+import type { ContextRequest, PlanProposal, StationDay } from '../../providers/types.ts';
 import { SceneSlot } from '../../scene/SceneSlot.tsx';
 import { useContextStore } from '../../store/context.ts';
 import { useTimeStore } from '../../store/time.ts';
 import { summaryRows } from '../scenario-lab/summaryRows.ts';
 import { Jun3Card } from './Jun3Card.tsx';
 import { MilestoneStrip } from './MilestoneStrip.tsx';
-import { replayAnnouncement } from './replayAnnouncement.ts';
 import { replayNarrative } from './replayData.ts';
 import type { Milestone } from './replayData.ts';
 import { stationText } from './stationText.ts';
@@ -63,7 +63,7 @@ export default function ReplayPage() {
 
   const checklist = useMemo(() => (fc.bundle ? buildChecklist(REPLAY_PLAN_4NOV, fc.bundle) : null), [fc.bundle]);
   const announcement = useMemo(
-    () => (checklist ? replayAnnouncement(REPLAY_PLAN_4NOV, checklist) : null),
+    () => (checklist ? announcementScripted({ levers: REPLAY_PLAN_4NOV } as PlanProposal, REPLAY_CTX, null, checklist) : null),
     [checklist],
   );
   const narrative = useMemo(

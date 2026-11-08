@@ -2,9 +2,9 @@
 // Run: node --env-file=.env scripts/set-function-secrets.ts
 import { spawnSync } from 'node:child_process';
 import { rmSync, writeFileSync } from 'node:fs';
-import { projectRef } from './lib/project.ts';
+import { project } from './lib/project.ts';
 
-const REF = projectRef();
+const REF = project().ref;
 const FILE = 'supabase/.env.functions'; // git-ignored
 const NAMES = ['GEMINI_API_KEY', 'GOOGLE_ROUTES_KEY'] as const;
 

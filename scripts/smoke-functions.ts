@@ -1,4 +1,4 @@
-// Live smoke test of the deployed Edge Functions, as the guest (demo role) user. Cleans up what it created (decision, forecasts, plans).
+// Live smoke test of the deployed Edge Functions, as the demo user. Cleans up what it created (decision, forecasts, plans).
 // Run: node --env-file=.env --env-file=.env.local scripts/smoke-functions.ts
 import { isDeepStrictEqual } from 'node:util';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
@@ -7,18 +7,18 @@ import type { RowFilter, RowsClient } from '../shared/bundle/assemble.ts';
 import type { TableName } from '../shared/bundle/rows.ts';
 import { evaluatePlan } from '../shared/engine/index.ts';
 import { buildChecklist } from '../shared/plans/checklist.ts';
-import { projectUrl } from './lib/project.ts';
-import { serviceRoleKey } from './lib/serviceRole.ts';
+import { project, publishableKey, secretKey } from './lib/project.ts';
 
-const URL_ = projectUrl();
+const URL_ = project().url;
+const PUBLISHABLE_KEY = publishableKey();
 const need = (n: string): string => {
   const v = process.env[n];
   if (!v) throw new Error(`${n} is not set`);
   return v;
 };
 
-const anon = createClient(URL_, need('VITE_SUPABASE_ANON_KEY'), { auth: { persistSession: false } });
-const admin = createClient(URL_, await serviceRoleKey(), { auth: { persistSession: false } });
+const pub = createClient(URL_, PUBLISHABLE_KEY, { auth: { persistSession: false } });
+const admin = createClient(URL_, await secretKey(), { auth: { persistSession: false } });
 
 function rowsClient(c: SupabaseClient): RowsClient {
   return {
@@ -47,7 +47,7 @@ async function call<T>(fn: string, body: unknown): Promise<T> {
   const t0 = Date.now();
   const res = await fetch(`${URL_}/functions/v1/${fn}`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json', authorization: `Bearer ${jwt}`, apikey: need('VITE_SUPABASE_ANON_KEY') },
+    headers: { 'content-type': 'application/json', authorization: `Bearer ${jwt}`, apikey: PUBLISHABLE_KEY },
     body: JSON.stringify(body),
   });
   const ms = Date.now() - t0;
@@ -67,7 +67,7 @@ async function call<T>(fn: string, body: unknown): Promise<T> {
 }
 
 async function main() {
-  const { data: auth, error } = await anon.auth.signInWithPassword({ email: need('VITE_DEMO_EMAIL'), password: need('VITE_DEMO_PASSWORD') });
+  const { data: auth, error } = await pub.auth.signInWithPassword({ email: need('VITE_DEMO_EMAIL'), password: need('VITE_DEMO_PASSWORD') });
   if (error || !auth.session) throw new Error(`demo sign-in failed: ${error?.message}`);
   jwt = auth.session.access_token;
   console.log('signed in as demo user');

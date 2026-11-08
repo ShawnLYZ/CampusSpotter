@@ -6,7 +6,7 @@ import { estimateForDisruption } from '../_shared/estimate.ts';
 import { GeminiError } from '../_shared/gemini.ts';
 import type { callGemini } from '../_shared/gemini.ts';
 import { fail, json } from '../_shared/http.ts';
-import { requireServiceRole, runJob } from '../_shared/jobs.ts';
+import { requireSecretKey, runJob } from '../_shared/jobs.ts';
 import { htmlToText, liveNationEventLinks, parseNewsRss } from '../_shared/parsers.ts';
 import { SYSTEM_PROMPTS } from '../_shared/prompts.ts';
 import type { Repo } from '../_shared/repo.ts';
@@ -16,7 +16,7 @@ import { clusterToRow, expandEvents, mergeCandidates, WINDOW_DAYS } from './cand
 import type { ExtractedEvent } from './candidates.ts';
 
 export interface EventScanDeps {
-  repo: Repo; fetchFn: typeof fetch; gemini: typeof callGemini; apiKey: string; now: () => Date;
+  repo: Repo; fetchFn: typeof fetch; gemini: typeof callGemini; apiKey: string; now: () => Date; secretKeys: readonly string[];
   /** Wall clock (epoch ms) for time budgets, the same clock callGemini uses for deadlines. Default Date.now. */
   clock?: () => number;
 }
@@ -49,7 +49,7 @@ const EXTRACT_CONCURRENCY = 3;
 type Extract = { events: ExtractedEvent[] };
 
 /**
- * Scans for upcoming events near Bukit Jalil and APU calendar items. Service role always scans; a manager or demo caller
+ * Scans for upcoming events near Bukit Jalil and APU calendar items. A secret-key caller (pg_cron) always scans; a manager or demo caller
  * reuses a successful scan from the last 10 minutes, or joins a scan still running that started under 3 minutes ago.
  */
 export async function handle(req: Request, deps: EventScanDeps): Promise<Response> {
@@ -57,7 +57,7 @@ export async function handle(req: Request, deps: EventScanDeps): Promise<Respons
   if (pre) return pre;
   let res: Response;
   try {
-    if (!requireServiceRole(req)) {
+    if (!requireSecretKey(req, deps.secretKeys)) {
       const caller = await getCaller(req, deps.repo);
       if (!caller) return fail(401, 'unauthorized');
       const last = await deps.repo.latestJob(JOB_NAME);
@@ -235,7 +235,8 @@ async function fallback(deps: EventScanDeps, today: string, deadlineAt: number, 
     for (const item of items) {
       if (publishedAt.has(item.link)) continue;
       publishedAt.set(item.link, item.publishedAt);
-      lines.push(`${item.title}\n${item.link}`);
+      // The publish date anchors relative words in the headline ("starts tomorrow", "two nights").
+      lines.push(`${item.title}\n${item.link}${item.publishedAt ? `\nPublished: ${mytParts(item.publishedAt).date}` : ''}`);
     }
     section(url, lines.join('\n'));
   }
@@ -267,7 +268,9 @@ async function fallback(deps: EventScanDeps, today: string, deadlineAt: number, 
         system: SYSTEM_PROMPTS.extract,
         prompt:
           `Today is ${today} (Malaysia time). Extract the events in the sources below. Each source starts with a "SOURCE: <url>" line; ` +
-          `put the URLs an event came from in sourceUrls, using the article link for news items.\n\n${batch}`,
+          `put the URLs an event came from in sourceUrls, using the article link for news items. ` +
+          `A news item gives its headline, link and "Published:" date. Work out relative dates such as "tomorrow", "tonight" or ` +
+          `"this weekend" from that publish date, never from today, and leave out an event whose date the text does not give.\n\n${batch}`,
         schema: SCHEMAS.extract,
         deadlineAt,
       });

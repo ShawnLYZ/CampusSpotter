@@ -19,7 +19,7 @@ export interface EarlyWarningItem {
 export interface DisruptionFilter { from: string; to: string; types?: DisruptionType[]; risks?: RiskLevel[]; includeDismissed?: boolean; includePast?: boolean }
 export interface DisruptionInput { title: string; type: DisruptionType; kind: DisruptionKind; venue: string | null; startAt: string; endAt: string; expectedAttendance: number | null; notes: string | null }
 export interface OverridePatch { startAt?: string; endAt?: string; expectedAttendance?: number }
-export interface ScanRun { id: string; startedAt: string; finishedAt: string | null; status: 'running' | 'success' | 'failed'; method: 'grounding' | 'fallback' | 'fixture' | null; itemsFound: number; itemsChanged: number; errorSummary: string | null }
+export interface ScanRun { id: string; startedAt: string; finishedAt: string | null; status: 'running' | 'success' | 'failed'; method: 'grounding' | 'fallback' | null; itemsFound: number; itemsChanged: number; errorSummary: string | null }
 export interface AskResult { matched: boolean; levers: LeverSet; restatement: string; changedKinds: LeverKind[] }
 export interface PlanProposal { id: string; name: string; levers: LeverSet; rationale: string; costLines: CostLine[]; totalCostRm: number; summary: Summary; noActionSummary: Summary; overBudget: boolean; budgetRm: number }
 export interface ChecklistItem { id: string; decisionId: string; team: Team; text: string; dueAt: string | null; done: boolean; doneBy: string | null; doneAt: string | null }
@@ -32,5 +32,4 @@ export interface BaselineTable { name: BaselineTableName; title: string; columns
 export interface CsvReport { ok: boolean; applied: boolean; rowCount: number; errors: CsvError[] }
 export interface EstimateView extends Estimate { date: string; disruptionTitle: string }
 export type Channel = 'disruptions' | 'job_runs' | 'decisions' | 'checklist_items' | 'baseline' | 'auth';
-export interface ProviderInfo { dataNote: string }
 export interface StationDay { date: string; boardings: number; alightings: number; typicalBoardings: number | null; typicalAlightings: number | null }

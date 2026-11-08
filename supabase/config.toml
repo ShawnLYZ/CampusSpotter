@@ -380,6 +380,40 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# CampusSpotter uses the new API keys (sb_publishable_…, sb_secret_…), which are not JWTs, so the platform JWT check is
+# off and every function checks its caller in code: a signed-in user's JWT (verified by Supabase Auth), or the project's
+# secret key on the apikey header for the scheduled jobs. engine-version only returns the engine version.
+[functions.ai-announcement]
+verify_jwt = false
+[functions.ai-ask]
+verify_jwt = false
+[functions.ai-estimate]
+verify_jwt = false
+[functions.ai-explain]
+verify_jwt = false
+[functions.ai-plans]
+verify_jwt = false
+[functions.baseline-import]
+verify_jwt = false
+[functions.decision-create]
+verify_jwt = false
+[functions.engine-version]
+verify_jwt = false
+[functions.event-scan]
+verify_jwt = false
+[functions.forecast-save]
+verify_jwt = false
+[functions.sync-prayer]
+verify_jwt = false
+[functions.sync-ridership]
+verify_jwt = false
+[functions.sync-timetable]
+verify_jwt = false
+[functions.sync-traffic]
+verify_jwt = false
+[functions.sync-weather]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

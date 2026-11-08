@@ -2,7 +2,7 @@ import { mytParts } from '../../../shared/bundle/assemble.ts';
 import type { TrafficRow } from '../../../shared/bundle/rows.ts';
 import { addDays } from '../../../shared/engine/grid.ts';
 import { fail } from '../_shared/http.ts';
-import { requireServiceRole, runJob } from '../_shared/jobs.ts';
+import { requireSecretKey, runJob } from '../_shared/jobs.ts';
 import { parseRouteDuration, routeDepartureTimes } from '../_shared/parsers.ts';
 import type { Repo } from '../_shared/repo.ts';
 import { refreshRisks } from '../_shared/risk.ts';
@@ -12,7 +12,7 @@ export const ROUTES_FIELD_MASK = 'routes.duration,routes.staticDuration';
 export const MONTHLY_CAP = 4000;
 export const CAP_MESSAGE = 'traffic forecast paused (monthly cap)';
 
-export interface SyncTrafficDeps { repo: Repo; fetchFn: typeof fetch; now: () => Date; routesKey: string }
+export interface SyncTrafficDeps { repo: Repo; fetchFn: typeof fetch; now: () => Date; routesKey: string; secretKeys: readonly string[] }
 
 const APU = { latitude: 3.05607, longitude: 101.70047 };
 const LRT = { latitude: 3.05813, longitude: 101.69222 };
@@ -32,7 +32,7 @@ const NEAR_DAYS = 2;
  * date beyond today + 2 with google rows fetched in the last 3 days is skipped. Rows are saved after each date.
  */
 export async function handle(req: Request, deps: SyncTrafficDeps): Promise<Response> {
-  if (!requireServiceRole(req)) return fail(401, 'service role required');
+  if (!requireSecretKey(req, deps.secretKeys)) return fail(401, 'secret key required');
   const { repo, fetchFn, now, routesKey } = deps;
   return runJob(repo, 'sync-traffic', async () => {
     const start = now();

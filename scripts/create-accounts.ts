@@ -1,10 +1,9 @@
-// Creates/updates the manager and guest (demo role) accounts and writes their credentials into .env.local.
+// Creates/updates the manager and demo accounts and writes their credentials into .env.local.
 // Run: node --env-file=.env --env-file=.env.local scripts/create-accounts.ts
 import { randomBytes } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { projectUrl } from './lib/project.ts';
-import { serviceRoleKey } from './lib/serviceRole.ts';
+import { project, secretKey } from './lib/project.ts';
 
 const ENV_LOCAL = '.env.local';
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
@@ -93,9 +92,8 @@ async function upsert(admin: SupabaseClient, a: Account): Promise<string | null>
 }
 
 const managerEmail = process.env.MANAGER_EMAIL;
-if (!managerEmail) throw new Error('MANAGER_EMAIL is not set: put your own email address in .env');
-
-const admin = createClient(projectUrl(), await serviceRoleKey(), {
+if (!managerEmail) throw new Error('MANAGER_EMAIL is not set');
+const admin = createClient(project().url, await secretKey(), {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 

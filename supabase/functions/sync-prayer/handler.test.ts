@@ -3,10 +3,10 @@ import sample from '../../../shared/fixtures/recorded/esolat-year-sample.json' w
 import type { DisruptionRow, PrayerRow } from '../../../shared/bundle/rows.ts';
 import { parseEsolatYear } from '../_shared/parsers.ts';
 import { handle, PRAYER_URL } from './handler.ts';
-import { SERVICE_TOKEN, seededRepo } from '../_shared/testkit.ts';
+import { SECRET_KEY, seededRepo, SECRET_KEYS, callerHeaders } from '../_shared/testkit.ts';
 
-const req = (token: string | null = SERVICE_TOKEN) =>
-  new Request('http://localhost/sync-prayer', { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {} });
+const req = (token: string | null = SECRET_KEY) =>
+  new Request('http://localhost/sync-prayer', { method: 'POST', headers: callerHeaders(token) });
 // Frozen clock: 2026-11-05T22:00:00Z = 06:00 MYT on Friday 6 Nov 2026 (today + 56 days = 31 Dec, the sample's last day).
 const now = () => new Date('2026-11-05T22:00:00Z');
 const okFetch = (body: unknown, calls: string[] = []) => ((url: string | URL | Request) => {
@@ -17,7 +17,7 @@ const okFetch = (body: unknown, calls: string[] = []) => ((url: string | URL | R
 Deno.test('stores prayer times from today and creates Friday items, the first starting 12:15', async () => {
   const repo = seededRepo();
   const calls: string[] = [];
-  const res = await handle(req(), { repo, fetchFn: okFetch(sample, calls), now });
+  const res = await handle(req(), { repo, fetchFn: okFetch(sample, calls), now, secretKeys: SECRET_KEYS });
   assertEquals(res.status, 200);
   assertEquals(calls, [PRAYER_URL]);
   const prayers = repo.tables.prayer_times as PrayerRow[];
@@ -43,7 +43,7 @@ Deno.test('a Malay "Dis" date parses to December', () => {
 Deno.test('a fetch failure leaves prayer rows and items unchanged', async () => {
   const repo = seededRepo();
   const before = JSON.stringify([repo.tables.prayer_times, repo.tables.disruptions]);
-  const res = await handle(req(), { repo, fetchFn: (() => Promise.resolve(new Response('x', { status: 503 }))) as typeof fetch, now });
+  const res = await handle(req(), { repo, fetchFn: (() => Promise.resolve(new Response('x', { status: 503 }))) as typeof fetch, now, secretKeys: SECRET_KEYS });
   assertEquals(res.status, 500);
   assertEquals(JSON.stringify([repo.tables.prayer_times, repo.tables.disruptions]), before);
 });
@@ -52,14 +52,14 @@ Deno.test('an unknown month fails before any write', async () => {
   const repo = seededRepo();
   const before = JSON.stringify([repo.tables.prayer_times, repo.tables.disruptions]);
   const bad = { prayerTime: [{ date: '06-Xyz-2026', fajr: '1:00', dhuhr: '1:00', asr: '1:00', maghrib: '1:00', isha: '1:00' }] };
-  const res = await handle(req(), { repo, fetchFn: okFetch(bad), now });
+  const res = await handle(req(), { repo, fetchFn: okFetch(bad), now, secretKeys: SECRET_KEYS });
   assertEquals(res.status, 500);
   assertEquals(JSON.stringify([repo.tables.prayer_times, repo.tables.disruptions]), before);
 });
 
-Deno.test('rejects callers without a service-role token', async () => {
+Deno.test('rejects callers without the secret key', async () => {
   const repo = seededRepo();
-  assertEquals((await handle(req(null), { repo, fetchFn: okFetch({}), now })).status, 401);
+  assertEquals((await handle(req(null), { repo, fetchFn: okFetch({}), now, secretKeys: SECRET_KEYS })).status, 401);
 });
 
 const ruleItem = (id: string, start: string, end: string, origin: DisruptionRow['origin'] = 'rule'): DisruptionRow => ({
@@ -74,7 +74,7 @@ Deno.test('valid-shaped but empty prayer data fails with schema and keeps existi
   const repo = seededRepo();
   (repo.tables.disruptions as DisruptionRow[]).push(ruleItem('friday-prayer-2026-11-13', '2026-11-13T12:15:00+08:00', '2026-11-13T14:45:00+08:00'));
   const before = JSON.stringify([repo.tables.prayer_times, repo.tables.disruptions]);
-  const res = await handle(req(), { repo, fetchFn: okFetch({ prayerTime: [] }), now });
+  const res = await handle(req(), { repo, fetchFn: okFetch({ prayerTime: [] }), now, secretKeys: SECRET_KEYS });
   assertEquals(res.status, 500);
   assertEquals(JSON.stringify([repo.tables.prayer_times, repo.tables.disruptions]), before);
   const run = (repo.tables.job_runs as { status: string; error_summary: string }[]).at(-1)!;
@@ -88,7 +88,7 @@ Deno.test('a removed Friday item has its date and neighbours risk-refreshed', as
   // Stale rule item on Wed 11 Nov (not a Friday in the new data) and a manual item on its +1 neighbour, Thu 12 Nov.
   all.push(ruleItem('friday-prayer-2026-11-11', '2026-11-11T12:15:00+08:00', '2026-11-11T14:45:00+08:00'));
   all.push({ ...ruleItem('manual-12-nov', '2026-11-12T09:00:00+08:00', '2026-11-12T12:00:00+08:00', 'manual'), kind: 'other', type: 'manual' });
-  const res = await handle(req(), { repo, fetchFn: okFetch(sample), now });
+  const res = await handle(req(), { repo, fetchFn: okFetch(sample), now, secretKeys: SECRET_KEYS });
   assertEquals(res.status, 200);
   const after = repo.tables.disruptions as DisruptionRow[];
   assert(!after.some((d) => d.id === 'friday-prayer-2026-11-11'));
@@ -100,7 +100,7 @@ Deno.test('a mid-December run never deletes rule items beyond the year file (cap
   const all = repo.tables.disruptions as DisruptionRow[];
   all.push(ruleItem('friday-prayer-2027-01-08', '2027-01-08T12:15:00+08:00', '2027-01-08T14:45:00+08:00'));
   // 2026-12-15T22:00:00Z = 06:00 MYT Wed 16 Dec; today + 56 days is in February 2027, past the sample.
-  const res = await handle(req(), { repo, fetchFn: okFetch(sample), now: () => new Date('2026-12-15T22:00:00Z') });
+  const res = await handle(req(), { repo, fetchFn: okFetch(sample), now: () => new Date('2026-12-15T22:00:00Z'), secretKeys: SECRET_KEYS });
   assertEquals(res.status, 200);
   const after = repo.tables.disruptions as DisruptionRow[];
   assert(after.some((d) => d.id === 'friday-prayer-2027-01-08'));

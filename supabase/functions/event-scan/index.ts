@@ -1,10 +1,11 @@
-import { createClient } from 'npm:@supabase/supabase-js@2';
-import { env } from '../_shared/env.ts';
+import { createAdminClient } from '../_shared/admin.ts';
+import { env, secretKeys as readSecretKeys } from '../_shared/env.ts';
 import { callGemini } from '../_shared/gemini.ts';
 import { createSupabaseRepo } from '../_shared/repo.ts';
 import { handle } from './handler.ts';
 
-const repo = createSupabaseRepo(createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY')));
+const secretKeys = readSecretKeys();
+const repo = createSupabaseRepo(createAdminClient(secretKeys));
 const apiKey = env('GEMINI_API_KEY');
 
-Deno.serve((req) => handle(req, { repo, fetchFn: fetch, gemini: callGemini, apiKey, now: () => new Date() }));
+Deno.serve((req) => handle(req, { repo, fetchFn: fetch, gemini: callGemini, apiKey, now: () => new Date(), secretKeys }));
