@@ -4,15 +4,18 @@ import type { Forecast } from '@engine/output.ts';
 import type { BlockId } from '@engine/types.ts';
 import { seededRandom } from '../../lib/random.ts';
 import { windowGlow } from '../animation.ts';
-import { CAMPUS_LAYOUT, FLOOR_HEIGHT } from '../layout.ts';
+import { CAMPUS_LAYOUT, FLOOR_HEIGHT, facadeBays, type Side } from '../layout.ts';
+import { WINDOW_CELL } from '../parts/materials.ts';
 import { lightingAt } from '../lighting.ts';
 
 const WARM = new Color('#ffd27a');
 const _o = new Object3D();
 const _c = new Color();
-const WIN_W = 1.0, WIN_H = 0.38, COL_PITCH = 2;
+const SIDES: { side: Side; rot: number }[] = [{ side: 's', rot: 0 }, { side: 'n', rot: Math.PI }, { side: 'e', rot: Math.PI / 2 }, { side: 'w', rot: -Math.PI / 2 }];
+const OUT = 0.03;
+const WIN_H = FLOOR_HEIGHT * WINDOW_CELL.height;
 
-interface Win { x: number; y: number; z: number; flip: boolean; block: BlockId; r: number }
+interface Win { x: number; y: number; z: number; rot: number; width: number; block: BlockId; r: number }
 type Energy = [BlockId, Forecast['perBlock'][BlockId]][];
 
 /** Overnight floor of each block's energy (min over the day): the "base" a window's glow is measured against. */
@@ -24,27 +27,33 @@ function baseKwhByBlock(forecast: Forecast): Partial<Record<BlockId, number>> {
   return out;
 }
 
-/** Warm emissive window panes on the front and back facades of the blocks, brighter with each block's energy use. One InstancedMesh. */
+/** Warm emissive panes over the facade windows of the blocks (all four sides, except behind sun screens), brighter with each block's energy use. One InstancedMesh. */
 export function WindowGlow({ forecast, step }: { forecast: Forecast; step: number }) {
   const mesh = useRef<InstancedMesh>(null);
   const wins = useMemo(() => {
     const rnd = seededRandom(41);
-    const out: Win[] = [];
+    const list: Win[] = [];
     for (const it of CAMPUS_LAYOUT) {
       if (!it.blockId || it.blockId === 'S' || !it.floors || !it.w || !it.d) continue;
-      const cols = Math.max(1, Math.floor((it.w - 1) / COL_PITCH));
-      for (const side of [1, -1]) {
+      for (const { side, rot } of SIDES) {
+        if (it.screens?.includes(side)) continue; // a sun screen covers this facade
+        const onZ = side === 's' || side === 'n';
+        const sign = side === 's' || side === 'e' ? 1 : -1;
+        const length = onZ ? it.w : it.d;
+        const bays = facadeBays(length), pitch = length / bays;
+        const offset = sign * ((onZ ? it.d : it.w) / 2 + OUT);
         for (let f = 0; f < it.floors; f++) {
-          for (let c = 0; c < cols; c++) {
-            out.push({
-              x: it.x + (c - (cols - 1) / 2) * COL_PITCH, y: (f + 0.5) * FLOOR_HEIGHT,
-              z: it.z + side * (it.d / 2 + 0.05), flip: side < 0, block: it.blockId, r: rnd(),
+          for (let c = 0; c < bays; c++) {
+            const along = (c - (bays - 1) / 2) * pitch;
+            list.push({
+              x: it.x + (onZ ? along : offset), y: (f + WINDOW_CELL.centreY) * FLOOR_HEIGHT, z: it.z + (onZ ? offset : along),
+              rot, width: pitch * WINDOW_CELL.width, block: it.blockId, r: rnd(),
             });
           }
         }
       }
     }
-    return out;
+    return list;
   }, []);
   const base = useMemo(() => baseKwhByBlock(forecast), [forecast]);
   const night = lightingAt(step).night;
@@ -60,8 +69,8 @@ export function WindowGlow({ forecast, step }: { forecast: Forecast; step: numbe
       const g = glow[w.block] ?? 0.1;
       const lit = (night || g > 0.3) && w.r < 0.35 + 0.65 * g;
       _o.position.set(w.x, w.y, w.z);
-      _o.rotation.set(0, w.flip ? Math.PI : 0, 0);
-      _o.scale.setScalar(lit ? 1 : 0);
+      _o.rotation.set(0, w.rot, 0);
+      _o.scale.set(lit ? w.width : 0, lit ? WIN_H : 0, 1);
       _o.updateMatrix();
       m.setMatrixAt(i, _o.matrix);
       m.setColorAt(i, _c.copy(WARM).multiplyScalar(0.35 + 0.65 * g));
@@ -72,7 +81,7 @@ export function WindowGlow({ forecast, step }: { forecast: Forecast; step: numbe
 
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, wins.length]} frustumCulled={false}>
-      <planeGeometry args={[WIN_W, WIN_H]} />
+      <planeGeometry args={[1, 1]} />
       <meshBasicMaterial toneMapped={false} />
     </instancedMesh>
   );

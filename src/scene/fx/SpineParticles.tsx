@@ -4,8 +4,10 @@ import type { BufferAttribute, BufferGeometry } from 'three';
 import type { Forecast } from '@engine/output.ts';
 import { seededRandom } from '../../lib/random.ts';
 import { MAX_SPINE_PARTICLES, spineParticleCount } from '../animation.ts';
+import { SPINE_DECK } from '../layout.ts';
 
-const X0 = -24, X1 = 22, LEN = X1 - X0, Z = -1, Y = 2.3, SPEED = 2.5;
+const { x0: X0, x1: X1, z: Z } = SPINE_DECK;
+const LEN = X1 - X0, Y = SPINE_DECK.y + 0.2, SPEED = 2.5;
 
 /** Walkers on the Spine deck: points drifting along x at constant speed, two directions, count from walkway flow. */
 export function SpineParticles({ forecast, step }: { forecast: Forecast; step: number }) {
@@ -13,7 +15,7 @@ export function SpineParticles({ forecast, step }: { forecast: Forecast; step: n
   const count = spineParticleCount(forecast.metrics.walkwayTraffic.detail.flowPerMin?.[step] ?? 0);
   const seeds = useMemo(() => {
     const rnd = seededRandom(11);
-    return Array.from({ length: MAX_SPINE_PARTICLES }, (_, i) => ({ phase: rnd() * LEN, z: Z + (rnd() - 0.5) * 2.2, dir: i % 2 ? 1 : -1 }));
+    return Array.from({ length: MAX_SPINE_PARTICLES }, (_, i) => ({ phase: rnd() * LEN, z: Z + (rnd() - 0.5) * 3, dir: i % 2 ? 1 : -1 }));
   }, []);
   const positions = useMemo(() => new Float32Array(MAX_SPINE_PARTICLES * 3), []);
 

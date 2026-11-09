@@ -6,10 +6,10 @@ import { MAX_QUEUE_FIGURES, queueFigures } from '../animation.ts';
 import { ChipSprite } from '../parts/ZoneLabel.tsx';
 import type { PressureStyle } from '../pressureStyle.ts';
 
-const PER_ROW = 10, SPACING = 0.6, FIGURE_Y = 0.32;
-/** Grid origins (x, z); rows extend away from the stop. */
-const APU_ORIGIN = { x: 17, z: 13, dz: -1 };
-const LRT_ORIGIN = { x: -95, z: 8.6, dz: 1 };
+const SPACING = 0.6, FIGURE_Y = 0.32;
+/** Grid origins (x, z); rows of `perRow` extend away from the stop. The APU queue fills the forecourt east of the grand stair. */
+const APU_ORIGIN = { x: 17.2, z: 13.4, dz: -1, perRow: 20 };
+const LRT_ORIGIN = { x: -95, z: 8.6, dz: 1, perRow: 10 };
 const LABEL_STYLE: PressureStyle = { color: '#f59e0b', glow: 0, tintOpacity: 0, text: '', icon: '●' };
 const _o = new Object3D();
 
@@ -31,7 +31,7 @@ export function QueueFigures({ forecast, step }: { forecast: Forecast; step: num
     const place = (count: number, o: typeof APU_ORIGIN, base: number) => {
       for (let i = 0; i < count; i++) {
         const j = jitter[base + i]!;
-        _o.position.set(o.x + (i % PER_ROW) * SPACING + j[0], FIGURE_Y, o.z + o.dz * Math.floor(i / PER_ROW) * SPACING + j[1]);
+        _o.position.set(o.x + (i % o.perRow) * SPACING + j[0], FIGURE_Y, o.z + o.dz * Math.floor(i / o.perRow) * SPACING + j[1]);
         _o.updateMatrix();
         m.setMatrixAt(n++, _o.matrix);
       }

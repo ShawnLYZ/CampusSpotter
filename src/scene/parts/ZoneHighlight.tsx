@@ -1,9 +1,9 @@
 import { Edges } from '@react-three/drei';
 import { Color } from 'three';
-import { FLOOR_HEIGHT, itemById } from '../layout.ts';
+import { SPINE_DECK, itemById, itemHeight } from '../layout.ts';
 import type { PressureStyle } from '../pressureStyle.ts';
 import type { Zone } from '../zones.ts';
-import { residencePairBoxes } from './Residences.tsx';
+import { residenceBoxes } from './Residences.tsx';
 
 const SELECTED = '#ffffff';
 const noRaycast = () => null;
@@ -12,12 +12,21 @@ interface Box { x: number; y: number; z: number; w: number; d: number; h: number
 
 /** Footprint boxes to outline, keyed by zone id. Road, stop and bay zones use other visuals. */
 function boxFor(zone: Zone): Box | null {
-  if (zone.id === 'spine') return { x: -1, y: 2.1, z: -1, w: 46, d: 3, h: 0.3 };
+  if (zone.id === 'spine') {
+    const s = itemById('spine')!;
+    return { x: s.x, y: SPINE_DECK.y, z: s.z, w: s.w ?? 0, d: s.d ?? 0, h: 0.3 };
+  }
   if (zone.id === 'lrt-station') return { x: -100, y: 1.5, z: 0, w: 24, d: 3, h: 5 };
   if (zone.id === 'apu-stop') return null; // the stop shows its ring only
   const it = itemById(zone.id);
   if (!it || zone.outline === 'path') return null;
-  return { x: it.x, y: 0, z: it.z, w: it.w ?? 6, d: it.d ?? 6, h: (it.floors ?? 3) * FLOOR_HEIGHT };
+  return { x: it.x, y: 0, z: it.z, w: it.w ?? 6, d: it.d ?? 6, h: itemHeight(it) };
+}
+
+/** Selection footprint of a flat or low layout item. */
+function itemBox(id: string, h: number): Box {
+  const it = itemById(id)!;
+  return { x: it.x, y: 0, z: it.z, w: it.w ?? 0, d: it.d ?? 0, h };
 }
 
 /** Ring decals on the ground for the shuttle stop and the LRT bay pad. */
@@ -47,9 +56,9 @@ function Ring({ x, z, color, radius, y = 0.12 }: { x: number; z: number; color: 
 
 /** Footprints for zones without metrics, which only ever show a selection outline. */
 const SELECT_BOXES: Record<string, Box[]> = {
-  residences: residencePairBoxes(),
-  'carpark-a': [{ x: -34, y: 0, z: 8, w: 10, d: 10, h: 2.1 }],
-  'carpark-b': [{ x: 0, y: 0, z: 18, w: 40, d: 6, h: 0.15 }],
+  residences: residenceBoxes(),
+  'carpark-a': [itemBox('carpark-a', 2.1)],
+  'carpark-b': [itemBox('carpark-b', 0.4)],
   'mranti-parking': [{ x: 45, y: 0, z: 30, w: 25, d: 15, h: 0.15 }],
 };
 

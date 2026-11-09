@@ -1,6 +1,6 @@
 import type { BlockId, MetricId } from '@engine/types.ts';
 import type { Forecast, Pressure, StepStatus, StepValue } from '@engine/output.ts';
-import { FLOOR_HEIGHT, itemById } from './layout.ts';
+import { SPINE_DECK, itemById, itemHeight } from './layout.ts';
 
 /** `detailOnly` metrics are listed in the zone's details but don't set its colour or label. */
 export interface MetricRef { metric: MetricId; scope: 'campus' | BlockId; detailOnly?: true }
@@ -11,7 +11,7 @@ export interface Zone {
 
 const topAnchor = (id: string): [number, number, number] => {
   const it = itemById(id)!;
-  return [it.x, (it.floors ?? 0) * FLOOR_HEIGHT, it.z];
+  return [it.x, itemHeight(it), it.z];
 };
 
 const block = (letter: BlockId, id: string): Zone => ({
@@ -26,7 +26,7 @@ const road = (id: string, name: string, anchor: [number, number, number]): Zone 
 export const ZONES: Zone[] = [
   block('A', 'block-a'), block('B', 'block-b'), block('C', 'block-c'), block('D', 'block-d'), block('E', 'block-e'),
   {
-    id: 'spine', name: 'The Spine', outline: 'box', anchor: [0, 6.5, -1],
+    id: 'spine', name: 'The Spine', outline: 'box', anchor: [(SPINE_DECK.x0 + SPINE_DECK.x1) / 2, SPINE_DECK.y, SPINE_DECK.z],
     metrics: [{ metric: 'walkwayTraffic', scope: 'campus' }, { metric: 'classroomOccupancy', scope: 'S' }],
   },
   {
@@ -34,7 +34,7 @@ export const ZONES: Zone[] = [
     metrics: [{ metric: 'classroomOccupancy', scope: 'L' }, { metric: 'buildingEnergy', scope: 'L' }],
   },
   {
-    id: 'atrium', name: 'Centre Point & Atrium (cafeteria)', outline: 'circle', anchor: [10, 2.1, 8],
+    id: 'atrium', name: 'Centre Point & Atrium (cafeteria)', outline: 'circle', anchor: topAnchor('atrium'),
     metrics: [{ metric: 'cafeteriaQueue', scope: 'campus' }],
   },
   {
@@ -42,9 +42,9 @@ export const ZONES: Zone[] = [
     // Coloured by the queue alone: a jammed road already shows red on the road segments.
     metrics: [{ metric: 'apuStopQueue', scope: 'campus' }, { metric: 'shuttleRtt', scope: 'campus', detailOnly: true }],
   },
-  { id: 'residences', name: 'Residences J1/J2/K1/K2', outline: 'box', anchor: [-32, 8.4, -14], metrics: [] },
-  { id: 'carpark-a', name: 'Car park Zone A (1,130 covered bays)', outline: 'box', anchor: [-34, 2.1, 8], metrics: [] },
-  { id: 'carpark-b', name: 'Car park Zone B (558 open bays)', outline: 'box', anchor: [0, 0, 18], metrics: [] },
+  { id: 'residences', name: 'Residences J1/J2/K1/K2', outline: 'box', anchor: topAnchor('residences-j'), metrics: [] },
+  { id: 'carpark-a', name: 'Car park Zone A (1,130 covered bays)', outline: 'box', anchor: [-30, 2.1, 2], metrics: [] },
+  { id: 'carpark-b', name: 'Car park Zone B (558 open bays)', outline: 'box', anchor: [-4.8, 0, 9], metrics: [] },
   road('road-jalan-teknologi', 'Jalan Teknologi', [16, 0, 18]),
   road('road-kl-seremban', 'KL–Seremban Expressway', [-20, 0, 24]),
   road('road-bukit-jalil-hwy', 'Bukit Jalil Highway / Jalan Barat', [-70, 0, 18]),

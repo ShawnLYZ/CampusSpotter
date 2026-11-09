@@ -1,13 +1,6 @@
 import { useMemo } from 'react';
 import type { Forecast } from '@engine/output.ts';
-import { itemById } from './layout.ts';
-import { Block } from './parts/Block.tsx';
-import { Spine } from './parts/Spine.tsx';
-import { Canopy } from './parts/Canopy.tsx';
-import { Library } from './parts/Library.tsx';
-import { Residences } from './parts/Residences.tsx';
-import { CarParks } from './parts/CarParks.tsx';
-import { Trees } from './parts/Trees.tsx';
+import { Campus } from './parts/Campus.tsx';
 import { Ground } from './parts/Ground.tsx';
 import { Road } from './parts/Road.tsx';
 import { LrtStation } from './parts/LrtStation.tsx';
@@ -56,23 +49,10 @@ export function CampusScene({ forecast, step, selectedZone, weatherMm, onZoneCli
     return out;
   }, [states]);
 
-  const block = (id: string, extra: { roof?: 'plate' | 'green'; perforated?: boolean } = {}) => (
-    <Block key={id} item={itemById(id)!} onZoneClick={onZoneClick} {...extra} />
-  );
   return (
     <>
       <Ground onClick={onGroundClick} />
-      {block('block-a')}
-      {block('block-b', { perforated: true })}
-      {block('block-c')}
-      {block('block-d')}
-      {block('block-e', { roof: 'green' })}
-      <Canopy onZoneClick={onZoneClick} />
-      <Library onZoneClick={onZoneClick} />
-      <Spine onZoneClick={onZoneClick} />
-      <Residences onZoneClick={onZoneClick} />
-      <CarParks onZoneClick={onZoneClick} />
-      <Trees />
+      <Campus onZoneClick={onZoneClick} />
       <Road onZoneClick={onZoneClick} styles={roadStyles} selectedZone={selectedZone} />
       <LrtStation onZoneClick={onZoneClick} />
       <Stadium onZoneClick={onZoneClick} glowing={eventDisruption} />
