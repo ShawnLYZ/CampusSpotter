@@ -12,7 +12,7 @@ async function readFailure(error: unknown): Promise<FailedResponse | null> {
   return { status: res.status, body };
 }
 
-/** Calls an Edge Function. `thing` completes "View-only accounts can’t change <thing>." when the function answers 403. */
+/** Calls an Edge Function. `thing` completes "Guest accounts can’t change <thing>." when the function answers 403. */
 export function createInvoke(client: SupabaseClient) {
   return async function invoke<T>(name: string, body: unknown, thing = 'that'): Promise<T> {
     const { data, error } = await client.functions.invoke(name, { body: body as Record<string, unknown> });

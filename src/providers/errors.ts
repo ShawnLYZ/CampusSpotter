@@ -11,7 +11,7 @@ export class ProviderError extends Error {
 
 interface ErrorLike { code?: unknown; status?: unknown; message?: unknown }
 
-/** Maps a Supabase/PostgREST failure to a ProviderError. `thing` completes "View-only accounts can’t change <thing>." */
+/** Maps a Supabase/PostgREST failure to a ProviderError. `thing` completes "Guest accounts can’t change <thing>." */
 export function toProviderError(e: unknown, thing: string): ProviderError {
   if (e instanceof ProviderError) return e;
   const err = (typeof e === 'object' && e !== null ? e : {}) as ErrorLike;
@@ -23,5 +23,5 @@ export function toProviderError(e: unknown, thing: string): ProviderError {
 
 /** A write that touched no rows was blocked by row-level security. */
 export function forbiddenWrite(thing: string): ProviderError {
-  return new ProviderError('forbidden', `View-only accounts can’t change ${thing}.`);
+  return new ProviderError('forbidden', `Guest accounts can’t change ${thing}.`);
 }

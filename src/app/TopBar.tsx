@@ -73,7 +73,7 @@ export default function TopBar() {
       </button>
       <span className="inline-flex items-center gap-2 text-text-2">
         <UserRound aria-hidden="true" strokeWidth={1.75} className="h-4 w-4" /> {user?.displayName ?? 'Guest'}
-        {user && <span className="rounded-full border border-border px-2 py-0.5 text-xs">{user.role === 'manager' ? 'Manager' : 'View only'}</span>}
+        {user && <span className="rounded-full border border-border px-2 py-0.5 text-xs">{user.role === 'manager' ? 'Manager' : 'Limited access'}</span>}
       </span>
       <button type="button" className="btn btn-quiet btn-sm" onClick={() => { noteSignOut(true); provider.signOut().then(() => navigate('/login'), (e: unknown) => { noteSignOut(false); setToast(e instanceof Error ? e.message : 'Couldn’t sign you out.'); }); }}>Sign out</button>
       {toast && <Toast message={toast} onDone={clearToast} />}

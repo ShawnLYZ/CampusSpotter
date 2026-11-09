@@ -13,7 +13,7 @@ describe('invoke', () => {
   });
   it('maps 403 to a forbidden error', async () => {
     await expect(createInvoke(failing(403, { error: 'no' }))('baseline-import', {}, 'baseline data'))
-      .rejects.toMatchObject({ code: 'forbidden', message: 'View-only accounts can’t change baseline data.' });
+      .rejects.toMatchObject({ code: 'forbidden', message: 'Guest accounts can’t change baseline data.' });
   });
   it('keeps the body of a stale 503', async () => {
     const body = { stale: true, estimates: [] };

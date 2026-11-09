@@ -44,7 +44,8 @@ export default function LoginPage() {
           {error && <p role="alert" className="text-sm text-red-ink">{error}</p>}
           <button type="submit" className="btn btn-primary" disabled={busy}>Sign in</button>
         </form>
-        <button type="button" className="btn mt-3 w-full" disabled={busy} onClick={() => void run(() => provider.demoSignIn())}>Continue as guest (view only)</button>
+        <button type="button" className="btn mt-3 w-full" disabled={busy} onClick={() => void run(() => provider.demoSignIn())}>Continue as guest</button>
+        <p className="mt-2 text-xs text-text-2">Guests can try every page and record decisions. Only managers can change events, sources and baseline data.</p>
       </div>
     </div>
   );

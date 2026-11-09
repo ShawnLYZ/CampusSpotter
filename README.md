@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/brand/apple-touch-icon.png" alt="CampusSpotter logo" width="200" height="200" />
+  <img src="images/CampusSpotter_Icon.png" alt="CampusSpotter logo" width="200" height="200" />
 </p>
 
 <h1 align="center">CampusSpotter</h1>
@@ -112,55 +112,55 @@ React, TypeScript and Vite for the website · Three.js for the 3D campus · Supa
 
 ## 3. Product overview
 
-These screenshots come from the working website, running on a local computer with live data on 8 November 2026, signed in as the view-only guest. They follow the order a manager uses the pages: watch, test, decide, then learn.
+These screenshots come from the working website, running on a local computer with live data on 8 November 2026, signed in as the guest. They follow the order a manager uses the pages: watch, test, decide, then learn.
 
 ### Sign in
 
-Managers sign in with their email and password. Anyone else can click **Continue as guest (view only)**.
+Managers sign in with their email and password. Anyone else can click **Continue as guest**. Guests can try every page and record decisions, but only managers can change events, sources and baseline figures.
 
-![Sign-in page with email and password fields and a "Continue as guest (view only)" button](screenshots/01-sign-in.png)
+![Sign-in page with email and password fields and a "Continue as guest" button](images/01-sign-in.png)
 
 ### Early Warning
 
 Upcoming days that could overload the shuttle or campus, most urgent first. Each card shows the risk rating, what peaks if nothing is done and where the event was found. From a card you can open the day in Scenario Lab or go straight to plans.
 
-![Early Warning page listing upcoming concerts and other disruptions as cards with risk ratings](screenshots/02-early-warning.png)
+![Early Warning page listing upcoming concerts and other disruptions as cards with risk ratings](images/02-early-warning.png)
 
 ### Command Center
 
 The 3D campus on Monday 9 November, a concert day, at 3:45 PM. Red labels mark overloaded places along the shuttle route. The panel on the right shows all nine measures at the chosen time, each with its source label. Press **Play** or drag the slider to move through the day.
 
-![Command Center with the 3D campus, a Critical concert alert and the status of each measure at 3:45 PM](screenshots/03-command-center.png)
+![Command Center with the 3D campus, a Critical concert alert and the status of each measure at 3:45 PM](images/03-command-center.png)
 
 ### Scenario Lab
 
 Two actions are switched on here: extra buses and a nonstop shuttle loop. The "No action" and "With plan" campuses play side by side, and the charts and day summary update at once. On the right you can ask Gemini a what-if question and see the unknowns it estimated for this day.
 
-![Scenario Lab with actions on the left, two 3D campuses side by side, charts for each measure and the Ask Gemini panel](screenshots/04-scenario-lab.png)
+![Scenario Lab with actions on the left, two 3D campuses side by side, charts for each measure and the Ask Gemini panel](images/04-scenario-lab.png)
 
 ### Action Plans
 
 Three plans from Gemini for the same concert day, within a budget of RM 2,000. Each plan lists its cost line by line, what it changes compared with no action, and Gemini's reasoning. Every number comes from the forecast engine, not from Gemini. Choosing a plan creates a checklist for each team and a draft message for students.
 
-![Action Plans page showing three plans with costs, effects and Gemini's reasoning](screenshots/05-action-plans.png)
+![Action Plans page showing three plans with costs, effects and Gemini's reasoning](images/05-action-plans.png)
 
 ### Decision Log
 
 Every chosen plan is saved here with its predicted effect, cost and checklist progress. This screenshot shows the log before any plan was chosen.
 
-![Decision Log with no decisions yet and a button to go to Action Plans](screenshots/06-decision-log.png)
+![Decision Log with no decisions yet and a button to go to Action Plans](images/06-decision-log.png)
 
 ### Replay: 4 Nov
 
 The concert night replayed. The left campus shows what happened with no action and the right one shows CampusSpotter's plan. The steps at the top tell the story from the ticket sell-out on 3 June to the night itself, and the table compares the key figures.
 
-![Replay page with the four-step story, two 3D campuses at 6:15 PM and a table of key figures](screenshots/07-replay.png)
+![Replay page with the four-step story, two 3D campuses at 6:15 PM and a table of key figures](images/07-replay.png)
 
 ### Data & Assumptions
 
 Every data source with its label (**Verified**, **Baseline** or **AI-estimated**), link, licence and when it was last updated. The other tabs list the baseline figures you can replace, the AI estimates, the thresholds, risk rules and cost rates, privacy notes and an About page.
 
-![Data & Assumptions page showing the Sources tab with labels, links, licences and freshness](screenshots/08-data-assumptions.png)
+![Data & Assumptions page showing the Sources tab with labels, links, licences and freshness](images/08-data-assumptions.png)
 
 ---
 
@@ -231,7 +231,7 @@ flowchart TB
 - **One forecast engine in two places.** The formulas in `shared/engine` run in the browser, so the 3D campus and Scenario Lab update at once. The same code runs in the server functions, so risk ratings and saved plans use exactly the same numbers.
 - **Gemini suggests, the engine calculates.** Gemini finds events, estimates unknowns, proposes plans, answers questions and drafts messages. The engine works out every figure.
 - **Live updates.** Supabase Realtime sends new events, job runs, decisions and checklist ticks to every open browser.
-- **Access rules.** Every visitor signs in, as a manager or as the guest. Row Level Security lets any signed-in user read the data, and only the manager can edit events, sources and baseline figures.
+- **Access rules.** Every visitor signs in, as a manager or as the guest. Row Level Security lets any signed-in user read the data, and only the manager can edit events, sources and baseline figures. The guest can also record decisions, tick checklists and edit announcements, so it can try the whole decision flow.
 - **Keys stay where they belong.** The browser holds only the publishable key and the map key. The Gemini and Routes keys are Edge Function secrets, and the secret key the scheduled jobs use is kept in Vault.
 
 ### Server functions
@@ -527,7 +527,7 @@ CampusSpotter reads its keys and passwords from two private files in the project
 | `VITE_SUPABASE_URL` | Your **Project URL** (C2, item 2) |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Your **publishable key** (C2, item 3) |
 | `VITE_GOOGLE_MAPS_KEY` | Your **map key** (Part B) |
-| `VITE_DEMO_EMAIL` | Leave empty. The view-only guest account's details go in `.env.local` in Step C9 |
+| `VITE_DEMO_EMAIL` | Leave empty. The guest account's details go in `.env.local` in Step C9 |
 | `VITE_DEMO_PASSWORD` | Leave empty, as above |
 | `MANAGER_EMAIL` | **Your own email address.** You sign in with it. This one is required |
 | `MANAGER_PASSWORD` | Option 1: leave empty to get a strong random password, or type your own (at least 12 characters). Option 2: leave empty, because you choose the password on the website |
@@ -641,7 +641,7 @@ First turn off public sign-up, so only the accounts you create can sign in:
 node --env-file=.env scripts/auth-config.ts
 ```
 
-You should see `auth config: ok`. Then create your manager account and a view-only guest account:
+You should see `auth config: ok`. Then create your manager account and a guest account:
 
 ```bash
 node --env-file=.env --env-file=.env.local scripts/create-accounts.ts
@@ -765,7 +765,7 @@ To check: open **Edge Functions** in the dashboard. You should see 15 functions,
 2. Turn off **Allow new users to sign up**, then click **Save changes**.
 3. Still under **Authentication**, click **URL Configuration**. Set **Site URL** to `http://localhost:5173` and click **Save changes**. Under **Redirect URLs**, click **Add URL**, type `http://localhost:5173/**` and save it.
 
-**Create your manager account and a view-only guest account:**
+**Create your manager account and a guest account:**
 
 4. Click **Authentication** → **Users** → **Add user** → **Create new user**.
 5. Fill in:
@@ -775,7 +775,7 @@ To check: open **Edge Functions** in the dashboard. You should see 15 functions,
 6. Click **Create user**.
 7. Repeat steps 4 to 6 for the guest account, with the email `demo@campusspotter.app` and a different password. The guest password is built into the website (it powers the **Continue as guest** button), so don't reuse a password from anywhere else.
 
-**Make your account the manager.** New accounts start as view-only. Run this SQL, with your email in place of `you@example.com`:
+**Make your account the manager.** New accounts start as guests. Run this SQL, with your email in place of `you@example.com`:
 
 ```sql
 update public.profiles set role = 'manager', display_name = 'APU Manager'
@@ -853,7 +853,7 @@ That's Option 2 done. Go to [Step C11](#step-c11-start-campusspotter).
 2. Hold **Ctrl** (Mac: **Cmd**) and click the `http://localhost:5173/` link, or type `localhost:5173` into Chrome, Edge or Safari.
 3. On the sign-in page:
    - sign in with your `MANAGER_EMAIL` and `MANAGER_PASSWORD` (from `.env.local`) for full access, or
-   - click **Continue as guest (view only)**.
+   - click **Continue as guest**.
 4. Click **How it works** at the top for a short tour.
 
 > [!NOTE]
@@ -941,7 +941,7 @@ select vault.update_secret((select id from vault.secrets where name = 'secret_ke
 **Sign-in says "Email not confirmed"**
 The account was created on the website without **Auto Confirm User**. In **Authentication** → **Users**, delete the account, add it again with the box ticked, then run the manager SQL in Step C9 (website) again.
 
-**I signed in with my own email but the top bar says "View only"**
+**I signed in with my own email but the top bar says "Limited access"**
 Your account isn't the manager yet. Run the manager SQL in Step C9 (website) with the exact email you sign in with, then reload the page.
 
 **AI features say the limit was reached (error 429)**
@@ -968,7 +968,7 @@ CampusSpotter/
 ├── scripts/              Setup helpers used in Part C
 ├── tests/                Tests that run against a live Supabase project
 ├── public/               Images and icons
-├── screenshots/          Website screenshots used in this README
+├── images/               Logo and website screenshots used in this README
 ├── .env.example          Template for your settings file
 └── package.json          Project name, commands and the list of building blocks
 ```
