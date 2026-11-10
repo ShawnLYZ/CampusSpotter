@@ -1,6 +1,7 @@
 import { Edges } from '@react-three/drei';
 import { Color } from 'three';
 import { SPINE_DECK, itemById, itemHeight } from '../layout.ts';
+import { LRT_BAY, STADIUM_AT, STADIUM_CLEAR_RADIUS, STATION_BOX } from '../bukitJalil/placement.ts';
 import type { PressureStyle } from '../pressureStyle.ts';
 import type { Zone } from '../zones.ts';
 import { residenceBoxes } from './Residences.tsx';
@@ -16,7 +17,7 @@ function boxFor(zone: Zone): Box | null {
     const s = itemById('spine')!;
     return { x: s.x, y: SPINE_DECK.y, z: s.z, w: s.w ?? 0, d: s.d ?? 0, h: 0.3 };
   }
-  if (zone.id === 'lrt-station') return { x: -100, y: 1.5, z: 0, w: 24, d: 3, h: 5 };
+  if (zone.id === 'lrt-station') return STATION_BOX;
   if (zone.id === 'apu-stop') return null; // the stop shows its ring only
   const it = itemById(zone.id);
   if (!it || zone.outline === 'path') return null;
@@ -30,7 +31,7 @@ function itemBox(id: string, h: number): Box {
 }
 
 /** Ring decals on the ground for the shuttle stop and the LRT bay pad. */
-const RINGS: Record<string, [number, number][]> = { 'apu-stop': [[16, 13]], 'lrt-station': [[-92, 6]] };
+const RINGS: Record<string, [number, number][]> = { 'apu-stop': [[16, 13]], 'lrt-station': [[LRT_BAY[0], LRT_BAY[1]]] };
 
 /** Glowing colour: brightened past 1 so the unlit-tonemapped outline reads as emissive without bloom. */
 const glowColor = (hex: string, glow: number) => new Color(hex).multiplyScalar(1 + glow);
@@ -57,14 +58,13 @@ function Ring({ x, z, color, radius, y = 0.12 }: { x: number; z: number; color: 
 /** Footprints for zones without metrics, which only ever show a selection outline. */
 const SELECT_BOXES: Record<string, Box[]> = {
   residences: residenceBoxes(),
-  'carpark-a': [itemBox('carpark-a', 2.1)],
   'carpark-b': [itemBox('carpark-b', 0.4)],
   'mranti-parking': [{ x: 45, y: 0, z: 30, w: 25, d: 15, h: 0.15 }],
 };
 
 /** White selection outline for a zone that has no pressure: boxes for buildings and lots, a ring for the stadium. */
 function SelectionOnly({ zone }: { zone: Zone }) {
-  if (zone.id === 'stadium') return <Ring x={-105} z={40} color={SELECTED} radius={19} y={0.15} />;
+  if (zone.id === 'stadium') return <Ring x={STADIUM_AT[0]} z={STADIUM_AT[1]} color={SELECTED} radius={STADIUM_CLEAR_RADIUS} y={0.15} />;
   return <>{SELECT_BOXES[zone.id]?.map((b) => <BoxOutline key={`${b.x},${b.z}`} box={b} color={SELECTED} margin={0.5} />)}</>;
 }
 

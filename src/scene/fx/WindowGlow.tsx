@@ -4,7 +4,7 @@ import type { Forecast } from '@engine/output.ts';
 import type { BlockId } from '@engine/types.ts';
 import { seededRandom } from '../../lib/random.ts';
 import { windowGlow } from '../animation.ts';
-import { CAMPUS_LAYOUT, FLOOR_HEIGHT, facadeBays, type Side } from '../layout.ts';
+import { CAMPUS_LAYOUT, FLOOR_HEIGHT, facadeBays, facadeCovered, type Side } from '../layout.ts';
 import { WINDOW_CELL } from '../parts/materials.ts';
 import { lightingAt } from '../lighting.ts';
 
@@ -27,7 +27,7 @@ function baseKwhByBlock(forecast: Forecast): Partial<Record<BlockId, number>> {
   return out;
 }
 
-/** Warm emissive panes over the facade windows of the blocks (all four sides, except behind sun screens), brighter with each block's energy use. One InstancedMesh. */
+/** Warm emissive panes over the strip windows of the blocks (every storey above the recessed ground floor, except behind sun screens and cores), brighter with each block's energy use. One InstancedMesh. */
 export function WindowGlow({ forecast, step }: { forecast: Forecast; step: number }) {
   const mesh = useRef<InstancedMesh>(null);
   const wins = useMemo(() => {
@@ -36,14 +36,14 @@ export function WindowGlow({ forecast, step }: { forecast: Forecast; step: numbe
     for (const it of CAMPUS_LAYOUT) {
       if (!it.blockId || it.blockId === 'S' || !it.floors || !it.w || !it.d) continue;
       for (const { side, rot } of SIDES) {
-        if (it.screens?.includes(side)) continue; // a sun screen covers this facade
         const onZ = side === 's' || side === 'n';
         const sign = side === 's' || side === 'e' ? 1 : -1;
         const length = onZ ? it.w : it.d;
         const bays = facadeBays(length), pitch = length / bays;
         const offset = sign * ((onZ ? it.d : it.w) / 2 + OUT);
-        for (let f = 0; f < it.floors; f++) {
+        for (let f = 1; f < it.floors; f++) {
           for (let c = 0; c < bays; c++) {
+            if (facadeCovered(it, side, (c + 0.5) / bays)) continue;
             const along = (c - (bays - 1) / 2) * pitch;
             list.push({
               x: it.x + (onZ ? along : offset), y: (f + WINDOW_CELL.centreY) * FLOOR_HEIGHT, z: it.z + (onZ ? offset : along),

@@ -3,8 +3,7 @@ import type { Forecast } from '@engine/output.ts';
 import { Campus } from './parts/Campus.tsx';
 import { Ground } from './parts/Ground.tsx';
 import { Road } from './parts/Road.tsx';
-import { LrtStation } from './parts/LrtStation.tsx';
-import { Stadium } from './parts/Stadium.tsx';
+import { BukitJalil } from './bukitJalil/BukitJalil.tsx';
 import { MrantiParking } from './parts/MrantiParking.tsx';
 import { ZoneHighlight } from './parts/ZoneHighlight.tsx';
 import { ZoneLabels } from './parts/ZoneLabel.tsx';
@@ -54,8 +53,7 @@ export function CampusScene({ forecast, step, selectedZone, weatherMm, onZoneCli
       <Ground onClick={onGroundClick} />
       <Campus onZoneClick={onZoneClick} />
       <Road onZoneClick={onZoneClick} styles={roadStyles} selectedZone={selectedZone} />
-      <LrtStation onZoneClick={onZoneClick} />
-      <Stadium onZoneClick={onZoneClick} glowing={eventDisruption} />
+      <BukitJalil onZoneClick={onZoneClick} glowing={eventDisruption} />
       <MrantiParking visible={eventDisruption} onZoneClick={onZoneClick} />
       <Buses forecast={forecast} step={step} />
       <QueueFigures forecast={forecast} step={step} />

@@ -7,8 +7,8 @@ import { ChipSprite } from '../parts/ZoneLabel.tsx';
 import type { PressureStyle } from '../pressureStyle.ts';
 
 const SPACING = 0.6, FIGURE_Y = 0.32;
-/** Grid origins (x, z); rows of `perRow` extend away from the stop. The APU queue fills the forecourt east of the grand stair. */
-const APU_ORIGIN = { x: 17.2, z: 13.4, dz: -1, perRow: 20 };
+/** Grid origins (x, z); rows of `perRow` extend away from the stop. The APU queue fills the forecourt between the stop and the atrium's grand stair. */
+const APU_ORIGIN = { x: 10.2, z: 11.2, dz: -1, perRow: 26 };
 const LRT_ORIGIN = { x: -95, z: 8.6, dz: 1, perRow: 10 };
 const LABEL_STYLE: PressureStyle = { color: '#f59e0b', glow: 0, tintOpacity: 0, text: '', icon: '●' };
 const _o = new Object3D();

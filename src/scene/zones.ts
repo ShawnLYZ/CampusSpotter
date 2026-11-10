@@ -1,6 +1,7 @@
 import type { BlockId, MetricId } from '@engine/types.ts';
 import type { Forecast, Pressure, StepStatus, StepValue } from '@engine/output.ts';
 import { SPINE_DECK, itemById, itemHeight } from './layout.ts';
+import { STADIUM_AT, STADIUM_HEIGHT, STATION_AT, STATION_HEIGHT } from './bukitJalil/placement.ts';
 
 /** `detailOnly` metrics are listed in the zone's details but don't set its colour or label. */
 export interface MetricRef { metric: MetricId; scope: 'campus' | BlockId; detailOnly?: true }
@@ -42,18 +43,17 @@ export const ZONES: Zone[] = [
     // Coloured by the queue alone: a jammed road already shows red on the road segments.
     metrics: [{ metric: 'apuStopQueue', scope: 'campus' }, { metric: 'shuttleRtt', scope: 'campus', detailOnly: true }],
   },
-  { id: 'residences', name: 'Residences J1/J2/K1/K2', outline: 'box', anchor: topAnchor('residences-j'), metrics: [] },
-  { id: 'carpark-a', name: 'Car park Zone A (1,130 covered bays)', outline: 'box', anchor: [-30, 2.1, 2], metrics: [] },
+  { id: 'residences', name: 'Residences J1/J2/K1/K2', outline: 'box', anchor: topAnchor('residences-j1'), metrics: [] },
   { id: 'carpark-b', name: 'Car park Zone B (558 open bays)', outline: 'box', anchor: [-4.8, 0, 9], metrics: [] },
   road('road-jalan-teknologi', 'Jalan Teknologi', [16, 0, 18]),
   road('road-kl-seremban', 'KL–Seremban Expressway', [-20, 0, 24]),
   road('road-bukit-jalil-hwy', 'Bukit Jalil Highway / Jalan Barat', [-70, 0, 18]),
   road('road-jalan-merah-caga', 'Jalan Merah Caga', [-88, 0, 7]),
   {
-    id: 'lrt-station', name: 'LRT Bukit Jalil', outline: 'box', anchor: [-100, 0, 0],
+    id: 'lrt-station', name: 'LRT Bukit Jalil', outline: 'box', anchor: [STATION_AT[0], STATION_HEIGHT, STATION_AT[1]],
     metrics: [{ metric: 'lrtStopQueue', scope: 'campus' }, { metric: 'lrtCrowding', scope: 'campus' }],
   },
-  { id: 'stadium', name: 'TM Stadium Nasional', outline: 'circle', anchor: [-105, 0, 40], metrics: [] },
+  { id: 'stadium', name: 'TM Stadium Nasional', outline: 'circle', anchor: [STADIUM_AT[0], STADIUM_HEIGHT, STADIUM_AT[1]], metrics: [] },
   { id: 'mranti-parking', name: 'MRANTI Park concert parking', outline: 'box', anchor: [45, 0, 30], metrics: [] },
 ];
 
